@@ -1,6 +1,6 @@
 # HAILERIS
 
-A spec-driven TDD pipeline. Takes raw feature context as input; produces verified, green-phase implementation as output.
+A spec-driven pipeline. Takes raw feature context as input; produces verified, green-phase implementation as output.
 
 ## Pipeline
 
