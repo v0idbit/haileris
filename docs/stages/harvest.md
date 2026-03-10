@@ -11,17 +11,28 @@ Data munging the context funnel.
   - Related context (epics, stories, design docs, dependency docs, library/tool/platform docs, conversation notes)
   - Tech details (language requirements, repo standards, installed/external dependencies)
 
-### Process
+## Process
+
+### Harvest.Explore
 
 1. Explore the codebase and read project standards:
    - Find relevant files, patterns, and test structure
    - Read project standards and all referenced imports; extract coding standards, testing standards, git workflow rules
      - **NOTE**: Standards must be stated, not inferred
-2. Synthesize the decomposition; write to `.haileris/features/{feature_id}/decomposition.md`
-3. Synthesize the technical details; write to `.haileris/features/{feature_id}/technical-details.md`
-4. Validate the context across 4 dimensions; write `harvest-inspection.yaml`
-5. If no constitution exists yet, present one-time opt-in prompt
-6. Record `constitution_version` in `pipeline-state.yaml` to lock the active constitution version for this feature run
+
+### Harvest.Synthesize
+
+1. Synthesize the decomposition; write to `.haileris/features/{feature_id}/decomposition.md`
+2. Synthesize the technical details; write to `.haileris/features/{feature_id}/technical-details.md`
+
+### Harvest.Validate
+
+1. Validate the context across 4 dimensions; write `harvest-inspection.yaml`
+
+### Harvest.Initialize
+
+1. If no constitution exists yet, present one-time opt-in prompt
+2. Record `constitution_version` in `pipeline-state.yaml` to lock the active constitution version for this feature run
 
 ## Outputs
 

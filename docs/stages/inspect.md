@@ -12,7 +12,7 @@ Review each tentatively finished implementation against the Gherkin spec.
 
 ## Process
 
-### Pre-check: Traceability Gate
+### Inspect.Gate — Traceability Gate
 
 Before reviews begin, verify the constitution version matches the version recorded in `pipeline-state.yaml` at Harvest. If the constitution has changed since the feature run began, warn the user and offer to either re-run from Inscribe against the new constitution or continue with the original version.
 
@@ -27,7 +27,7 @@ Then verify all four BID inspection artifacts exist and passed:
 
 If a file exists but `pass: false`, record Critical with the finding count. Critical traceability findings cause FAIL status and appear at the top of the report.
 
-### Step 1: Parallel Review
+### Inspect.Review — Parallel Review
 
 Shared context (Gherkin spec, Constitution, Standards, pyproject.toml) is loaded once for all reviews.
 
@@ -40,7 +40,7 @@ Run all reviews in parallel:
 
 After all reviews complete, synthesize.
 
-### Step 2: Synthesize and Classify Findings
+### Inspect.Synthesize — Synthesize and Classify Findings
 
 1. Merge and deduplicate findings by severity: Critical → High → Medium → Low → Nit
 2. Tag each finding with a `resolution_domain`:

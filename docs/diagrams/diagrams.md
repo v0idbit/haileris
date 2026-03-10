@@ -120,7 +120,7 @@ flowchart TD
     RAW --> H
 
     subgraph H["1. Harvest"]
-        H_P["Data munging / context funnel"]
+        H_E["Explore"] --> H_S["Synthesize"] --> H_V["Validate"] --> H_I["Initialize"]
     end
 
     H --> DEC(["Decomposition (tentative)"])
@@ -136,7 +136,7 @@ flowchart TD
     IEC --> I
 
     subgraph I["3. Inscribe + Constitution"]
-        I_P["Write spec with BIDs"]
+        I_A["Author"] --> I_V["Verify"] --> I_AP["Approve"]
     end
 
     I --> SP(["Spec<br>(BIDs + tech + delivery details)"])
@@ -171,7 +171,7 @@ flowchart TD
     IM2 --> IN
 
     subgraph IN["7. Inspect + Constitution"]
-        IN_P["Review finished work against spec"]
+        IN_G["Gate"] --> IN_R["Review"] --> IN_S["Synthesize"]
     end
 
     IN --> IF(["Implementation Failure Details"])
@@ -179,7 +179,7 @@ flowchart TD
     IF --> S
 
     subgraph S["8. Settle + Constitution"]
-        S_P["Refactor / resolve failures"]
+        S_T["Triage"] --> S_F["Fix"] --> S_C["Confirm"]
     end
 
     S -->|"domain: spec"| A

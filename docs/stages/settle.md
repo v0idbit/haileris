@@ -10,12 +10,20 @@ Refactor and resolve failures. Gate on completeness.
 
 ## Process
 
+### Settle.Triage
+
 1. Locate the most recent `verify_{timestamp}.md`; parse Critical, High, and Medium findings only (skip Low and Nit)
-2. Classify each finding by `resolution_domain` from the report:
+
+### Settle.Fix
+
+1. Classify each finding by `resolution_domain` from the report:
    - **`domain: test`** → fix structural quality only (fixture dedup, assertion patterns, missing assertions; MUST NOT change behavioral contracts or test count). If a test is genuinely wrong (wrong interface, unrealistic fixture, mismatched assertion granularity), escalate to user with a proposed correction rather than forcing a full spec loop.
    - **`domain: spec`** → resolve spec ambiguity (present reasonable default assumption; update Gherkin spec wording if needed)
    - **`domain: impl`** → apply targeted production code fixes (NEVER modify spec-driven test files; fix only the listed findings)
-3. After all domain-specific fixes, re-run Inspect to confirm resolution
+
+### Settle.Confirm
+
+1. After all domain-specific fixes, re-run Inspect to confirm resolution
 
 ## Outputs
 

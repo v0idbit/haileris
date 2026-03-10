@@ -19,6 +19,8 @@
 
 ### 1. Harvest
 
+**Sub-stages:** Harvest.Explore → Harvest.Synthesize → Harvest.Validate → Harvest.Initialize
+
 #### Inputs
 
 **Target source code** and **feature details**, including:
@@ -56,6 +58,8 @@ Repeat until no ascertainments remain: identify ambiguities or gaps, output a li
 ---
 
 ### 3. Inscribe
+
+**Sub-stages:** Inscribe.Author → Inscribe.Verify → Inscribe.Approve
 
 #### Inputs
 
@@ -107,6 +111,8 @@ This ensures later subsets can depend on earlier subsets' implementations.
 ---
 
 ### 7. Inspect
+
+**Sub-stages:** Inspect.Gate → Inspect.Review → Inspect.Synthesize
 
 #### Inputs
 
@@ -165,6 +171,8 @@ The pipeline does not enforce cross-feature ordering automatically — it is the
 ---
 
 ### 8. Settle
+
+**Sub-stages:** Settle.Triage → Settle.Fix → Settle.Confirm
 
 #### Inputs
 

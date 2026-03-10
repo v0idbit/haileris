@@ -9,12 +9,15 @@ Create the Gherkin spec from the improved decomposition.
 
 ## Process
 
-1. Produce a behavioral Gherkin spec with BIDs; read constitution if present; flag constitution violations; write to `.haileris/features/{feature_id}/spec/`
-2. Run read-only consistency checks (ANLZ-001..005)
-3. Present Gherkin spec + consistency check results to user; wait for approval
-4. Update Gherkin spec frontmatter `status: approved` (or `status: ascertaining` if user requests changes; return to Ascertain)
+### Inscribe.Author
 
-### Consistency Checks (ANLZ-001..005)
+1. Produce a behavioral Gherkin spec with BIDs; read constitution if present; flag constitution violations; write to `.haileris/features/{feature_id}/spec/`
+
+### Inscribe.Verify
+
+1. Run read-only consistency checks (ANLZ-001..005)
+
+#### Consistency Checks (ANLZ-001..005)
 
 | ID | Check |
 |----|-------|
@@ -25,6 +28,11 @@ Create the Gherkin spec from the improved decomposition.
 | ANLZ-005 | Integration behaviors reference modules listed in the Gherkin spec |
 
 If any check returns FAIL: show which checks failed; ask user to fix or proceed anyway.
+
+### Inscribe.Approve
+
+1. Present Gherkin spec + consistency check results to user; wait for approval
+2. Update Gherkin spec frontmatter `status: approved` (or `status: ascertaining` if user requests changes; return to Ascertain)
 
 ## Outputs
 

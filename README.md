@@ -17,6 +17,8 @@ Eight stages in sequence. Stages 5–6 repeat per spec subset (sequentially: Etc
 | 7 | **Inspect** | Review the finished implementation against the spec |
 | 8 | **Settle** | Fix failures by domain; loop to earliest required stage if any remain |
 
+> Harvest, Inscribe, Inspect, and Settle each contain named sub-stages (e.g., `Harvest.Explore → Harvest.Synthesize → Harvest.Validate → Harvest.Initialize`). See individual stage docs for details.
+
 See [`docs/pipeline.md`](docs/pipeline.md) for the full input/output spec and [`docs/diagrams/diagrams.md`](docs/diagrams/diagrams.md) for stage flow and artifact maps.
 
 ## Artifacts
