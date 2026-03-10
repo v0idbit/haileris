@@ -1,6 +1,6 @@
 # HAILERIS
 
-A spec-driven TDD pipeline. Takes raw feature context as input; produces verified, green-phase implementation as output.
+A spec-driven pipeline. Takes raw feature context as input; produces verified, green-phase implementation as output.
 
 ## Pipeline
 
@@ -45,9 +45,9 @@ Shared project memory:
 └── constitution.md
 ```
 
-## Auditing
+## Inspecting
 
-Stages 1, 4, 5, and 6 each produce an audit artifact. All four converge at Inspect as the **Traceability Gate** — a missing or failed audit triggers a Critical finding before reviews begin.
+Stages 1, 4, 5, and 6 each produce an inspect artifact. All four converge at Inspect as the **Traceability Gate** — a missing or failed inspect triggers a Critical finding before reviews begin.
 
 | Inspection artifact | Produced by | Validates |
 |---------------------|------------|-----------|
@@ -70,4 +70,4 @@ Findings are classified by resolution domain: `impl` (production code), `test` (
 
 - [`docs/pipeline.md`](docs/pipeline.md) — stage inputs, outputs, and flow
 - [`docs/diagrams/diagrams.md`](docs/diagrams/diagrams.md) — mermaid diagrams: stage flow, artifact paths, traceability gate
-- [`docs/stages/`](docs/stages/) — per-stage process, artifacts, and audit details
+- [`docs/stages/`](docs/stages/) — per-stage process, artifacts, and inspect details
