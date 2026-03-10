@@ -14,6 +14,9 @@ Break the Gherkin spec into small, vertical deliverables.
 3. Verify each task's scope matches its BIDs (flag over-bundled or over-engineered tasks); revise per findings
 4. Write ordered task list to `.haileris/features/{feature_id}/tasks.md`
 5. Validate BID coverage; write `.haileris/features/{feature_id}/layout-inspection.yaml`
+6. Present task list to user for approval; wait for confirmation before proceeding to Etch
+   - User may request task regrouping, reordering, or splitting — revise and re-validate if so
+   - This gate catches over-bundled tasks, awkward groupings, or poor dependency ordering that the layout inspection cannot detect
 
 ## Outputs
 
@@ -50,6 +53,16 @@ Validates the task list against Gherkin spec BIDs across 5 check types:
 Overall `pass: true` only when all 5 check types produce zero findings.
 
 On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate to user.
+
+## Subset Execution Order
+
+Etch and Realize execute **sequentially per subset** in task dependency order:
+
+```
+Etch(subset 1) → Realize(subset 1) → Etch(subset 2) → Realize(subset 2) → ...
+```
+
+This ordering ensures later subsets can depend on earlier subsets' implementations. The dependency order from Layout determines the sequence. All subsets must complete before Inspect runs.
 
 ## Notes
 

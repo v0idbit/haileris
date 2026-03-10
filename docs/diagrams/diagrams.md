@@ -17,11 +17,13 @@ flowchart TD
     A -->|ascertainments needed| A
     A --> I
     I --> L
-    L --> E
+    L -->|user approves tasks| E
     E --> R
     R --> IN
     IN --> S
-    S -->|failures remain| A
+    S -->|"domain: spec"| A
+    S -->|"domain: test"| E
+    S -->|"domain: impl"| R
     S -->|no failures| DONE([COMPLETE])
 ```
 
@@ -50,6 +52,7 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | **Etch inspection** | `.haileris/features/{id}/etch-inspection.yaml` | Yes |
 | **Realize map** | `.haileris/features/{id}/realize-map.yaml` | Yes |
 | **Realize inspection** | `.haileris/features/{id}/realize-inspection.yaml` | Yes |
+| Pipeline state | `.haileris/features/{id}/pipeline-state.yaml` | Yes |
 
 Inspection artifacts (bold) all converge at stage 7 (Inspect) as the **Traceability Gate**.
 
@@ -108,7 +111,7 @@ flowchart TD
 
 ---
 
-## 3. Complete Pipeline
+## 4. Complete Pipeline
 
 ```mermaid
 flowchart TD
@@ -179,13 +182,15 @@ flowchart TD
         S_P["Refactor / resolve failures"]
     end
 
-    S -->|failures remain| A
+    S -->|"domain: spec"| A
+    S -->|"domain: test"| E
+    S -->|"domain: impl"| R
     S -->|no failures| DONE(["COMPLETE"])
 ```
 
 ---
 
-## 4. Inspection Artifact Flow (Traceability Gate)
+## 5. Inspection Artifact Flow (Traceability Gate)
 
 Each of stages 1, 4, 5, and 6 produces an inspection artifact. All four converge at stage 7 (Inspect) as the Traceability Gate — Inspect verifies BID coverage end-to-end before reviews begin.
 

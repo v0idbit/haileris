@@ -14,7 +14,9 @@ Review each tentatively finished implementation against the Gherkin spec.
 
 ### Pre-check: Traceability Gate
 
-Before reviews begin, verify all four BID inspection artifacts exist and passed:
+Before reviews begin, verify the constitution version matches the version recorded in `pipeline-state.yaml` at Harvest. If the constitution has changed since the feature run began, warn the user and offer to either re-run from Inscribe against the new constitution or continue with the original version.
+
+Then verify all four BID inspection artifacts exist and passed:
 
 | Artifact | Source stage | Failure = |
 |----------|-------------|-----------|
@@ -55,7 +57,11 @@ After all reviews complete, synthesize.
 
 | Artifact | Path | Notes |
 |----------|------|-------|
-| Implementation failure details | `.haileris/features/{feature_id}/verify_{timestamp}.md` | Timestamped; ingested by Settle; kept for inspection trail |
+| Implementation failure details | `.haileris/features/{feature_id}/verify_{timestamp}.md` | Timestamped; ingested by Settle; kept for audit trail |
+
+### Verify Report Retention
+
+Multiple `verify_{timestamp}.md` files accumulate across Settle loops. Settle always reads the most recent report. Older reports are retained for audit purposes and are never automatically deleted. To reduce clutter, users may archive or remove old reports after the feature reaches COMPLETE.
 
 ## Status Rules
 
@@ -71,3 +77,4 @@ After all reviews complete, synthesize.
 - Constitution violations are always Critical severity
 - Finding `resolution_domain` determines the fix approach in Settle: `impl` → targeted production code fix, `test` → structural test quality fix, `spec` → auto-resolve Gherkin spec ambiguity
 - Architecture findings requiring judgment (module restructuring, design pattern changes) are surfaced to the user rather than auto-fixed in Settle
+- **Mutation testing trade-off**: When mutation testing is disabled, Inspect becomes a purely structural review (standards, architecture, complexity). Mutation testing is the only review dimension that validates behavioral correctness of the implementation against the spec. Disabling it is acceptable for speed, but the user should be aware that behavioral gaps may go undetected until integration or manual testing.

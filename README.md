@@ -4,7 +4,7 @@ A spec-driven pipeline. Takes raw feature context as input; produces verified, g
 
 ## Pipeline
 
-Eight stages in sequence. Stages 5–6 repeat per spec subset; the loop between 8 and 2 repeats until no failures remain.
+Eight stages in sequence. Stages 5–6 repeat per spec subset (sequentially: Etch→Realize per subset). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize.
 
 | # | Stage | What it does |
 |---|-------|-------------|
@@ -15,7 +15,7 @@ Eight stages in sequence. Stages 5–6 repeat per spec subset; the loop between 
 | 5 | **Etch** | Generate red-phase (failing) tests per spec subset |
 | 6 | **Realize** | Implement minimum code to turn red tests green |
 | 7 | **Inspect** | Review the finished implementation against the spec |
-| 8 | **Settle** | Fix failures by domain; loop back to Ascertain if any remain |
+| 8 | **Settle** | Fix failures by domain; loop to earliest required stage if any remain |
 
 See [`docs/pipeline.md`](docs/pipeline.md) for the full input/output spec and [`docs/diagrams/diagrams.md`](docs/diagrams/diagrams.md) for stage flow and artifact maps.
 
@@ -35,6 +35,7 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Green-phase implementation | Realize | `src/` (repo) |
 | Realize map | Realize | `.haileris/features/{id}/realize-map.yaml` |
 | Implementation failure details | Inspect | `.haileris/features/{id}/verify_{ts}.md` |
+| Pipeline state | Harvest | `.haileris/features/{id}/pipeline-state.yaml` |
 
 Shared project memory:
 

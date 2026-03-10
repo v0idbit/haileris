@@ -21,6 +21,7 @@ Data munging the context funnel.
 3. Synthesize the technical details; write to `.haileris/features/{feature_id}/technical-details.md`
 4. Validate the context across 4 dimensions; write `harvest-inspection.yaml`
 5. If no constitution exists yet, present one-time opt-in prompt
+6. Record `constitution_version` in `pipeline-state.yaml` to lock the active constitution version for this feature run
 
 ## Outputs
 
@@ -42,6 +43,7 @@ Data munging the context funnel.
 | Test conventions memory | `.haileris/memory/test-conventions.md` | Committed |
 | Harvest inspection | `.haileris/features/{feature_id}/harvest-inspection.yaml` | Traceability gate input for Inspect |
 | Harvest metadata | `.haileris/memory/last-harvest.json` | Used for incremental reharvest detection |
+| Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | Tracks current stage, constitution version, and resume state |
 
 ## Harvest Inspection
 
@@ -62,3 +64,13 @@ On FAIL: present findings to user with options to re-run, fix manually, or proce
 
 - Memory files are reused across runs unless `--reharvest` is passed; use `--reharvest` when project standards change
 - `harvest-inspection.yaml` is the earliest inspection artifact and feeds the Traceability Gate at Inspect (stage 7)
+
+### Feature Size Guidance
+
+A feature that produces more than **~20 BIDs** at Inscribe should be considered for splitting. Large features cause:
+- Massive specs that are hard to review at the Inscribe approval gate
+- Many Layout tasks with complex dependency chains
+- Long Etch → Realize loops that delay feedback
+- Broad Inspect reviews where findings are harder to triage
+
+If the decomposition suggests a feature will exceed this threshold, recommend splitting at Harvest before proceeding to Ascertain. Split along natural boundaries: separate user-facing behaviors, independent integration points, or distinct data flows. Each sub-feature runs through the pipeline independently.
