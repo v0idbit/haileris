@@ -9,7 +9,7 @@ Create the Gherkin spec from the improved decomposition.
 
 ## Process
 
-1. Produce a behavioral Gherkin spec with BIDs; read constitution if present; flag constitution violations; write to `.haileris/features/{feature_id}/{feature_name}.feature`
+1. Produce a behavioral Gherkin spec with BIDs; read constitution if present; flag constitution violations; write to `.haileris/features/{feature_id}/spec/`
 2. Run read-only consistency checks (ANLZ-001..005)
 3. Present Gherkin spec + consistency check results to user; wait for approval
 4. Update Gherkin spec frontmatter `status: approved` (or `status: ascertaining` if user requests changes; return to Ascertain)
@@ -39,12 +39,12 @@ If any check returns FAIL: show which checks failed; ask user to fix or proceed 
 
 | Artifact | Path | Notes |
 |----------|------|-------|
-| Gherkin spec | `.haileris/features/{feature_id}/{feature_name}.feature` | Source of truth for all downstream stages (Layout through Settle) |
+| Gherkin spec | `.haileris/features/{feature_id}/spec/` | Source of truth for all downstream stages (Layout through Settle) |
 
 ## Notes
 
 - BID format: `BID-{NNN}` (sequentially numbered, e.g. `BID-001`)
 - Gherkin spec status lifecycle: `inscribing` → `ascertaining` (if markers exist) → `approved` (after user gate)
-- `{feature_name}.feature` is the central artifact — every downstream stage reads it. It must not be modified after user approval
+- `spec/` is the central artifact — every downstream stage reads it. It must not be modified after user approval
 - Constitution violations are always **Critical** severity
 - Gherkin spec types: `greenfield` (all new), `modification` (unchanged / modified / new sections), `refactor` (behaviors must not change)

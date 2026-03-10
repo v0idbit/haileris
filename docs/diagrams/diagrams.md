@@ -36,7 +36,7 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | Decomposition | `.haileris/features/{id}/decomposition.md` | Yes |
 | Technical details | `.haileris/features/{id}/technical-details.md` | Yes |
 | Ascertainments | `.haileris/features/{id}/ascertainments.md` | Yes |
-| Spec | `.haileris/features/{id}/{feature_name}.feature` | Yes |
+| Spec | `.haileris/features/{id}/spec/` | Yes |
 | Task list | `.haileris/features/{id}/tasks.md` | Yes |
 | Red-phase tests | `tests/` (repo) | Yes |
 | Green-phase implementation | `src/` (repo) | Yes |

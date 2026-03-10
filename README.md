@@ -28,7 +28,7 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Decomposition | Harvest | `.haileris/features/{id}/decomposition.md` |
 | Technical details | Harvest | `.haileris/features/{id}/technical-details.md` |
 | Ascertainments | Ascertain | `.haileris/features/{id}/ascertainments.md` |
-| Spec | Inscribe | `.haileris/features/{id}/{feature_name}.feature` |
+| Spec | Inscribe | `.haileris/features/{id}/spec/` |
 | Task list | Layout | `.haileris/features/{id}/tasks.md` |
 | Red-phase tests | Etch | `tests/` (repo) |
 | Etch map | Etch | `.haileris/features/{id}/etch-map.yaml` |
