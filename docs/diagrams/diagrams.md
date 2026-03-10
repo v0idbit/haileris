@@ -196,7 +196,7 @@ flowchart LR
     E[5. Etch] -.->|produces| DAUD["etch-inspection.yaml"]
     R[6. Realize] -.->|produces| IAUD["realize-inspection.yaml"]
 
-    SAUD --> IN["7. Inspect\n(Traceability Gate)"]
+    SAUD --> IN["7. Inspect<br>(Traceability Gate)"]
     PAUD --> IN
     DAUD --> IN
     IAUD --> IN
