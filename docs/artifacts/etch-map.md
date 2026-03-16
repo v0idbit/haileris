@@ -12,12 +12,17 @@ For each BID in the subspec: a list of fully-qualified test function paths that 
 bids:
   BID-001:
     tests:
-      - tests/test_feature.py::test_create_user
-      - tests/test_feature.py::test_create_user_duplicate
+      - tests/unit/test_feature.py::test_create_user
+      - tests/unit/test_feature.py::test_create_user_duplicate
   BID-002:
     tests:
-      - tests/test_feature.py::test_delete_user
+      - tests/unit/test_feature.py::test_delete_user
+  BID-060:
+    tests:
+      - tests/integration/test_workflow.py::test_full_pipeline
 ```
+
+Primary spec BIDs map to `tests/integration/`; subspec BIDs map to `tests/unit/` or `tests/features/`.
 
 ## Lifecycle
 

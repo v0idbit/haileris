@@ -49,11 +49,11 @@ Decomposed Context
 
 #### Process
 
-Repeat until no ascertainments remain: identify ambiguities or gaps, output a list of ascertainment needs, receive an updated Engineered Context, and repeat.
+Repeat until no ascertainments remain: identify ambiguities or gaps, output a list of ascertainment needs, receive answers, update `ascertainments.md` and `decomposition.md`, and repeat. If no ambiguities are found, list assumptions for user confirmation before proceeding.
 
 #### Output
 
-**Improved Context** - Plain English spec
+**Improved decomposition** — refined plain English spec with resolved ambiguities
 
 ---
 
@@ -77,12 +77,12 @@ Repeat until no ascertainments remain: identify ambiguities or gaps, output a li
 
 #### Inputs
 
-- Gherkin spec
+- Gherkin spec (primary spec + concern subspecs)
 - Constitution
 
 #### Outputs
 
-**Gherkin subspecs** — one per vertical delivery slice, each containing the relevant BIDs behaviors.
+**Gherkin subspecs** — one per vertical delivery slice, each containing the relevant BIDs. All BIDs (both primary and subspec) are grouped into tasks; integration BIDs naturally land in later tasks due to cross-concern dependencies.
 
 Gherkin subspecs must be non-intersecting and their union must equal the full Gherkin spec.
 
@@ -187,4 +187,4 @@ The pipeline does not enforce cross-feature ordering automatically — it is the
 
 #### Output
 
-If failures are present, route by domain of remaining findings (see [Settle](stages/settle.md)). Otherwise, **COMPLETE**.
+If failures are present, route by domain of remaining findings (see [Settle](stages/settle.md)). Max 3 Settle loops; escalate to user if unresolved. Otherwise, **COMPLETE**.

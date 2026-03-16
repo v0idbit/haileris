@@ -11,7 +11,7 @@ A machine-readable record of where a feature currently sits in the pipeline. Wri
 - `last_updated` — ISO timestamp of the most recent write
 - `stage_statuses` — a map of stage name → `pending` / `running` / `passed` / `failed`
 - `etch_realize_progress` — subset tracking for Etch/Realize sequential execution
-- `loop_count` — number of Settle → re-entry loops
+- `loop_count` — number of Settle → re-entry loops (max 3; escalate to user if exceeded)
 - `last_loop_target` — which stage the most recent Settle loop re-entered (`ascertain` / `etch` / `realize` / `null`)
 
 ```yaml
