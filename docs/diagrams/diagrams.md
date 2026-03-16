@@ -43,9 +43,9 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | Red-phase tests | `tests/` (repo) | Yes |
 | Green-phase implementation | `src/` (repo) | Yes |
 | Implementation failure details | `.haileris/features/{id}/verify_{ts}.md` | Yes |
-| Standards memory | `.haileris/memory/standards.md` | Yes |
-| Test conventions memory | `.haileris/memory/test-conventions.md` | Yes |
-| Constitution | `.haileris/constitution/constitution.md` | Yes |
+| Standards memory | `.haileris/project/standards.md` | Yes |
+| Test conventions memory | `.haileris/project/test-conventions.md` | Yes |
+| Constitution | `.haileris/project/constitution.md` | Yes |
 | **Harvest inspection** | `.haileris/features/{id}/harvest-inspection.yaml` | Yes |
 | **Layout inspection** | `.haileris/features/{id}/layout-inspection.yaml` | Yes |
 | **Etch map** | `.haileris/features/{id}/etch-map.yaml` | Yes |

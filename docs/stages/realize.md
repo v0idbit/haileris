@@ -14,8 +14,9 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 1. For each task in dependency order, write minimum production code to make the task's tests pass (Gherkin spec = intent, tests = source of truth; NEVER modify test files)
 2. If tests still fail: analyze root cause; retry with findings — max 3 cycles per task; if still failing, escalate to user
 3. After each task's tests pass, map BIDs → source symbols in `realize-map.yaml`
-4. After all tasks complete, run the full test suite to confirm GREEN state
-5. Validate the implementation map; write `realize-inspection.yaml`
+4. Validate the task's new map entries: verify each mapped symbol exists in source (no broken refs) and each of the task's BIDs has at least one symbol entry (no missing mappings). On FAIL: fix the mapping or escalate to user before proceeding to the next task.
+5. After all tasks complete, run the full test suite to confirm GREEN state
+6. Validate the full implementation map; write `realize-inspection.yaml`
 
 ## Outputs
 

@@ -4,15 +4,15 @@ The user-readable output of Inspect. Produced at the end of the review phase, it
 
 ## What It Contains
 
-- Overall status: `PASSED` or `FAILED`
-- Sections: Architecture Review, Code Review, Security Review, Performance Review
-- Each finding entry: severity (Critical / High / Medium / Low), domain (`impl` / `test` / `spec`), BID (if applicable), description, and recommended fix
+- Overall status: `PASS` or `FAIL`
+- Sections: Standards Compliance, Architecture Review, Complexity and Scope, Mutation Testing
+- Each finding entry: severity (Critical / High / Medium / Low / Nit), domain (`impl` / `test` / `spec`), BID (if applicable), description, and recommended fix
 - A summary count of findings by severity and domain
 - Timestamp of the review run
 
 ## Lifecycle
 
-Created by Inspect after all four reviews complete. If the status is `FAILED`, Settle reads the report to determine its fix plan. The report is not overwritten — each review run produces a new timestamped file. Multiple verify reports may exist for a feature if Settle triggers a re-inspect.
+Created by Inspect after all four reviews complete. If the status is `FAIL`, Settle reads the report to determine its fix plan. The report is not overwritten — each review run produces a new timestamped file. Multiple verify reports may exist for a feature if Settle triggers a re-inspect.
 
 ## Path
 

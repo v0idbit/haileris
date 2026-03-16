@@ -46,8 +46,10 @@ Gap = a transformation step with no covering subspec BID. On FAIL: show which pr
 
 ### Inscribe.Approve
 
-1. Present Gherkin spec + consistency check results to user; wait for user gate (APPROVE / REJECT)
-2. Update Gherkin spec frontmatter `status: approved` (or `status: ascertaining` if user requests changes; return to Ascertain)
+1. Present Gherkin spec + consistency check results to user; wait for user gate:
+   - **Approve** — set `status: approved`; proceed to Layout
+   - **Request changes (minor edits)** — apply edits in place within Inscribe; re-run Inscribe.Verify; present again
+   - **Request changes (needs ascertainment)** — set `status: ascertaining`; return to Ascertain with the user's feedback
 
 ## Outputs
 

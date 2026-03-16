@@ -39,10 +39,10 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Implementation failure details | Inspect | `.haileris/features/{id}/verify_{ts}.md` |
 | Pipeline state | Harvest | `.haileris/features/{id}/pipeline-state.yaml` |
 
-Shared project memory:
+Project-wide artifacts:
 
 ```
-.haileris/memory/
+.haileris/project/
 ├── standards.md
 ├── test-conventions.md
 └── constitution.md
