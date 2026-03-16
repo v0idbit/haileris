@@ -10,7 +10,7 @@ Eight stages in sequence. Stages 5–6 repeat per spec subset (sequentially: Etc
 |---|-------|-------------|
 | 1 | **Harvest** | Ingest all feature context; synthesize into a Decomposition and Technical Details |
 | 2 | **Ascertain** | Surface and resolve ambiguities in the Decomposition |
-| 3 | **Inscribe** | Write the behavioral spec (BIDs in Gherkin format) |
+| 3 | **Inscribe** | Write the behavioral spec: primary workflow scenarios, then per-concern subspecs |
 | 4 | **Layout** | Break the spec into ordered, non-overlapping implementation tasks |
 | 5 | **Etch** | Generate red-phase (failing) tests per spec subset |
 | 6 | **Realize** | Implement minimum code to turn red tests green |
@@ -30,7 +30,7 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Decomposition | Harvest | `.haileris/features/{id}/decomposition.md` |
 | Technical details | Harvest | `.haileris/features/{id}/technical-details.md` |
 | Ascertainments | Ascertain | `.haileris/features/{id}/ascertainments.md` |
-| Spec | Inscribe | `.haileris/features/{id}/spec/` |
+| Spec | Inscribe | `tests/features/` (repo) |
 | Task list | Layout | `.haileris/features/{id}/tasks.md` |
 | Red-phase tests | Etch | `tests/` (repo) |
 | Etch map | Etch | `.haileris/features/{id}/etch-map.yaml` |
@@ -63,9 +63,8 @@ Stages 1, 4, 5, and 6 each produce an inspect artifact. All four converge at Ins
 
 | Findings | Status |
 |----------|--------|
-| Any Critical or High | FAIL |
-| Medium / Low / Nit only | APPROVED WITH SUGGESTIONS |
-| None | APPROVED |
+| Any Critical, High, or Medium | FAIL |
+| Low / Nit only, or none | PASS |
 
 Findings are classified by resolution domain: `impl` (production code), `test` (test structure), or `spec` (spec ambiguity). Settle routes each finding to the appropriate fix approach.
 

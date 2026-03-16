@@ -4,17 +4,17 @@ Break the Gherkin spec into small, vertical deliverables.
 
 ## Inputs
 
-- Gherkin spec
+- Gherkin spec (primary spec + concern subspecs)
 - Constitution
 
 ## Process
 
-1. Read Gherkin spec BIDs; group related behaviors into discrete implementation tasks (each task has a coherent BID set, a shared implementation boundary, and is independently implementable)
+1. Read all BIDs from the spec directory (both `primary.feature` and `{concern}.feature` files); group related behaviors into discrete implementation tasks (each task has a coherent BID set, a shared implementation boundary, and is independently implementable). Integration BIDs from `primary.feature` are naturally placed in later tasks due to cross-concern dependencies.
 2. Assign each task: `TASK-{NNN}` ID, description, BIDs covered, dependencies on other tasks, acceptance criteria
 3. Verify each task's scope matches its BIDs (flag over-bundled or over-engineered tasks); revise per findings
 4. Write ordered task list to `.haileris/features/{feature_id}/tasks.md`
 5. Validate BID coverage; write `.haileris/features/{feature_id}/layout-inspection.yaml`
-6. Present task list to user for approval; wait for confirmation before proceeding to Etch
+6. Present task list to user for approval (APPROVE / REJECT); wait for confirmation before proceeding to Etch
    - User may request task regrouping, reordering, or splitting — revise and re-validate if so
    - This gate catches over-bundled tasks, awkward groupings, or poor dependency ordering that the layout inspection cannot detect
 

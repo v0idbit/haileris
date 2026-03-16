@@ -68,8 +68,8 @@ Repeat until no ascertainments remain: identify ambiguities or gaps, output a li
 
 #### Outputs
 
-
-**Gherkin Spec** — Gherkin document with behavior IDs (BIDs).
+**Gherkin spec** — end-to-end workflow scenarios with BIDs and `@traces` tags.
+**Gherkin subspecs** — per-concern behavioral contracts with BIDs. Subspecs compose into the primary spec; ANLZ-006 validates this.
 
 ---
 
@@ -134,27 +134,32 @@ Each feature run tracks its execution state in `.haileris/features/{feature_id}/
 
 ```yaml
 feature_id: "{feature_id}"
-current_stage: "realize"           # last completed or in-progress stage
-constitution_version: "1.2.0"     # locked at Harvest; checked at Inspect
+current_stage: "realize"
+constitution_version: "1.2.0"
 started_at: "2026-03-10T14:30:00Z"
-stages_completed:
-  - harvest
-  - ascertain
-  - inscribe
-  - layout
+last_updated: "2026-03-10T16:45:00Z"
+stage_statuses:
+  harvest: passed
+  ascertain: passed
+  inscribe: passed
+  layout: passed
+  etch: running
+  realize: pending
+  inspect: pending
+  settle: pending
 etch_realize_progress:
-  current_subset: 2               # 1-indexed; which subset is in progress
+  current_subset: 2
   total_subsets: 3
-  subsets_completed: [1]           # which subsets have finished Etch → Realize
-loop_count: 0                     # number of Settle → re-entry loops
-last_loop_target: null             # "ascertain" | "etch" | "realize" | null
+  subsets_completed: [1]
+loop_count: 0
+last_loop_target: null
 ```
 
 ### Resume Semantics
 
 - If execution is interrupted, the pipeline resumes from `current_stage` using the progress fields.
 - For Etch/Realize interruptions: `etch_realize_progress` tracks which subsets are complete. Completed subsets are not re-run; the pipeline resumes at the current subset.
-- After a Settle loop, `loop_count` increments and `last_loop_target` records where the loop re-entered. `stages_completed` is trimmed to exclude stages after the loop target.
+- After a Settle loop, `loop_count` increments and `last_loop_target` records where the loop re-entered. Downstream stages reset to `pending` in `stage_statuses` from the loop target onward.
 
 ---
 

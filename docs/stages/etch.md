@@ -9,7 +9,7 @@ Write red-phase tests for each Gherkin subspec.
 
 ## Process
 
-1. Write one pytest test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail with `ImportError`
+1. Write one pytest test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail with `ImportError`. Primary spec BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`) and/or behavior tests (e.g., `tests/features/`). Exact directory names follow project conventions.
 2. Write `etch-map.yaml` mapping each BID to its test functions
 3. Verify every BID has at least one test function via the map (TEST-001 gate); if FAIL, add missing tests and update the map
 4. Run the test suite to confirm RED state — all generated tests must fail; if any test passes before implementation, fix it (TEST-002 failure)
@@ -23,9 +23,12 @@ Write red-phase tests for each Gherkin subspec.
 
 | Artifact | Path | Notes |
 |----------|------|-------|
-| Red-phase tests | `tests/` (repo) | Written directly to repo; ingested by Realize and Inspect |
+| Integration tests (primary BIDs) | `tests/integration/` (repo) | End-to-end tests from primary spec BIDs; written to repo test tree |
+| Unit/behavior tests (subspec BIDs) | `tests/unit/`, `tests/features/` (repo) | Per-concern tests from subspec BIDs; written to repo test tree |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | BID → test function map; validated by Etch Inspection and ingested by Inspect |
 | Draft inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | Traceability gate input for Inspect |
+
+All tests are source artifacts in the repo's test directories — never stored in `.haileris/`.
 
 ## Etch Inspection
 
@@ -44,7 +47,7 @@ On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate t
 ## Notes
 
 - Test naming convention: `test_{description}` (e.g., `test_create_user`) — BID traceability is carried by `etch-map.yaml`, not by test names
-- `etch-map.yaml` format: each BID key lists the fully-qualified test function paths that cover it (e.g., `tests/test_feature.py::test_create_user`)
+- `etch-map.yaml` format: each BID key lists the fully-qualified test function paths that cover it (e.g., `tests/integration/test_workflow.py::test_full_pipeline` for primary BIDs, `tests/unit/test_feature.py::test_create_user` for subspec BIDs)
 - `etch-inspection.yaml` is a Traceability Gate input at Inspect — missing or failed = Critical finding
 - The etch inspection can be re-run on demand with `--fix` to attempt auto-repair
 - Do not proceed until RED state is confirmed; `ImportError` on missing source modules is the expected failure mode
