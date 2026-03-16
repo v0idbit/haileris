@@ -63,7 +63,7 @@ Repeat until no ascertainments remain: identify ambiguities or gaps, output a li
 
 #### Inputs
 
-- Improved Context
+- Improved decomposition
 - Constitution
 
 #### Outputs

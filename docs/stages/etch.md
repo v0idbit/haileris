@@ -26,7 +26,7 @@ Write red-phase tests for each Gherkin subspec.
 | Integration tests (primary BIDs) | `tests/integration/` (repo) | End-to-end tests from primary spec BIDs; written to repo test tree |
 | Unit/behavior tests (subspec BIDs) | `tests/unit/`, `tests/features/` (repo) | Per-concern tests from subspec BIDs; written to repo test tree |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | BID → test function map; validated by Etch Inspection and ingested by Inspect |
-| Draft inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | Traceability gate input for Inspect |
+| Etch inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | Traceability gate input for Inspect |
 
 All tests are source artifacts in the repo's test directories — never stored in `.haileris/`.
 

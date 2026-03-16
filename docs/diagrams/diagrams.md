@@ -63,7 +63,8 @@ Inspection artifacts (bold) all converge at stage 7 (Inspect) as the **Traceabil
 ```mermaid
 flowchart TD
     DEC([Decomposition])
-    IEC([Improved Engineered Context])
+    ID([Improved Decomposition])
+    ASC([Ascertainments])
     PS([Primary Spec<br>primary.feature])
     CS([Concern Subspecs<br>concern.feature])
     SS([Spec Subsets])
@@ -77,8 +78,10 @@ flowchart TD
     H[1. Harvest] -->|creates| DEC
     DEC -->|ingested by| A[2. Ascertain]
 
-    A -->|creates| IEC
-    IEC -->|ingested by| I[3. Inscribe]
+    A -->|creates| ID
+    A -->|creates| ASC
+    ID -->|ingested by| I[3. Inscribe]
+    ASC -->|ingested by| I
     CON -->|ingested by| I
 
     I -->|creates| PS
@@ -122,7 +125,7 @@ Primary spec is authored first, then decomposed into subspecs. ANLZ-006 validate
 
 ```mermaid
 flowchart LR
-    IEC([Improved Context]) --> AUTH["Inscribe.Author"]
+    ID([Improved Decomposition]) --> AUTH["Inscribe.Author"]
 
     AUTH -->|"step 1"| PS["primary.feature<br>(end-to-end scenarios<br>with @traces tags)"]
     AUTH -->|"step 2"| CS["{concern}.feature<br>(per-concern BIDs)"]
@@ -158,8 +161,8 @@ flowchart TD
         A_OUT_Q -->|answers fed back in| A_P
     end
 
-    A --> IEC(["Improved Engineered Context"])
-    IEC --> I
+    A --> ID(["Improved Decomposition"])
+    ID --> I
 
     subgraph I["3. Inscribe + Constitution"]
         I_A["Author"] --> I_V["Verify"] --> I_AP["Approve"]

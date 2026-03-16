@@ -28,7 +28,7 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 |----------|------|-------|
 | Green-phase implementation | `src/` (repo) | Written directly to repo; also updated by Settle |
 | Implementation map | `.haileris/features/{feature_id}/realize-map.yaml` | BID → source symbol mapping; built incrementally after each task |
-| Build inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | Traceability gate input for Inspect; also written to session copy |
+| Realize inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | Traceability gate input for Inspect; also written to session copy |
 
 ## Realize Inspection
 
