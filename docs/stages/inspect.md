@@ -67,9 +67,9 @@ Multiple `verify_{timestamp}.md` files accumulate across Settle loops. Settle al
 
 | Finding severity | Overall status |
 |-----------------|----------------|
-| Any Critical or High | **FAIL** |
-| Medium / Low / Nit only | **APPROVED WITH SUGGESTIONS** |
-| No findings | **APPROVED** |
+| Any Critical, High, or Medium | **FAIL** |
+| Low / Nit only | **PASS** |
+| No findings | **PASS** |
 
 ## Notes
 

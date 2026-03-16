@@ -13,6 +13,17 @@ Data munging the context funnel.
 
 ## Process
 
+### Project Artifact Pre-Check
+
+Before any stage runs (not just Harvest), the pipeline checks for required project-wide artifacts:
+
+1. Check for `.haileris/project/standards.md` and `.haileris/project/test-conventions.md`
+   - If missing: run Harvest.Explore and Harvest.Synthesize to generate them
+2. Check for `.haileris/project/constitution.md`
+   - If missing: prompt the user with the option to create one (opt-in, not required)
+
+This pre-check ensures every stage has stable access to project conventions without redundant exploration.
+
 ### Harvest.Explore
 
 1. Explore the codebase and read project standards:
@@ -31,8 +42,7 @@ Data munging the context funnel.
 
 ### Harvest.Initialize
 
-1. If no constitution exists yet, present one-time opt-in prompt
-2. Record `constitution_version` in `pipeline-state.yaml` to lock the active constitution version for this feature run
+1. Record `constitution_version` in `pipeline-state.yaml` to lock the active constitution version for this feature run (if a constitution exists)
 
 ## Outputs
 
@@ -50,10 +60,10 @@ Data munging the context funnel.
 |----------|------|-------|
 | Decomposition | `.haileris/features/{feature_id}/decomposition.md` | Stage output; ingested by Ascertain and Inscribe |
 | Technical details | `.haileris/features/{feature_id}/technical-details.md` | Stage output; ingested by Ascertain and Inscribe |
-| Standards memory | `.haileris/memory/standards.md` | Committed; refreshed by `--reharvest` |
-| Test conventions memory | `.haileris/memory/test-conventions.md` | Committed |
+| Standards memory | `.haileris/project/standards.md` | Committed; refreshed by `--reharvest` |
+| Test conventions memory | `.haileris/project/test-conventions.md` | Committed |
 | Harvest inspection | `.haileris/features/{feature_id}/harvest-inspection.yaml` | Traceability gate input for Inspect |
-| Harvest metadata | `.haileris/memory/last-harvest.json` | Used for incremental reharvest detection |
+| Harvest metadata | `.haileris/project/last-harvest.json` | Used for incremental reharvest detection |
 | Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | Tracks current stage, constitution version, and resume state |
 
 ## Harvest Inspection
@@ -64,7 +74,7 @@ Validates `decomposition.md` and `technical-details.md` across 4 dimensions:
 |-----------|----------|---------------|
 | Decomposition template compliance | `decomposition.md` | Description and Delivery Details sections present and non-empty |
 | Technical details template compliance | `technical-details.md` | Standards, Test Conventions, and Dependencies sections present and non-empty |
-| Artifact preflight | memory | `.haileris/memory/standards.md` and `test-conventions.md` both exist with >5 non-blank lines |
+| Artifact preflight | memory | `.haileris/project/standards.md` and `test-conventions.md` both exist with >5 non-blank lines |
 | Dependency doc coverage | `technical-details.md` | All referenced packages appear in memory files (skip = not a failure) |
 
 Overall `pass: true` requires the first three dimensions to pass; dependency doc coverage can be `skip`.
@@ -75,6 +85,9 @@ On FAIL: present findings to user with options to re-run, fix manually, or proce
 
 - Memory files are reused across runs unless `--reharvest` is passed; use `--reharvest` when project standards change
 - `harvest-inspection.yaml` is the earliest inspection artifact and feeds the Traceability Gate at Inspect (stage 7)
+
+> [!NOTE]
+> `technical-details.md` (including its dependency documentation) remains available to all downstream stages — particularly Etch and Realize, where dependency APIs are needed to write tests and implementation. Stages should reference it rather than re-discovering dependency details independently.
 
 ### Feature Size Guidance
 

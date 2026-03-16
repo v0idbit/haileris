@@ -9,10 +9,12 @@ Clarify ambiguities, contradictions, and gaps in the decomposition.
 ## Process
 
 1. Analyze the decomposition for genuine ambiguities
-2. Surface each ambiguity with a default assumption as a selectable option (not open-ended questions)
-3. Present questions to user; wait for answers before proceeding
-4. Record answered ascertainments in `.haileris/features/{feature_id}/ascertainments.md`
-5. Repeat until no ascertainments are needed (see Iteration below)
+2. If ambiguities are found: surface each with a default assumption as a selectable option (not open-ended questions)
+3. If no ambiguities are found: list the assumptions made during analysis and present them to the user for confirmation. This prevents silent assumptions from propagating through the pipeline.
+4. Present questions or assumptions to user; wait for answers before proceeding
+5. Record answered ascertainments in `.haileris/features/{feature_id}/ascertainments.md`
+6. Update `decomposition.md` with resolved ambiguities so it reflects Q&A outcomes
+7. Repeat until no ascertainments are needed (see Iteration below)
 
 ## Iteration
 
@@ -20,7 +22,7 @@ Repeat until no ascertainments are needed:
 
 1. Identify gaps, contradictions, or ambiguities
 2. Output detailed ascertainment needs
-3. Receive answers and update decomposition
+3. Receive answers; update `ascertainments.md` and `decomposition.md`
 
 ## Outputs
 
@@ -31,6 +33,7 @@ Repeat until no ascertainments are needed:
 | Artifact | Path | Notes |
 |----------|------|-------|
 | Ascertainments | `.haileris/features/{feature_id}/ascertainments.md` | Ingested by Inscribe |
+| Decomposition (updated) | `.haileris/features/{feature_id}/decomposition.md` | Updated in place with resolved ambiguities; ensures Inscribe reads the refined version |
 
 ## Notes
 

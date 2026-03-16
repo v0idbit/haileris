@@ -2,20 +2,56 @@
 
 The central artifact of the pipeline. Produced by Inscribe, consumed by every downstream stage. It is the source of truth for what must be built and the traceability anchor for all tests, tasks, and implementation.
 
-The spec is a **directory** (`spec/`) of `.feature` files — one per concern or module. Each `.feature` file contains a single `Feature` block scoped to that concern.
+The spec is a set of `.feature` files written directly to the repo's test tree (`tests/features/`). It contains a **primary spec** and one or more **subspecs**. The primary spec defines end-to-end workflow scenarios (integration-level contract). The subspecs define per-concern behavioral scenarios (unit-level contracts). Their union, when composed, must cover all primary spec behaviors.
 
 ```
-.haileris/features/{feature_id}/spec/
-├── {concern_1}.feature
+tests/features/
+├── primary.feature          # integration-level workflow scenarios
+├── {concern_1}.feature      # unit-level behavioral contract
 ├── {concern_2}.feature
-└── ...
+├── steps/
+│   └── *_steps.py
+└── environment.py
 ```
+
+Feature files are source artifacts — permanent repo fixtures committed alongside unit tests. They are not intermediate pipeline products. Pipeline metadata (etch-map, inspections, pipeline-state) stays in `.haileris/features/{feature_id}/`.
+
+## Two-Level Hierarchy
+
+| Level | File | Contains | Role |
+|-------|------|----------|------|
+| Primary | `primary.feature` | End-to-end workflow scenarios | Integration-level contract |
+| Subspec | `{concern}.feature` | Per-concern behavioral scenarios | Unit-level contracts |
+
+The primary spec is written first. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for data transformations between concerns. Subspecs are decompositions of the primary spec — each owns one concern's behavioral contract. ANLZ-006 validates that subspecs compose back into the primary spec with no gaps.
 
 ## Format
 
 Standard Gherkin feature files (`.feature`), as used by [behave](https://github.com/behave/behave). No YAML frontmatter. Plain Gherkin only.
 
-Each `.feature` file contains one `Feature` block scoped to a single concern or module:
+### Primary Spec (`primary.feature`)
+
+```gherkin
+@status:approved @type:greenfield
+Feature: {feature_name} — Primary Spec
+  End-to-end workflow scenarios for the feature.
+
+  @BID-060 @traces:BID-003,BID-015,BID-024
+  Scenario: {end-to-end workflow description}
+    Given {full system precondition}
+    When {user-facing action}
+    Then {observable end-to-end outcome}
+
+  @BID-061 @traces:BID-007,BID-031
+  Scenario: {another workflow}
+    Given {precondition}
+    When {action}
+    Then {outcome}
+```
+
+Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it traces through. The `@traces` tag makes composition explicit and auditable.
+
+### Subspecs (`{concern}.feature`)
 
 ```gherkin
 @status:approved @type:greenfield
@@ -47,6 +83,15 @@ Feature: {concern_name}
 
 Feature-level tags (`@status:...`, `@type:...`) live on **every file's** `Feature` keyword. `Background` is per-file — each `.feature` file defines its own if needed; no shared Background across files.
 
+## `@traces` Tag
+
+Format: `@traces:BID-003,BID-015,BID-024` — a comma-separated list of subspec BIDs that the primary scenario traces through.
+
+Each primary spec scenario must have a `@traces` tag. ANLZ-006 validates:
+- Every primary BID has a `@traces` tag
+- All referenced BIDs exist in subspecs
+- The referenced BIDs collectively cover the scenario's steps (no unowned data transformations)
+
 ## Keywords
 
 | Keyword | Role |
@@ -59,7 +104,7 @@ Feature-level tags (`@status:...`, `@type:...`) live on **every file's** `Featur
 | `When` | Describes the action under test |
 | `Then` | Asserts the expected outcome |
 | `And` / `But` | Continuation of any step type |
-| `@tag` | Metadata — used for BIDs, status, and type (see below) |
+| `@tag` | Metadata — used for BIDs, status, type, and traces (see below) |
 | `#` | Comment |
 | `"""` | Docstring (multi-line step argument) |
 | `\|` | Data table delimiter |
@@ -88,9 +133,10 @@ Stable after user approval. Must not be modified by any downstream stage except 
 
 ## Path
 
-- Directory: `.haileris/features/{feature_id}/spec/`
-- Individual files: `.haileris/features/{feature_id}/spec/{concern}.feature`
+- Directory: `tests/features/`
+- Primary spec: `tests/features/primary.feature`
+- Subspecs: `tests/features/{concern}.feature`
 
 ## Committed
 
-Yes. The approved spec is committed as part of the feature's artifact set.
+Yes. The approved spec is committed as part of the repo's test tree.

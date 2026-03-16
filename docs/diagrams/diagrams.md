@@ -38,14 +38,14 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | Decomposition | `.haileris/features/{id}/decomposition.md` | Yes |
 | Technical details | `.haileris/features/{id}/technical-details.md` | Yes |
 | Ascertainments | `.haileris/features/{id}/ascertainments.md` | Yes |
-| Spec | `.haileris/features/{id}/spec/` | Yes |
+| Spec | `tests/features/` (repo) | Yes |
 | Task list | `.haileris/features/{id}/tasks.md` | Yes |
 | Red-phase tests | `tests/` (repo) | Yes |
 | Green-phase implementation | `src/` (repo) | Yes |
 | Implementation failure details | `.haileris/features/{id}/verify_{ts}.md` | Yes |
-| Standards memory | `.haileris/memory/standards.md` | Yes |
-| Test conventions memory | `.haileris/memory/test-conventions.md` | Yes |
-| Constitution | `.haileris/constitution/constitution.md` | Yes |
+| Standards memory | `.haileris/project/standards.md` | Yes |
+| Test conventions memory | `.haileris/project/test-conventions.md` | Yes |
+| Constitution | `.haileris/project/constitution.md` | Yes |
 | **Harvest inspection** | `.haileris/features/{id}/harvest-inspection.yaml` | Yes |
 | **Layout inspection** | `.haileris/features/{id}/layout-inspection.yaml` | Yes |
 | **Etch map** | `.haileris/features/{id}/etch-map.yaml` | Yes |
@@ -64,7 +64,8 @@ Inspection artifacts (bold) all converge at stage 7 (Inspect) as the **Traceabil
 flowchart TD
     DEC([Decomposition])
     IEC([Improved Engineered Context])
-    SP([Spec])
+    PS([Primary Spec<br>primary.feature])
+    CS([Concern Subspecs<br>concern.feature])
     SS([Spec Subsets])
     RT([Red-phase Tests])
     ETM([Etch Map])
@@ -80,8 +81,10 @@ flowchart TD
     IEC -->|ingested by| I[3. Inscribe]
     CON -->|ingested by| I
 
-    I -->|creates| SP
-    SP -->|ingested by| L[4. Layout]
+    I -->|creates| PS
+    I -->|creates| CS
+    PS -->|ingested by| L[4. Layout]
+    CS -->|ingested by| L
     CON -->|ingested by| L
 
     L -->|creates| SS
@@ -97,16 +100,39 @@ flowchart TD
 
     R -->|creates| GI
     R -->|creates| IM
-    SP -->|ingested by| IN[7. Inspect]
+    PS -->|ingested by| IN[7. Inspect]
+    CS -->|ingested by| IN
     GI -->|ingested by| IN
     ETM -->|ingested by| IN
     IM -->|ingested by| IN
     CON -->|ingested by| IN
 
     IN -->|creates| IF
-    SP -->|ingested by| S[8. Settle]
+    PS -->|ingested by| S[8. Settle]
+    CS -->|ingested by| S
     IF -->|ingested by| S
     CON -->|ingested by| S
+```
+
+---
+
+## 3a. Spec Composition Flow
+
+Primary spec is authored first, then decomposed into subspecs. ANLZ-006 validates that subspecs compose back into the primary spec.
+
+```mermaid
+flowchart LR
+    IEC([Improved Context]) --> AUTH["Inscribe.Author"]
+
+    AUTH -->|"step 1"| PS["primary.feature<br>(end-to-end scenarios<br>with @traces tags)"]
+    AUTH -->|"step 2"| CS["{concern}.feature<br>(per-concern BIDs)"]
+
+    PS --> V["Inscribe.Verify<br>ANLZ-006"]
+    CS --> V
+
+    V -->|"validates composition"| RESULT{"Subspecs cover<br>all primary steps?"}
+    RESULT -->|PASS| AP["Inscribe.Approve"]
+    RESULT -->|FAIL| FIX["Show uncovered steps;<br>user fixes or proceeds"]
 ```
 
 ---
@@ -139,8 +165,10 @@ flowchart TD
         I_A["Author"] --> I_V["Verify"] --> I_AP["Approve"]
     end
 
-    I --> SP(["Spec<br>(BIDs + tech + delivery details)"])
-    SP --> L
+    I --> PS2(["Primary Spec<br>(end-to-end workflow BIDs)"])
+    I --> CS2(["Concern Subspecs<br>(per-concern BIDs)"])
+    PS2 --> L
+    CS2 --> L
 
     subgraph L["4. Layout + Constitution"]
         L_P["Break spec into vertical<br>non-overlapping subsets"]
@@ -165,7 +193,8 @@ flowchart TD
 
     R --> GI(["Green-phase Implementation (per subset)"])
     R --> IM2(["Implementation Map"])
-    SP --> IN
+    PS2 --> IN
+    CS2 --> IN
     GI --> IN
     ETM2 --> IN
     IM2 --> IN
@@ -175,7 +204,8 @@ flowchart TD
     end
 
     IN --> IF(["Implementation Failure Details"])
-    SP --> S
+    PS2 --> S
+    CS2 --> S
     IF --> S
 
     subgraph S["8. Settle + Constitution"]

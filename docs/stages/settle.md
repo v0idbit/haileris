@@ -47,5 +47,6 @@ Refactor and resolve failures. Gate on completeness.
 ## Notes
 
 - Test quality fixes must not add, remove, or rename test functions; run tests before and after — results must be identical (except for additions from missing-assertion fixes)
-- **Genuinely wrong tests** (wrong interface, unrealistic fixture, assertion that doesn't match the actual API): escalate to user with a proposed one-line or localized correction. If approved, apply the fix and update `etch-map.yaml` if mappings changed. This avoids a full pipeline re-run for minor test defects that don't indicate a spec problem.
+- **Genuinely wrong tests** (wrong interface, unrealistic fixture, assertion that doesn't match the actual API): escalate to user with a proposed one-line or localized correction (APPROVE / REJECT). If approved, apply the fix and update `etch-map.yaml` if mappings changed. This avoids a full pipeline re-run for minor test defects that don't indicate a spec problem.
 - On completion with remaining failures: route to the earliest stage required by domain of remaining findings (see Outputs above). This avoids wasteful full-pipeline re-runs for findings that don't require spec changes.
+- **Max 3 Settle loops.** If findings remain after 3 cycles (tracked by `loop_count` in `pipeline-state.yaml`), stop looping and escalate to the user with the unresolved findings. The user decides whether to continue, restructure, or abort.

@@ -1,6 +1,6 @@
 # Memory Files
 
-Persistent markdown files written by Harvest and maintained across runs. They give every stage stable access to the project's conventions, standards, and constitution without re-harvestning the codebase each time.
+Persistent markdown files written by Harvest and maintained across runs. They give every stage stable access to the project's conventions and standards without re-harvesting the codebase each time.
 
 ## What They Contain
 
@@ -8,17 +8,15 @@ Persistent markdown files written by Harvest and maintained across runs. They gi
 |---|---|
 | `standards.md` | Coding standards, linting rules, formatting conventions, language version |
 | `test-conventions.md` | Test framework, naming patterns, fixture strategy, assertion style |
-| `constitution.md` | Copy of the active constitution principles (if a constitution exists) |
 
 ## Lifecycle
 
-Written by Harvest on the first run. Updated when Harvest runs with `--reharvest`. All downstream stages read from memory rather than re-harvestning source files. The constitution memory file is updated whenever the constitution changes.
+Written by Harvest on the first run. Updated when Harvest runs with `--reharvest`. All downstream stages read from memory rather than re-harvesting source files.
 
 ## Paths
 
-`.haileris/memory/standards.md`
-`.haileris/memory/test-conventions.md`
-`.haileris/memory/constitution.md`
+`.haileris/project/standards.md`
+`.haileris/project/test-conventions.md`
 
 ## Committed
 
