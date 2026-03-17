@@ -29,14 +29,14 @@ If a file exists but `pass: false`, record Critical with the finding count. Crit
 
 ### Inspect.Review — Parallel Review
 
-Shared context (Gherkin spec, Constitution, Standards, pyproject.toml) is loaded once for all reviews.
+Shared context (Gherkin spec, Constitution, Standards, project config) is loaded once for all reviews.
 
 Run all reviews in parallel:
 
 1. **Standards compliance** — validate code against project standards (project standards first, pipeline defaults second); constitution violations = Critical
-2. **Architecture review** — validate module boundaries against Gherkin spec BIDs; check README.md existence; API boundary type checking (Pydantic / dataclass / plain); constitution violations = Critical
+2. **Architecture review** — validate module boundaries against Gherkin spec BIDs; check README.md existence; API boundary type checking per project conventions; constitution violations = Critical
 3. **Complexity and scope** — evaluate every abstraction for BID traceability; scope creep = HIGH, over-engineering = MEDIUM
-4. **Mutation testing** — design 5–10 targeted mutations; report kill rate (optional; skip if disabled)
+4. **Mutation testing** — design 5–10 targeted mutations; report kill rate
 
 After all reviews complete, synthesize.
 
@@ -77,4 +77,4 @@ Multiple `verify_{timestamp}.md` files accumulate across Settle loops. Settle al
 - Constitution violations are always Critical severity
 - Finding `resolution_domain` determines the fix approach in Settle: `impl` → targeted production code fix, `test` → structural test quality fix, `spec` → auto-resolve Gherkin spec ambiguity
 - Architecture findings requiring judgment (module restructuring, design pattern changes) are surfaced to the user rather than auto-fixed in Settle
-- **Mutation testing trade-off**: When mutation testing is disabled, Inspect becomes a purely structural review (standards, architecture, complexity). Mutation testing is the only review dimension that validates behavioral correctness of the implementation against the spec. Disabling it is acceptable for speed, but the user should be aware that behavioral gaps may go undetected until integration or manual testing.
+- **Mutation testing** is the only review dimension that validates behavioral correctness of the implementation against the spec — it always runs

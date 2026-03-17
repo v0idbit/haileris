@@ -4,14 +4,16 @@ A structured mapping from BIDs to the source symbols that implement them. Built 
 
 ## What It Contains
 
-For each BID in the spec: a list of source symbols (in `path/to/file.py::ClassName.method_name` format) and the tasks that contributed them. Metadata: `feature_id`, `tasks_completed`, `tasks_total`, `last_updated`.
+For each BID in the spec: a list of source symbols (in `path/to/file#Symbol.member` format) and the tasks that contributed them. Metadata: `feature_id`, `tasks_completed`, `tasks_total`, `last_updated`.
 
 ## Symbol Format
 
-- Class method: `src/module.py::ClassName.method_name`
-- Module-level function: `src/module.py::function_name`
+- Class method: `src/module#ClassName.method_name`
+- Module-level function: `src/module#function_name`
 
-Private helpers (names starting with `_`) called only by mapped functions may be omitted unless they are substantial standalone functions.
+The `#` separator delimits the file path from the symbol name.
+
+Non-public helpers (language-private functions, internal methods) called only by mapped symbols may be omitted unless they are substantial standalone functions.
 
 ## Lifecycle
 

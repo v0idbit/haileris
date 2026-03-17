@@ -37,7 +37,7 @@ Validates the implementation map after all tasks complete. Three checks:
 | Check | What it verifies |
 |-------|-----------------|
 | Completeness | Every Gherkin spec BID has at least one symbol entry in `realize-map.yaml` |
-| Scope (AST) | Every source symbol discovered by Python AST appears in the map under some BID (private helpers exempt) |
+| Scope (AST) | Every source symbol discovered by static analysis appears in the map under some BID (private helpers exempt) |
 | Broken refs | Every symbol in the map actually exists in source (no ghost symbols) |
 
 The realize inspection runs only after ALL tasks complete and the full test suite is GREEN. Do not run it mid-pipeline.
@@ -53,7 +53,7 @@ tasks_total: 3
 bids:
   BID-001:
     symbols:
-      - src/module.py::MyClass.my_method
+      - src/module#MyClass.my_method
     tasks: [TASK-1]
 ```
 

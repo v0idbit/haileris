@@ -9,9 +9,7 @@ tests/features/
 ├── primary.feature          # integration-level workflow scenarios
 ├── {concern_1}.feature      # unit-level behavioral contract
 ├── {concern_2}.feature
-├── steps/
-│   └── *_steps.py
-└── environment.py
+└── steps/                   # step definitions (language-specific)
 ```
 
 Feature files are source artifacts — permanent repo fixtures committed alongside unit tests. They are not intermediate pipeline products. Pipeline metadata (etch-map, inspections, pipeline-state) stays in `.haileris/features/{feature_id}/`.
@@ -27,7 +25,7 @@ The primary spec is written first. Its scenarios define the observable end-to-en
 
 ## Format
 
-Standard Gherkin feature files (`.feature`), as used by [behave](https://github.com/behave/behave). No YAML frontmatter. Plain Gherkin only.
+Standard Gherkin feature files (`.feature`). No YAML frontmatter. Plain Gherkin only.
 
 ### Primary Spec (`primary.feature`)
 
@@ -57,7 +55,7 @@ Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it 
 @status:approved @type:greenfield
 Feature: {concern_name}
   {plain-English description of what this concern delivers}
-  Modules: path/to/module.py (role), path/to/other.py (role)
+  Modules: path/to/module (role), path/to/other (role)
 
   Background:
     Given {shared precondition for all scenarios in this file}
