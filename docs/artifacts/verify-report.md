@@ -12,7 +12,7 @@ The user-readable output of Inspect. Produced at the end of the review phase, it
 
 ## Lifecycle
 
-Created by Inspect after all four reviews complete. If the status is `FAIL`, Settle reads the report to determine its fix plan. The report is not overwritten — each review run produces a new timestamped file. Multiple verify reports may exist for a feature if Settle triggers a re-inspect.
+Created by Inspect after all four reviews complete. If the status is `FAIL`, Settle reads the report to determine its fix plan. Each review run produces a new timestamped file (append-only). Multiple verify reports may exist for a feature if Settle triggers a re-inspect.
 
 ## Path
 

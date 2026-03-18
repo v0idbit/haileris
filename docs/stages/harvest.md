@@ -20,7 +20,7 @@ Before any stage runs (not just Harvest), the pipeline checks for required proje
 1. Check for `.haileris/project/standards.md` and `.haileris/project/test-conventions.md`
    - If missing: run Harvest.Explore and Harvest.Synthesize to generate them
 2. Check for `.haileris/project/constitution.md`
-   - If missing: prompt the user with the option to create one (opt-in, not required)
+   - If missing: prompt the user with the option to create one (opt-in)
 
 This pre-check ensures every stage has stable access to project conventions without redundant exploration.
 
@@ -29,7 +29,7 @@ This pre-check ensures every stage has stable access to project conventions with
 1. Explore the codebase and read project standards:
    - Find relevant files, patterns, and test structure
    - Read project standards and all referenced imports; extract coding standards, testing standards, git workflow rules
-     - **NOTE**: Standards must be stated, not inferred
+     - **NOTE**: Standards must be explicitly stated in the project's own files
 
 ### Harvest.Synthesize
 
@@ -79,10 +79,11 @@ Validates `decomposition.md` and `technical-details.md` across 4 dimensions:
 
 Overall `pass: true` requires the first three dimensions to pass; dependency doc coverage can be `skip`.
 
-On FAIL: present findings to user with options to re-run, fix manually, or proceed. Do not auto-retry.
+On FAIL: present findings to user with options to re-run, fix manually, or proceed. Requires user decision before retrying.
 
 ## Notes
 
+- **Constructivist framing**: project-wide artifacts (`standards.md`, `test-conventions.md`, `constitution.md`) are consumed by LLM agents at every downstream stage. Prefer constructive statements ("use X", "organize by Y") over negations ("avoid X", "do not Y"). Agents follow positive instructions more reliably than prohibitions.
 - Memory files are reused across runs unless `--reharvest` is passed; use `--reharvest` when project standards change
 - `harvest-inspection.yaml` is the earliest inspection artifact and feeds the Traceability Gate at Inspect (stage 7)
 

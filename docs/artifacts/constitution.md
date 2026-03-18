@@ -4,18 +4,18 @@ A document of architectural principles that governs the entire pipeline. When pr
 
 ## What It Contains
 
-A versioned set of named principles, each with a rule, a rationale, and a scope. Principles define what the pipeline must and must not do at an architectural level — things that apply regardless of which feature is being built.
+A versioned set of named principles, each with a rule, a rationale, and a scope. Principles define what the pipeline must do and what it must preserve at an architectural level — things that apply regardless of which feature is being built. Principles should use constructive framing — state what to do and what to preserve, rather than listing prohibitions. Agents follow positive instructions more reliably.
 
 ## Lifecycle
 
-The constitution is not produced by any pipeline stage. It is created and managed independently, before or alongside pipeline runs. It is a stable project-wide input.
+The constitution is created and managed independently, before or alongside pipeline runs. It is a stable project-wide input, external to the pipeline's stage lifecycle.
 
 Version numbers follow semver:
 - **PATCH** — wording clarification only; no behavioral change
 - **MINOR** — new principle or substantive expansion
 - **MAJOR** — removal or fundamental change to a principle
 
-Prior versions are not archived — git history serves as the version record.
+Git history serves as the version record.
 
 ## Path
 

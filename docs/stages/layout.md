@@ -4,12 +4,12 @@ Break the Gherkin spec into small, vertical deliverables.
 
 ## Inputs
 
-- Gherkin spec (primary spec + concern subspecs)
+- Gherkin spec (primary spec + deliverable subspecs)
 - Constitution
 
 ## Process
 
-1. Read all BIDs from the spec directory (both `primary.feature` and `{concern}.feature` files); group related behaviors into discrete implementation tasks (each task has a coherent BID set, a shared implementation boundary, and is independently implementable). Integration BIDs from `primary.feature` are naturally placed in later tasks due to cross-concern dependencies.
+1. Read all BIDs from the spec directory (both `primary.feature` and `{deliverable}.feature` files); group related behaviors into discrete implementation tasks (each task has a coherent BID set, a shared implementation boundary, and is independently implementable). Primary BIDs from `primary.feature` are naturally placed in later tasks due to cross-deliverable dependencies.
 2. Assign each task: `TASK-{NNN}` ID, description, BIDs covered, dependencies on other tasks, acceptance criteria
 3. Verify each task's scope matches its BIDs (flag over-bundled or over-engineered tasks); revise per findings
 4. Write ordered task list to `.haileris/features/{feature_id}/tasks.md`
@@ -28,7 +28,7 @@ Break the Gherkin spec into small, vertical deliverables.
 ## Subspec Rules
 
 - Separated by vertical slices
-- No intersection between any two subspecs
+- Every subspec is disjoint from all others
 - Union of all subspecs equals the full Gherkin spec
 
 ## Artifacts Written
@@ -44,8 +44,8 @@ Validates the task list against Gherkin spec BIDs across 5 check types:
 
 | Check | Condition |
 |-------|-----------|
-| MISSING | A Gherkin spec BID is not referenced in any task |
-| HALLUCINATED | A BID in a task does not exist in the Gherkin spec |
+| MISSING | A Gherkin spec BID is absent from all tasks |
+| HALLUCINATED | A BID in a task has no corresponding Gherkin spec entry |
 | DUPLICATED | The same BID is the primary responsibility of more than one task |
 | INSUFFICIENT | A task description is fewer than 10 words, or contains none of the keywords from the BID's Gherkin clauses |
 | PARTIAL | A BID is split across tasks such that neither task alone covers its full acceptance criteria |
@@ -54,15 +54,15 @@ Overall `pass: true` only when all 5 check types produce zero findings.
 
 On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate to user.
 
-## Subset Execution Order
+## Subspec Execution Order
 
-Etch and Realize execute **sequentially per subset** in task dependency order:
+Etch and Realize execute **sequentially per subspec** in task dependency order:
 
 ```
-Etch(subset 1) → Realize(subset 1) → Etch(subset 2) → Realize(subset 2) → ...
+Etch(subspec 1) → Realize(subspec 1) → Etch(subspec 2) → Realize(subspec 2) → ...
 ```
 
-This ordering ensures later subsets can depend on earlier subsets' implementations. The dependency order from Layout determines the sequence. All subsets must complete before Inspect runs.
+This ordering ensures later subspecs can depend on earlier subspecs' implementations. The dependency order from Layout determines the sequence. All subspecs must complete before Inspect runs.
 
 ## Notes
 

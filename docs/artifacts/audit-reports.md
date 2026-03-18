@@ -22,8 +22,8 @@ Machine-readable YAML files produced at validation gates throughout the pipeline
 
 **Realize inspection (3 checks):**
 - `Completeness` — every BID maps to at least one derivation
-- `Scope` — no unmapped derivations exist in impl files (AST-checked)
-- `Broken refs` — no ghost derivations in the realize-map (derivation path exists and is importable)
+- `Scope` — every derivation in impl files maps to a BID (AST-checked)
+- `Broken refs` — every derivation in the realize-map resolves to an existing, importable source path
 
 ## Traceability Gate
 

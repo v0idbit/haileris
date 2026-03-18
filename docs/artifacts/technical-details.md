@@ -4,7 +4,7 @@ The synthesized technical context for a feature. Produced by Harvest alongside t
 
 ## What It Contains
 
-- **Coding standards and test conventions** — project standards, testing patterns, fixture inventory, git workflow, and any conflicts with pipeline defaults
+- **Coding standards and test conventions** — project standards, testing patterns, fixture inventory, git workflow, and any conflicts with [pipeline defaults](pipeline-defaults.md)
 - **Dependency documentation** — relevant packages and what documentation is available for them
 - **File path inventory** — files to create or modify (with paths), patterns from real files in the codebase, critical constraints
 

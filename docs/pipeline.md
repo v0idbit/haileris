@@ -69,7 +69,7 @@ Repeat until no ascertainments remain: identify ambiguities or gaps, output a li
 #### Outputs
 
 **Gherkin spec** — end-to-end workflow scenarios with BIDs and `@traces` tags.
-**Gherkin subspecs** — per-concern behavioral contracts with BIDs. Subspecs compose into the primary spec; ANLZ-006 validates this.
+**Gherkin subspecs** — per-deliverable behavioral contracts with BIDs. Subspecs compose into the primary spec; ANLZ-004 validates this.
 
 ---
 
@@ -77,35 +77,35 @@ Repeat until no ascertainments remain: identify ambiguities or gaps, output a li
 
 #### Inputs
 
-- Gherkin spec (primary spec + concern subspecs)
+- Gherkin spec (primary spec + deliverable subspecs)
 - Constitution
 
 #### Outputs
 
-**Gherkin subspecs** — one per vertical delivery slice, each containing the relevant BIDs. All BIDs (both primary and subspec) are grouped into tasks; integration BIDs naturally land in later tasks due to cross-concern dependencies.
+**Gherkin subspecs** — one per vertical delivery slice, each containing the relevant BIDs. All BIDs (both primary and subspec) are grouped into tasks; primary BIDs naturally land in later tasks due to cross-deliverable dependencies.
 
-Gherkin subspecs must be non-intersecting and their union must equal the full Gherkin spec.
+Gherkin subspecs must be disjoint and their union must equal the full Gherkin spec.
 
 ---
 
-### 5–6. Etch → Realize (per subset)
+### 5–6. Etch → Realize (per subspec)
 
-Etch and Realize execute **sequentially per subset** in the dependency order established by Layout:
+Etch and Realize execute **sequentially per subspec** in the dependency order established by Layout:
 
 ```
-Etch(subset 1) → Realize(subset 1) → Etch(subset 2) → Realize(subset 2) → ...
+Etch(subspec 1) → Realize(subspec 1) → Etch(subspec 2) → Realize(subspec 2) → ...
 ```
 
-This ensures later subsets can depend on earlier subsets' implementations.
+This ensures later subspecs can depend on earlier subspecs' implementations.
 
 #### 5. Etch
 
-**Inputs:** Gherkin subspec (current subset), Constitution
+**Inputs:** Gherkin subspec (current subspec), Constitution
 **Outputs:** Red-phase test suite, Etch map (BID → test function mapping)
 
 #### 6. Realize
 
-**Inputs:** Gherkin subspec (current subset), Red-phase tests, Etch map, Constitution
+**Inputs:** Gherkin subspec (current subspec), Red-phase tests, Etch map, Constitution
 **Outputs:** Green-phase implementation, Implementation map (BID → derivation mapping)
 
 ---
@@ -148,9 +148,9 @@ stage_statuses:
   inspect: pending
   settle: pending
 etch_realize_progress:
-  current_subset: 2
-  total_subsets: 3
-  subsets_completed: [1]
+  current_subspec: 2
+  total_subspecs: 3
+  subspecs_completed: [1]
 loop_count: 0
 last_loop_target: null
 ```
@@ -158,7 +158,7 @@ last_loop_target: null
 ### Resume Semantics
 
 - If execution is interrupted, the pipeline resumes from `current_stage` using the progress fields.
-- For Etch/Realize interruptions: `etch_realize_progress` tracks which subsets are complete. Completed subsets are not re-run; the pipeline resumes at the current subset.
+- For Etch/Realize interruptions: `etch_realize_progress` tracks which subspecs are complete. The pipeline resumes at the current subspec; completed subspecs are skipped.
 - After a Settle loop, `loop_count` increments and `last_loop_target` records where the loop re-entered. Downstream stages reset to `pending` in `stage_statuses` from the loop target onward.
 
 ---
@@ -171,7 +171,7 @@ Each feature runs in its own `.haileris/features/{id}/` directory. When Feature 
 2. **At Inscribe**: reference Feature A's BIDs in Given preconditions where applicable (e.g., `Given Feature A's BID-003 behavior is available`)
 3. **Ordering**: Feature A must reach COMPLETE before Feature B enters Etch. Earlier stages (Harvest through Layout) can run in parallel.
 
-The pipeline does not enforce cross-feature ordering automatically — it is the user's responsibility to sequence dependent features correctly.
+Cross-feature ordering is the user's responsibility — the pipeline trusts the user to sequence dependent features correctly.
 
 ---
 

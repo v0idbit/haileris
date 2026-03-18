@@ -9,8 +9,8 @@ Clarify ambiguities, contradictions, and gaps in the decomposition.
 ## Process
 
 1. Analyze the decomposition for genuine ambiguities
-2. If ambiguities are found: surface each with a default assumption as a selectable option (not open-ended questions)
-3. If no ambiguities are found: list the assumptions made during analysis and present them to the user for confirmation. This prevents silent assumptions from propagating through the pipeline.
+2. If ambiguities are found: surface each with a default assumption as a selectable option
+3. If no ambiguities are found: list the assumptions made during analysis and present them to the user for confirmation. This ensures all assumptions are visible before they propagate through the pipeline.
 4. Present questions or assumptions to user; wait for answers before proceeding
 5. Record answered ascertainments in `.haileris/features/{feature_id}/ascertainments.md`
 6. Update `decomposition.md` with resolved ambiguities so it reflects Q&A outcomes
@@ -37,5 +37,5 @@ Repeat until no ascertainments are needed:
 
 ## Notes
 
-- This stage surfaces only genuine ambiguities — things where two reasonable developers would implement differently. It does not nitpick.
-- Ambiguities are presented with default assumptions with selectable alternatives, not open-ended questions
+- This stage surfaces only genuine ambiguities — things where two reasonable developers would implement differently. Keep the bar high.
+- Ambiguities are presented with default assumptions and selectable alternatives

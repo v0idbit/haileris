@@ -33,10 +33,10 @@ Shared context (Gherkin spec, Constitution, Standards, project config) is loaded
 
 Run all reviews in parallel:
 
-1. **Standards compliance** — validate code against project standards (project standards first, pipeline defaults second); constitution violations = Critical
-2. **Architecture review** — validate module boundaries against Gherkin spec BIDs; check README.md existence; API boundary type checking per project conventions; constitution violations = Critical
+1. **Standards compliance** — validate code against project standards (project standards first, [pipeline defaults](../artifacts/pipeline-defaults.md) second); constitution violations = Critical
+2. **Architecture review** — validate domain boundaries against Gherkin spec BIDs; check README.md existence; API boundary type checking per project conventions; constitution violations = Critical
 3. **Complexity and scope** — evaluate every abstraction for BID traceability; scope creep = HIGH, over-engineering = MEDIUM
-4. **Mutation testing** — design 5–10 targeted mutations; report kill rate
+4. **Mutation testing** — design targeted mutations per BID; report kill rate per BID. Each mutation must break an observable behavioral assertion from the BID's Gherkin Then/And steps: boundary conditions, comparison operators, argument order, branch logic, return values. A surviving mutation = Medium finding tagged to the BID, with the mutation and the untested behavioral gap described
 
 After all reviews complete, synthesize.
 
@@ -75,6 +75,6 @@ Multiple `verify_{timestamp}.md` files accumulate across Settle loops. Settle al
 
 - Traceability Gate runs before any reviews — inspection artifacts from Harvest, Layout, Etch, and Realize must all pass for a clean Inspect
 - Constitution violations are always Critical severity
-- Finding `resolution_domain` determines the fix approach in Settle: `impl` → targeted production code fix, `test` → structural test quality fix, `spec` → auto-resolve Gherkin spec ambiguity
-- Architecture findings requiring judgment (module restructuring, design pattern changes) are surfaced to the user rather than auto-fixed in Settle
+- Finding `resolution_domain` determines the fix approach in Settle: `impl` → targeted production code fix, `test` → tiered test fix (structural refactors, assertion corrections with user notification, or escalation — see [Settle](settle.md)), `spec` → auto-resolve Gherkin spec ambiguity
+- Architecture findings requiring judgment (domain restructuring, design pattern changes) are surfaced to the user rather than auto-fixed in Settle
 - **Mutation testing** is the only review dimension that validates behavioral correctness of the implementation against the spec — it always runs

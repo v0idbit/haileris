@@ -24,11 +24,25 @@ bids:
 
 The `#` separator delimits the file path from the function name.
 
-Primary spec BIDs map to `tests/integration/`; subspec BIDs map to `tests/unit/` or `tests/features/`.
+Primary BIDs map to `tests/integration/`; subspec BIDs map to `tests/unit/`.
+
+## Scenario Outline Mapping
+
+A Scenario Outline with an Examples table carries one BID. Etch produces one test function per Examples row (if the framework supports parameterization) or one parameterized test function. Both are valid — the etch-map lists every resulting entry under the same BID:
+
+```yaml
+bids:
+  BID-002:
+    tests:
+      - tests/unit/test_feature#test_parameterized[foo]
+      - tests/unit/test_feature#test_parameterized[baz]
+```
+
+The parameterization suffix (e.g., `[foo]`) follows the project's test framework conventions. One BID, potentially multiple test entries — all mapping back to the same BID.
 
 ## Lifecycle
 
-Written by Etch once all test functions are generated. Read by the etch inspection to validate coverage. Ingested by Realize to guide implementation scoping. Ingested by Inspect as input to the Traceability Gate. Not modified after Etch.
+Written by Etch once all test functions are generated. Read by the etch inspection to validate coverage. Ingested by Realize to guide implementation scoping. Ingested by Inspect as input to the Traceability Gate. Stable after Etch.
 
 ## Path
 

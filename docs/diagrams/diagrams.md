@@ -66,8 +66,8 @@ flowchart TD
     ID([Improved Decomposition])
     ASC([Ascertainments])
     PS([Primary Spec<br>primary.feature])
-    CS([Concern Subspecs<br>concern.feature])
-    SS([Spec Subsets])
+    CS([Deliverable Subspecs<br>deliverable.feature])
+    SS([Spec Subspecs])
     RT([Red-phase Tests])
     ETM([Etch Map])
     GI([Green-phase Implementation])
@@ -121,16 +121,16 @@ flowchart TD
 
 ## 3a. Spec Composition Flow
 
-Primary spec is authored first, then decomposed into subspecs. ANLZ-006 validates that subspecs compose back into the primary spec.
+Primary spec is authored first, then decomposed into subspecs. ANLZ-004 validates that subspecs compose back into the primary spec.
 
 ```mermaid
 flowchart LR
     ID([Improved Decomposition]) --> AUTH["Inscribe.Author"]
 
     AUTH -->|"step 1"| PS["primary.feature<br>(end-to-end scenarios<br>with @traces tags)"]
-    AUTH -->|"step 2"| CS["{concern}.feature<br>(per-concern BIDs)"]
+    AUTH -->|"step 2"| CS["{deliverable}.feature<br>(per-deliverable BIDs)"]
 
-    PS --> V["Inscribe.Verify<br>ANLZ-006"]
+    PS --> V["Inscribe.Verify<br>ANLZ-004"]
     CS --> V
 
     V -->|"validates composition"| RESULT{"Subspecs cover<br>all primary steps?"}
@@ -169,32 +169,32 @@ flowchart TD
     end
 
     I --> PS2(["Primary Spec<br>(end-to-end workflow BIDs)"])
-    I --> CS2(["Concern Subspecs<br>(per-concern BIDs)"])
+    I --> CS2(["Deliverable Subspecs<br>(per-deliverable BIDs)"])
     PS2 --> L
     CS2 --> L
 
     subgraph L["4. Layout + Constitution"]
-        L_P["Break spec into vertical<br>non-overlapping subsets"]
+        L_P["Break spec into vertical<br>disjoint subspecs"]
     end
 
-    L --> SS(["Spec Subsets (BID groups)"])
+    L --> SS(["Spec Subspecs (BID groups)"])
     SS --> E
 
     subgraph E["5. Etch + Constitution"]
-        E_P["Write red-phase tests per subset"]
+        E_P["Write red-phase tests per subspec"]
     end
 
-    E --> RT(["Red-phase Tests (per subset)"])
+    E --> RT(["Red-phase Tests (per subspec)"])
     E --> ETM2(["Etch Map"])
     SS --> R
     RT --> R
     ETM2 --> R
 
     subgraph R["6. Realize + Constitution"]
-        R_P["Green-phase implementation per subset"]
+        R_P["Green-phase implementation per subspec"]
     end
 
-    R --> GI(["Green-phase Implementation (per subset)"])
+    R --> GI(["Green-phase Implementation (per subspec)"])
     R --> IM2(["Implementation Map"])
     PS2 --> IN
     CS2 --> IN

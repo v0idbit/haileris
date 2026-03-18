@@ -10,7 +10,7 @@ A machine-readable record of where a feature currently sits in the pipeline. Wri
 - `started_at` — ISO timestamp of when the feature run began
 - `last_updated` — ISO timestamp of the most recent write
 - `stage_statuses` — a map of stage name → `pending` / `running` / `passed` / `failed`
-- `etch_realize_progress` — subset tracking for Etch/Realize sequential execution
+- `etch_realize_progress` — subspec tracking for Etch/Realize sequential execution
 - `loop_count` — number of Settle → re-entry loops (max 3; escalate to user if exceeded)
 - `last_loop_target` — which stage the most recent Settle loop re-entered (`ascertain` / `etch` / `realize` / `null`)
 
@@ -30,9 +30,9 @@ stage_statuses:
   inspect: pending
   settle: pending
 etch_realize_progress:
-  current_subset: 2
-  total_subsets: 3
-  subsets_completed: [1]
+  current_subspec: 2
+  total_subspecs: 3
+  subspecs_completed: [1]
 loop_count: 0
 last_loop_target: null
 ```

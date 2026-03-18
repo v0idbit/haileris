@@ -18,22 +18,20 @@ Tests are placed based on whether their BID comes from the primary spec or a sub
 | BID source | Test type | Directory |
 |------------|-----------|-----------|
 | `primary.feature` | Integration tests | `tests/integration/` |
-| `{concern}.feature` | Unit tests | `tests/unit/` |
-| `{concern}.feature` | Behavior tests | `tests/features/` |
+| `{deliverable}.feature` | Unit tests | `tests/unit/` |
 
 Exact directory names follow project conventions.
 
 ## Lifecycle
 
-Written by Etch. Must be in full RED state (all failing) before Realize begins. Must not be modified by any stage after Etch — Realize, Inspect, and Settle never touch test files. For `domain: test` findings, Settle may address structural quality issues only and must not change behavioral contracts.
+Written by Etch. Must be in full RED state (all failing) before Realize begins. Read-only after Etch — Realize and Inspect treat them as fixed inputs. Settle applies a three-tier test-domain fix policy: structural refactors (preserve what the test verifies), assertion-level corrections (closed derivation scope from Gherkin step + Arrange data, with user notification), and genuinely wrong test escalation (APPROVE / REJECT). See [Settle](../stages/settle.md) for full details.
 
 ## Path
 
 ```
 tests/
 ├── unit/           # unit tests (from subspec BIDs)
-├── integration/    # integration tests (from primary spec BIDs)
-└── features/       # behavior tests (from subspec BIDs)
+└── integration/    # integration tests (from primary BIDs)
 ```
 
 ## Committed

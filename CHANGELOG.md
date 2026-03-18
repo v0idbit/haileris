@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-03-18
+
+### Changed
+- **Settle test-domain fix boundary** — three-tier policy replaces blanket "structural quality only": (1) structural refactors apply directly, (2) assertion-level corrections use a closed derivation scope (Gherkin Then/And step + test Arrange data) with user notification, (3) genuinely wrong tests escalate for approval. "Test count" clarified as function count; assertion count is a separate measure adjusted by tier 2.
+- **Etch RED state confirmation** — structured diagnostic protocol for passing tests replaces "fix it" handwave. Three mechanical detections (existing import, default-value assertion, tautological assertion) with prescribed corrections. One correction pass, then escalate. Assertion corrections reuse the closed-derivation-scope principle.
+
 ## 2026-03-15
 
 ### Added
@@ -17,4 +23,4 @@
 - **Project-wide artifacts** consolidated under `.haileris/project/` (was `.haileris/memory/` and `.haileris/constitution/`)
 - **Constitution** — single path at `.haileris/project/constitution.md`; archive removed (git history handles versioning); no duplicate memory copy
 - **Ascertain** — explicitly updates `decomposition.md` with resolved ambiguities (was implied but not called out)
-- **Etch test placement** — distinguishes integration tests (`tests/integration/`) from unit/behavior tests (`tests/unit/`, `tests/features/`) based on primary vs subspec BIDs
+- **Etch test placement** — distinguishes integration tests (`tests/integration/`) from unit tests (`tests/unit/`) based on primary vs subspec BIDs

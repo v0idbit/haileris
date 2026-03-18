@@ -11,7 +11,7 @@ Persistent markdown files written by Harvest and maintained across runs. They gi
 
 ## Lifecycle
 
-Written by Harvest on the first run. Updated when Harvest runs with `--reharvest`. All downstream stages read from memory rather than re-harvesting source files.
+Written by Harvest on the first run. Updated when Harvest runs with `--reharvest`. All downstream stages read from memory rather than re-harvesting source files. Memory files should use constructive framing — state what to do, how to organize, and what patterns to follow, rather than listing prohibitions. Agents follow positive instructions more reliably.
 
 ## Paths
 

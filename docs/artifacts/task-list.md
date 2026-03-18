@@ -15,7 +15,7 @@ Tasks are grouped so that each covers a coherent set of BIDs with a shared imple
 
 ## Lifecycle
 
-Written once by Layout after the complexity gate approves the breakdown. Read by Etch (for test grouping) and Realize (for implementation order). Stable after writing — not modified by downstream stages. Kept after the feature completes as an inspection record of how the spec was decomposed.
+Written once by Layout after the complexity gate approves the breakdown. Read by Etch (for test grouping) and Realize (for implementation order). Stable after writing — downstream stages treat it as a fixed input. Kept after the feature completes as an inspection record of how the spec was decomposed.
 
 ## Path
 
