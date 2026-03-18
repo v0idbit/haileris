@@ -109,7 +109,7 @@ Each primary spec scenario must have a `@traces` tag. ANLZ-006 validates:
 
 ## BID Format
 
-`BID-{NNN}` — sequentially numbered from `001`. Every Scenario carries exactly one BID as a tag (`@BID-001`). BIDs are the unit of traceability: every task, test, and source symbol in the pipeline is traced back to a BID.
+`BID-{NNN}` — sequentially numbered from `001`. Every Scenario carries exactly one BID as a tag (`@BID-001`). BIDs are the unit of traceability: every task, test, and derivation in the pipeline is traced back to a BID.
 
 ## Pipeline Metadata
 

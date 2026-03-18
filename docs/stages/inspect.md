@@ -7,10 +7,10 @@ Review each tentatively finished implementation against the Gherkin spec.
 - Gherkin spec
 - Green-phase implementation
 - Etch map (`etch-map.yaml`) — BID → test function mapping from Etch
-- Realize map (`realize-map.yaml`) — BID → source symbol mapping from Realize
+- Realize map (`realize-map.yaml`) — BID → derivation mapping from Realize
 - Constitution
 
-## Process
+## Process 
 
 ### Inspect.Gate — Traceability Gate
 

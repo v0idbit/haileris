@@ -106,7 +106,7 @@ This ensures later subsets can depend on earlier subsets' implementations.
 #### 6. Realize
 
 **Inputs:** Gherkin subspec (current subset), Red-phase tests, Etch map, Constitution
-**Outputs:** Green-phase implementation, Implementation map (BID → source symbol mapping)
+**Outputs:** Green-phase implementation, Implementation map (BID → derivation mapping)
 
 ---
 

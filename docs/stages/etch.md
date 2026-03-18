@@ -47,7 +47,7 @@ On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate t
 ## Notes
 
 - Test naming convention follows the project's test framework (e.g., `test_create_user`) — BID traceability is carried by `etch-map.yaml`, not by test names
-- `etch-map.yaml` format: each BID key lists the fully-qualified test function paths that cover it (e.g., `tests/integration/test_workflow#test_full_pipeline` for primary BIDs, `tests/unit/test_feature#test_create_user` for subspec BIDs). The `#` separates the file path from the symbol name.
+- `etch-map.yaml` format: each BID key lists the fully-qualified test function paths that cover it (e.g., `tests/integration/test_workflow#test_full_pipeline` for primary BIDs, `tests/unit/test_feature#test_create_user` for subspec BIDs). The `#` separates the file path from the function name.
 - `etch-inspection.yaml` is a Traceability Gate input at Inspect — missing or failed = Critical finding
 - The etch inspection can be re-run on demand with `--fix` to attempt auto-repair
 - Do not proceed until RED state is confirmed; import/build failure on missing source modules is the expected failure mode

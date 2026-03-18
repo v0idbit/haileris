@@ -247,7 +247,7 @@ flowchart LR
 | `harvest-inspection.yaml` | decomposition.md and technical-details.md across 4 dimensions: template compliance (×2), artifact preflight, dependency doc coverage |
 | `layout-inspection.yaml` | task list BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
 | `etch-inspection.yaml` | etch-map.yaml BID → test mapping: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
-| `realize-inspection.yaml` | implementation map: completeness (BID → symbol), scope (unmapped symbols via AST), broken refs (ghost symbols) |
+| `realize-inspection.yaml` | implementation map: completeness (BID → derivation), scope (unmapped derivations via AST), broken refs (ghost derivations) |
 
 Missing or `pass: false` on any inspection artifact = **Critical** finding at Inspect.
 

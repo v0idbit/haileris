@@ -22,7 +22,7 @@ bids:
       - tests/integration/test_workflow#test_full_pipeline
 ```
 
-The `#` separator delimits the file path from the symbol name.
+The `#` separator delimits the file path from the function name.
 
 Primary spec BIDs map to `tests/integration/`; subspec BIDs map to `tests/unit/` or `tests/features/`.
 

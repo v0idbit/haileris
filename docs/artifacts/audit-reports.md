@@ -21,9 +21,9 @@ Machine-readable YAML files produced at validation gates throughout the pipeline
 - `PARTIAL` — BID partially covered; some sub-conditions unaddressed
 
 **Realize inspection (3 checks):**
-- `Completeness` — every BID maps to at least one source symbol
-- `Scope` — no unmapped symbols exist in impl files (AST-checked)
-- `Broken refs` — no ghost symbols in the realize-map (symbol path exists and is importable)
+- `Completeness` — every BID maps to at least one derivation
+- `Scope` — no unmapped derivations exist in impl files (AST-checked)
+- `Broken refs` — no ghost derivations in the realize-map (derivation path exists and is importable)
 
 ## Traceability Gate
 
