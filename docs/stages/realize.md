@@ -16,7 +16,7 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 3. After each subspec's tests pass, map BIDs → derivations in `realize-map.yaml`
 4. Validate the subspec's new map entries: every mapped derivation must exist in source and every BID must have at least one derivation entry. On FAIL: fix the mapping or escalate to user before proceeding to the next subspec.
 5. After all subspecs complete, run the full test suite to confirm GREEN state
-6. Validate the full implementation map; write `realize-inspection.yaml`
+6. Validate the full Realize map; write `realize-inspection.yaml`
 
 ## Outputs
 
@@ -32,7 +32,7 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 
 ## Realize Inspection
 
-Validates the implementation map after all subspecs complete. Three checks:
+Validates the Realize map after all subspecs complete. Three checks:
 
 | Check | What it verifies |
 |-------|-----------------|

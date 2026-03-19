@@ -1,6 +1,6 @@
 # Realize Inspection
 
-Validates the implementation map after all subspecs complete. Source: [realize.md](../stages/realize.md) (Realize Inspection table).
+Validates the Realize map after all subspecs complete. Source: [realize.md](../stages/realize.md) (Realize Inspection table).
 
 ## Inputs
 
