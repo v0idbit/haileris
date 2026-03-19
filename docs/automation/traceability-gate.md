@@ -8,10 +8,10 @@ Pre-review verification that all upstream inspection artifacts exist and passed.
 |-------|------|--------|
 | Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | YAML per [pipeline-state.md](../artifacts/pipeline-state.md) |
 | Constitution | `.haileris/project/constitution.md` | Markdown (optional) |
-| Harvest inspection | `.haileris/features/{feature_id}/harvest-inspection.yaml` | YAML per [audit-reports.md](../artifacts/audit-reports.md) |
-| Layout inspection | `.haileris/features/{feature_id}/layout-inspection.yaml` | YAML per [audit-reports.md](../artifacts/audit-reports.md) |
-| Etch inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | YAML per [audit-reports.md](../artifacts/audit-reports.md) |
-| Realize inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | YAML per [audit-reports.md](../artifacts/audit-reports.md) |
+| Harvest inspection | `.haileris/features/{feature_id}/harvest-inspection.yaml` | YAML per [inspection-reports.md](../artifacts/inspection-reports.md) |
+| Layout inspection | `.haileris/features/{feature_id}/layout-inspection.yaml` | YAML per [inspection-reports.md](../artifacts/inspection-reports.md) |
+| Etch inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | YAML per [inspection-reports.md](../artifacts/inspection-reports.md) |
+| Realize inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | YAML per [inspection-reports.md](../artifacts/inspection-reports.md) |
 
 **Version extraction:** The constitution version can be stored as YAML frontmatter, a heading, or a metadata field. The implementation must match the project's constitution format. If the constitution is plain markdown without machine-readable version, this check verifies file existence only.
 

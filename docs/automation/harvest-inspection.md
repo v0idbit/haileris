@@ -8,8 +8,8 @@ Validates `decomposition.md` and `technical-details.md` across 4 dimensions. Sou
 |-------|------|--------|
 | Decomposition | `.haileris/features/{feature_id}/decomposition.md` | Markdown with section headings |
 | Technical details | `.haileris/features/{feature_id}/technical-details.md` | Markdown with section headings |
-| Standards memory | `.haileris/project/standards.md` | Markdown |
-| Test conventions memory | `.haileris/project/test-conventions.md` | Markdown |
+| Project standards | `.haileris/project/standards.md` | Markdown |
+| Project test conventions | `.haileris/project/test-conventions.md` | Markdown |
 
 `has_non_empty_section(content, name)`: scan for a markdown heading (any level) whose text contains `name` (case-insensitive). Return true if at least one non-blank line exists between that heading and the next heading (or end of file).
 
@@ -19,7 +19,7 @@ Validates `decomposition.md` and `technical-details.md` across 4 dimensions. Sou
 
 ```gherkin
 Feature: Harvest Inspection
-  Validates decomposition.md, technical-details.md, and project memory artifacts.
+  Validates decomposition.md, technical-details.md, and project standards artifacts.
 
   Background:
     Given the feature directory is ".haileris/features/{feature_id}/"
@@ -83,7 +83,7 @@ Feature: Harvest Inspection
         | Test Conventions |
         | Dependencies     |
 
-  Rule: ARTIFACT_PREFLIGHT — project memory artifacts exist and have substantive content
+  Rule: ARTIFACT_PREFLIGHT — project standards artifacts exist and have substantive content
 
     Scenario: Both project artifacts exist and exceed the line threshold
       Given "standards.md" exists in the project directory with more than 5 non-blank lines

@@ -10,7 +10,7 @@ The synthesized technical context for a feature. Produced by Harvest alongside t
 
 ## Lifecycle
 
-Written by Harvest. Read by Inscribe as supplementary context for spec writing. Also consulted by Etch and Realize via standards memory. Stable after Harvest; refreshed by `--reharvest` when project standards change.
+Written by Harvest. Read by Inscribe as supplementary context for spec writing. Also consulted by Etch and Realize via project standards. Stable after Harvest; refreshed by `--reharvest` when project standards change.
 
 ## Path
 

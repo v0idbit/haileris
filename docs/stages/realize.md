@@ -28,7 +28,7 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 |----------|------|-------|
 | Green-phase implementation | `src/` (repo) | Written directly to repo; also updated by Settle |
 | Realize map | `.haileris/features/{feature_id}/realize-map.yaml` | BID → derivation mapping; built incrementally after each subspec |
-| Realize inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | Traceability gate input for Inspect; also written to session copy |
+| Realize inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | Traceability gate input for Inspect |
 
 ## Realize Inspection
 
@@ -64,3 +64,4 @@ bids:
 - `realize-map.yaml` is built incrementally after each subspec; the realize inspection reads the final map
 - `realize-inspection.yaml` is the third Traceability Gate input at Inspect — missing or failed = Critical finding
 - The realize inspection can be re-run on demand (no `--fix` available for build stage)
+- After all subspecs' implementations pass, primary BID integration tests should also pass (since subspecs compose into primary scenarios per ANLZ-004). If any fail, treat as an implementation gap and retry.

@@ -66,3 +66,4 @@ One correction pass, then re-run. Escalate to user when a test still passes afte
 - The etch inspection can be re-run on demand with `--fix` to attempt auto-repair
 - See RED State Confirmation above for the full diagnostic protocol applied to passing tests
 - Import paths are derived from the subspec's `Domains:` declarations and project naming conventions — `Domains:` provides the module root, naming conventions provide entity names. This makes import paths a shared contract with Realize (see [spec Domains metadata](../artifacts/spec.md#pipeline-metadata))
+- After all subspec Etch→Realize cycles complete and the full suite is green, a final Etch pass writes integration tests for primary BIDs. These verify end-to-end composition (the wiring that `@traces` tags describe). The etch-map includes primary BIDs.

@@ -51,9 +51,6 @@ If `standards.md` uses structured rules (e.g., rule + scope pairs), comparison c
 
 - Primary spec
   - End-to-end workflow scenarios with BIDs
-- Technical details
-  - Common details across BIDs
-  - Per BID details as needed
 
 ## Artifacts Written
 

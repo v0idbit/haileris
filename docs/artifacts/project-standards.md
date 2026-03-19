@@ -1,4 +1,4 @@
-# Memory Files
+# Project Standards
 
 Persistent markdown files written by Harvest and maintained across runs. They give every stage stable access to the project's conventions and standards without re-harvesting the codebase each time.
 
@@ -11,7 +11,7 @@ Persistent markdown files written by Harvest and maintained across runs. They gi
 
 ## Lifecycle
 
-Written by Harvest on the first run. Updated when Harvest runs with `--reharvest`. All downstream stages read from memory rather than re-harvesting source files. Memory files should use constructive framing — state what to do, how to organize, and what patterns to follow, rather than listing prohibitions. Agents follow positive instructions more reliably.
+Written by Harvest on the first run. Updated when Harvest runs with `--reharvest`. All downstream stages read from project standards files rather than re-harvesting source files. Project standards files should use constructive framing — state what to do, how to organize, and what patterns to follow, rather than listing prohibitions. Agents follow positive instructions more reliably.
 
 ## Paths
 
@@ -20,4 +20,4 @@ Written by Harvest on the first run. Updated when Harvest runs with `--reharvest
 
 ## Committed
 
-Yes. Memory files are committed. They are the stable source of project context for all stages.
+Yes. Project standards files are committed. They are the stable source of project context for all stages.

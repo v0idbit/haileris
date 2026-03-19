@@ -95,7 +95,7 @@ Etch and Realize execute **sequentially per subspec** in the dependency order es
 Etch(subspec 1) → Realize(subspec 1) → Etch(subspec 2) → Realize(subspec 2) → ...
 ```
 
-This ensures later subspecs can depend on earlier subspecs' implementations.
+This ensures later subspecs can depend on earlier subspecs' implementations. After all subspec cycles complete, a final Etch pass writes integration tests for primary BIDs; Realize then ensures those pass.
 
 #### 5. Etch
 
@@ -124,6 +124,22 @@ This ensures later subspecs can depend on earlier subspecs' implementations.
 #### Output
 
 **Implementation failure details** (empty if all checks pass)
+
+---
+
+### 8. Settle
+
+**Sub-stages:** Settle.Triage → Settle.Fix → Settle.Confirm
+
+#### Inputs
+
+- Gherkin spec
+- Constitution
+- Implementation failure details
+
+#### Output
+
+If failures are present, route by domain of remaining findings (see [Settle](stages/settle.md)). Max 3 Settle loops; escalate to user if unresolved. Otherwise, **COMPLETE**.
 
 ---
 
@@ -171,19 +187,3 @@ Each feature runs in its own `.haileris/features/{id}/` directory. When Feature 
 3. **Ordering**: Feature A must reach COMPLETE before Feature B enters Etch. Earlier stages (Harvest through Layout) can run in parallel.
 
 Cross-feature ordering is the user's responsibility — the pipeline trusts the user to sequence dependent features correctly.
-
----
-
-### 8. Settle
-
-**Sub-stages:** Settle.Triage → Settle.Fix → Settle.Confirm
-
-#### Inputs
-
-- Gherkin spec
-- Constitution
-- Implementation failure details
-
-#### Output
-
-If failures are present, route by domain of remaining findings (see [Settle](stages/settle.md)). Max 3 Settle loops; escalate to user if unresolved. Otherwise, **COMPLETE**.

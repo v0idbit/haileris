@@ -48,7 +48,7 @@ Each spec uses Gherkin (Feature/Rule/Scenario) to define observable behaviors. S
 
 ### Output Format
 
-All inspection checks produce results conforming to the schema in [audit-reports.md](../artifacts/audit-reports.md):
+All inspection checks produce results conforming to the schema in [inspection-reports.md](../artifacts/inspection-reports.md):
 
 ```
 InspectionResult:
@@ -89,7 +89,7 @@ Tier 2 specs include a **Constraint** section documenting the condition under wh
 
 ### Path Conventions
 
-All paths in these specs use forward slashes and are relative to the project root unless stated otherwise. The two standard base paths:
+All paths in these specs use forward slashes and are relative to the project root unless stated otherwise. The three standard base paths:
 
 - **Feature directory**: `.haileris/features/{feature_id}/`
 - **Project directory**: `.haileris/project/`

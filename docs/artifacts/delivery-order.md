@@ -13,8 +13,6 @@ subspecs:
     depends_on: []
   - file: "auth.feature"
     depends_on: ["users.feature"]
-  - file: "primary.feature"
-    depends_on: ["users.feature", "auth.feature"]
 ```
 
 Subspecs are identified by filename. Each entry declares its dependencies on other subspecs.

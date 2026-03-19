@@ -44,8 +44,8 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | Red-phase tests | `tests/` (repo) | Yes |
 | Green-phase implementation | `src/` (repo) | Yes |
 | Implementation failure details | `.haileris/features/{id}/verify_{ts}.md` | Yes |
-| Standards memory | `.haileris/project/standards.md` | Yes |
-| Test conventions memory | `.haileris/project/test-conventions.md` | Yes |
+| Project standards | `.haileris/project/standards.md` | Yes |
+| Project test conventions | `.haileris/project/test-conventions.md` | Yes |
 | Constitution | `.haileris/project/constitution.md` | Yes |
 | **Harvest inspection** | `.haileris/features/{id}/harvest-inspection.yaml` | Yes |
 | **Layout inspection** | `.haileris/features/{id}/layout-inspection.yaml` | Yes |
@@ -53,6 +53,7 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | **Etch inspection** | `.haileris/features/{id}/etch-inspection.yaml` | Yes |
 | **Realize map** | `.haileris/features/{id}/realize-map.yaml` | Yes |
 | **Realize inspection** | `.haileris/features/{id}/realize-inspection.yaml` | Yes |
+| Harvest metadata | `.haileris/project/last-harvest.json` | Yes |
 | Pipeline state | `.haileris/features/{id}/pipeline-state.yaml` | Yes |
 
 Inspection artifacts (bold) all converge at stage 7 (Inspect) as the **Traceability Gate**.

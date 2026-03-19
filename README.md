@@ -74,3 +74,5 @@ Findings are classified by resolution domain: `impl` (production code), `test` (
 - [`docs/pipeline.md`](docs/pipeline.md) — stage inputs, outputs, and flow
 - [`docs/diagrams/diagrams.md`](docs/diagrams/diagrams.md) — mermaid diagrams: stage flow, artifact paths, traceability gate
 - [`docs/stages/`](docs/stages/) — per-stage process, artifacts, and inspect details
+- [`docs/artifacts/`](docs/artifacts/) — artifact format and lifecycle specs
+- [`docs/automation/`](docs/automation/) — mechanical verification specs (inspections, analysis checks)
