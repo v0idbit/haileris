@@ -9,126 +9,123 @@ Validates the task list against Gherkin spec BIDs. Source: [layout.md](../stages
 | Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags |
 | Task list | `.haileris/features/{feature_id}/tasks.md` | Markdown with `TASK-NNN` headings |
 
-## Prerequisite: BID and Task Extraction
+### BID Extraction
 
-Both are shared across checks.
+Spec BIDs are extracted by scanning all `.feature` files for `@BID-NNN` tags (regex `@(BID-\d+)`). The result is a set of unique BID identifiers.
 
-### Extract Spec BIDs
+### Task List Parsing
 
-```
-FUNCTION extract_spec_bids(spec_dir):
-  bids ← empty set
-  FOR EACH file IN glob(spec_dir, "*.feature"):
-    content ← read(file)
-    FOR EACH match OF regex "@(BID-\d+)" IN content:
-      bids.add(match.group(1))
-  RETURN bids
-```
+The task list is split at markdown headings matching `TASK-NNN`. For each task:
+- **task_id**: the `TASK-NNN` identifier from the heading
+- **description**: the remainder of the heading line (trimmed)
+- **bids**: unique set of all `BID-\d+` matches in the task body (text between this heading and the next)
+- **deps**: unique set of all `TASK-\d+` matches in the task body, excluding the task's own ID
 
-### Parse Task List
+The union of all task BIDs across all tasks forms the `task_bids` set.
 
-```
-FUNCTION parse_tasks(task_list_path):
-  content ← read(task_list_path)
-  tasks ← empty list
+## Behavior
 
-  Split content at markdown headings matching regex "^#+\s*(TASK-\d+)\b(.*)"
-  FOR EACH heading match:
-    task_id   ← captured TASK-NNN
-    description ← remainder of heading line (trimmed)
-    body      ← text between this heading and the next TASK heading (or EOF)
-    bids      ← unique set of all "BID-\d+" matches in body
-    deps      ← unique set of all "TASK-\d+" matches in body, excluding task_id
+```gherkin
+Feature: Layout Inspection
+  Validates the task list against Gherkin spec BIDs across 5 dimensions.
 
-    APPEND TaskEntry(task_id, description, bids, deps) to tasks
+  Background:
+    Given the spec files are in "tests/features/"
+    And the task list is at ".haileris/features/{feature_id}/tasks.md"
 
-  RETURN tasks
-```
+  Rule: MISSING — every spec BID must appear in at least one task
 
-### Collect Task BIDs
+    Scenario: All spec BIDs appear in the task list
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the task list references BIDs "BID-001, BID-002"
+      When the MISSING check runs
+      Then the check status is PASS
+      And no findings are produced
 
-```
-task_bids ← union of all task.bids for each task in tasks
-```
+    Scenario: A spec BID is absent from all tasks
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the task list references BIDs "BID-001"
+      When the MISSING check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "MISSING"
+      And the finding detail is "BID-002 has no task in the task list"
 
-## Checks
+    Scenario: Multiple missing BIDs are reported in sorted order
+      Given the spec contains BIDs "BID-001, BID-002, BID-003"
+      And the task list references BIDs "BID-002"
+      When the MISSING check runs
+      Then the check status is FAIL
+      And findings are produced for "BID-001, BID-003" with check_type "MISSING"
+      And findings are reported in sorted BID order
 
-### 1. MISSING
+  Rule: HALLUCINATED — every task BID must have a corresponding spec entry
 
-A Gherkin spec BID is absent from all tasks.
+    Scenario: All task BIDs exist in the spec
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the task list references BIDs "BID-001, BID-002"
+      When the HALLUCINATED check runs
+      Then the check status is PASS
+      And no findings are produced
 
-```
-FUNCTION check_missing(spec_bids, task_bids):
-  missing ← spec_bids − task_bids    — set difference
+    Scenario: A task references a BID not in the spec
+      Given the spec contains BIDs "BID-001"
+      And the task list references BIDs "BID-001, BID-002"
+      When the HALLUCINATED check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "HALLUCINATED"
+      And the finding detail is "BID-002 is in task list but not in spec"
 
-  FOR EACH bid IN sorted(missing):
-    ADD finding(bid, check_type="MISSING", detail="{bid} has no task in the task list")
+  Rule: DUPLICATED — a BID should appear in only one task
 
-  RETURN PASS if missing is empty, FAIL otherwise
-```
+    Scenario: Each BID appears in exactly one task
+      Given TASK-001 references BIDs "BID-001"
+      And TASK-002 references BIDs "BID-002"
+      When the DUPLICATED check runs
+      Then the check status is PASS
+      And no findings are produced
 
-### 2. HALLUCINATED
+    Scenario: A BID appears in multiple tasks
+      Given TASK-001 references BIDs "BID-001"
+      And TASK-002 references BIDs "BID-001"
+      When the DUPLICATED check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-001" with check_type "DUPLICATED"
+      And the finding detail is "BID-001 appears in 2 tasks"
 
-A BID in a task has no corresponding Gherkin spec entry.
+  Rule: INSUFFICIENT — task descriptions must be substantive and related to their BIDs
 
-```
-FUNCTION check_hallucinated(spec_bids, task_bids):
-  hallucinated ← task_bids − spec_bids
+    Scenario: A task description has 10+ words and shares keywords with its BID scenarios
+      Given TASK-001 has a description with 12 words
+      And TASK-001 references BIDs "BID-001"
+      And the Gherkin steps for "BID-001" share keywords with the task description
+      When the INSUFFICIENT check runs
+      Then the check status is PASS
+      And no findings are produced
 
-  FOR EACH bid IN sorted(hallucinated):
-    ADD finding(bid, check_type="HALLUCINATED", detail="{bid} is in task list but not in spec")
+    Scenario: A task description has fewer than 10 words
+      Given TASK-001 has a description with 5 words
+      When the INSUFFICIENT check runs
+      Then the check status is FAIL
+      And a finding is produced for "TASK-001" with check_type "INSUFFICIENT"
+      And the finding detail contains "TASK-001 description has 5 words (need ≥10)"
 
-  RETURN PASS if hallucinated is empty, FAIL otherwise
-```
+    Scenario: A task description shares no keywords with its BID scenarios
+      Given TASK-001 has a description with 15 words
+      And TASK-001 references BIDs "BID-001"
+      And the Gherkin steps for "BID-001" share no keywords with the task description
+      When the INSUFFICIENT check runs
+      Then the check status is FAIL
+      And a finding is produced for "TASK-001" with check_type "INSUFFICIENT"
+      And the finding detail is "TASK-001 description shares no keywords with its BID scenarios"
 
-### 3. DUPLICATED
-
-The same BID is the primary responsibility of more than one task.
-
-```
-FUNCTION check_duplicated(tasks):
-  bid_count ← empty map of BID → integer
-
-  FOR EACH task IN tasks:
-    FOR EACH bid IN task.bids:
-      bid_count[bid] ← bid_count[bid] + 1
-
-  FOR EACH (bid, count) IN bid_count WHERE count > 1:
-    ADD finding(bid, check_type="DUPLICATED", detail="{bid} appears in {count} tasks")
-
-  RETURN PASS if no findings, FAIL otherwise
-```
-
-### 4. INSUFFICIENT
-
-A task description is fewer than 10 words, or contains none of the keywords from the BID's Gherkin clauses.
-
-```
-FUNCTION check_insufficient(tasks, spec_dir):
-  FOR EACH task IN tasks:
-    words ← split(task.description, on whitespace)
-
-    IF length(words) < 10:
-      ADD finding(task.task_id, check_type="INSUFFICIENT",
-                  detail="{task_id} description has {length(words)} words (need ≥10)")
-      CONTINUE to next task
-
-    — Keyword overlap check
-    FOR EACH bid IN task.bids:
-      keywords ← extract_gherkin_step_keywords(spec_dir, bid)
-      — keywords = set of step text words from the BID's scenario
-      IF any keyword appears in task.description (case-insensitive):
-        mark task as having overlap
-        BREAK
-
-    IF task has BIDs AND no keyword overlap was found:
-      ADD finding(task.task_id, check_type="INSUFFICIENT",
-                  detail="{task_id} description shares no keywords with its BID scenarios")
-
-  RETURN PASS if no findings, FAIL otherwise
+    Scenario: A task has no BIDs — keyword overlap is not checked
+      Given TASK-001 has a description with 15 words
+      And TASK-001 references no BIDs
+      When the INSUFFICIENT check runs
+      Then no keyword-overlap finding is produced for "TASK-001"
 ```
 
-`extract_gherkin_step_keywords(spec_dir, bid)`: find the scenario tagged with `@{bid}` in the spec directory. Collect the text of all Given/When/Then/And/But steps in that scenario. Split into individual words (lowercased). Return as a set.
+Keyword extraction: For each BID, find the scenario tagged with `@{bid}` in the spec directory. Collect the text of all Given/When/Then/And/But steps in that scenario. Split into individual words (lowercased). Compare against words in the task description (case-insensitive).
 
 ### 5. PARTIAL — SKIP
 
@@ -136,22 +133,7 @@ Deferred (J-v: requires semantic coverage analysis). Returns `status: SKIP`.
 
 ## Aggregation
 
-```
-FUNCTION run_layout_inspection(feature_dir, spec_dir):
-  spec_bids ← extract_spec_bids(spec_dir)
-  tasks     ← parse_tasks(feature_dir / "tasks.md")
-  task_bids ← union of all task.bids
-
-  checks ← [
-    check_missing(spec_bids, task_bids),
-    check_hallucinated(spec_bids, task_bids),
-    check_duplicated(tasks),
-    check_insufficient(tasks, spec_dir),
-  ]
-
-  pass ← all active checks have status PASS
-  RETURN InspectionResult(timestamp=now_utc(), pass, checks, flatten(findings))
-```
+The inspection runs checks 1–5 in order. Overall status is PASS when all active checks pass.
 
 ## Output Path
 

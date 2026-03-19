@@ -9,32 +9,59 @@ Verifies every spec BID has at least one test function mapped in the etch-map. S
 | Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | YAML per [etch-map.md](../artifacts/etch-map.md) |
 
-## Algorithm
+## Behavior
 
-```
-FUNCTION run_test001(feature_dir, spec_dir):
-  spec_bids ← extract_spec_bids(spec_dir)
-  etch_map  ← load_yaml(feature_dir / "etch-map.yaml")
+```gherkin
+Feature: TEST-001 BID Coverage Gate
+  Verifies every spec BID has at least one test function mapped in the etch-map
+  with a non-empty tests list.
 
-  IF etch_map is null or invalid:
-    RETURN InspectionResult(pass=false, finding: "etch-map.yaml not found or invalid")
+  Rule: BID coverage — every spec BID must have a mapped test in etch-map
 
-  map_bids ← set of keys in etch_map.bids matching "^BID-\d+$"
+    Scenario: All spec BIDs have etch-map entries with non-empty tests lists
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the etch map contains entries for "BID-001, BID-002"
+      And each entry has a non-empty tests list
+      When the BID coverage check runs
+      Then the check status is PASS
+      And no findings are produced
 
-  — Check 1: Every spec BID must be in the map
-  missing ← spec_bids − map_bids
-  FOR EACH bid IN sorted(missing):
-    ADD finding(bid, check_type="MISSING",
-                detail="{bid} has no test function in etch-map")
+    Scenario: The etch-map is missing or invalid
+      Given the etch-map file does not exist or is invalid YAML
+      When the BID coverage check runs
+      Then the check status is FAIL
+      And a finding is produced with detail "etch-map.yaml not found or invalid"
 
-  — Check 2: Every mapped BID must have a non-empty tests list
-  FOR EACH (bid, entry) IN etch_map.bids:
-    IF bid IN map_bids AND entry.tests is empty:
-      ADD finding(bid, check_type="MISSING",
-                  detail="{bid} is in etch-map but has an empty tests list")
+    Scenario: A spec BID has no entry in the etch map
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the etch map contains entries for "BID-001"
+      When the BID coverage check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "MISSING"
+      And the finding detail is "BID-002 has no test function in etch-map"
 
-  pass ← findings is empty
-  RETURN InspectionResult(timestamp=now_utc(), pass, [check_result], findings)
+    Scenario: A spec BID has an entry with an empty tests list
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the etch map contains entries for "BID-001, BID-002"
+      And the entry for "BID-002" has an empty tests list
+      When the BID coverage check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "MISSING"
+      And the finding detail is "BID-002 is in etch-map but has an empty tests list"
+
+    Scenario: Multiple missing BIDs are reported in sorted order
+      Given the spec contains BIDs "BID-001, BID-002, BID-003"
+      And the etch map contains entries for "BID-002"
+      When the BID coverage check runs
+      Then the check status is FAIL
+      And findings are produced for "BID-001, BID-003" with check_type "MISSING"
+      And findings are reported in sorted BID order
+
+    Scenario: The spec has no BIDs
+      Given the spec contains no BIDs
+      When the BID coverage check runs
+      Then the check status is PASS
+      And no findings are produced
 ```
 
 ## Relationship to Etch Inspection

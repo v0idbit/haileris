@@ -29,171 +29,134 @@ last_loop_target: null
 
 ## Constants
 
-```
-STAGE_ORDER ← [harvest, ascertain, inscribe, layout, etch, realize, inspect, settle]
+Stage order: harvest → ascertain → inscribe → layout → etch → realize → inspect → settle.
 
-VALID_TRANSITIONS:
-  harvest    → [ascertain]
-  ascertain  → [inscribe]
-  inscribe   → [layout]
-  layout     → [etch]
-  etch       → [realize]
-  realize    → [inspect]
-  inspect    → [settle]
-  settle     → [ascertain, etch, realize]    — loop re-entry targets
+Valid transitions from Settle on loop: ascertain, etch, realize.
 
-MAX_LOOPS ← 3
-```
+Maximum loops: 3.
 
-## Operations
+## Behavior
 
-### 1. Initialize
+```gherkin
+Feature: Pipeline State Machine
+  State management operations for tracking feature progress through the pipeline.
 
-Create a new pipeline state when a feature is first registered at Harvest.
+  Rule: Initialize — create a new pipeline state at Harvest
 
-```
-FUNCTION init_state(feature_id, state_dir, constitution_version=null):
-  now ← current UTC timestamp in ISO 8601
+    Scenario: A new feature is registered
+      Given no pipeline state exists for "feature-123"
+      When the state is initialized for "feature-123"
+      Then the current stage is "harvest"
+      And all stage statuses are "pending"
+      And the loop count is 0
+      And the last loop target is null
+      And started_at and last_updated are set to the current UTC timestamp
 
-  state ← {
-    feature_id:             feature_id,
-    current_stage:          "harvest",
-    constitution_version:   constitution_version,
-    started_at:             now,
-    last_updated:           now,
-    stage_statuses:         { stage: "pending" FOR EACH stage IN STAGE_ORDER },
-    etch_realize_progress:  { current_subspec: 1, total_subspecs: 0, subspecs_completed: [] },
-    loop_count:             0,
-    last_loop_target:       null,
-  }
+    Scenario: A new feature is registered with a constitution version
+      Given no pipeline state exists for "feature-123"
+      And a constitution exists with version "1.0"
+      When the state is initialized for "feature-123" with constitution version "1.0"
+      Then the constitution version is "1.0"
 
-  write_yaml(state, state_dir / "pipeline-state.yaml")
-  RETURN state
-```
+  Rule: Advance — record a stage result and move the pipeline forward
 
-### 2. Load
+    Scenario: A stage passes and the pipeline advances to the next stage
+      Given the current stage is "harvest" with status "running"
+      When "harvest" is advanced with status "passed"
+      Then the stage status for "harvest" is "passed"
+      And the current stage is "ascertain"
+      And the stage status for "ascertain" is "running"
 
-Read existing pipeline state from disk.
+    Scenario: The last stage (settle) passes — pipeline is complete
+      Given the current stage is "settle" with status "running"
+      When "settle" is advanced with status "passed"
+      Then the stage status for "settle" is "passed"
+      And the current stage is "settle"
 
-```
-FUNCTION load_state(state_dir):
-  path ← state_dir / "pipeline-state.yaml"
-  IF path does not exist: RETURN null
-  data ← load_yaml(path)
-  IF data is null or not a valid state object: RETURN null
-  RETURN data as PipelineState
-```
+    Scenario: A stage fails — pipeline stays at the failed stage
+      Given the current stage is "etch" with status "running"
+      When "etch" is advanced with status "failed"
+      Then the stage status for "etch" is "failed"
+      And the current stage is "etch"
 
-### 3. Save
+    Scenario: An invalid transition is rejected
+      Given the current stage is "harvest"
+      When "layout" is advanced with status "passed"
+      Then the transition is rejected with an error
 
-Write pipeline state to disk, updating the `last_updated` timestamp.
+    Scenario: Advancing the same stage twice is idempotent
+      Given the current stage is "harvest" with status "running"
+      When "harvest" is advanced with status "passed"
+      And "harvest" is advanced with status "passed" again
+      Then the state reflects the first advance
 
-```
-FUNCTION save_state(state, state_dir):
-  state.last_updated ← current UTC timestamp in ISO 8601
-  create state_dir if it does not exist
-  write_yaml(state, state_dir / "pipeline-state.yaml")
-```
+  Rule: Loop — handle Settle re-entry by resetting downstream stages
 
-### 4. Advance Stage
+    Scenario: A loop to etch resets etch and all downstream stages
+      Given the current stage is "settle"
+      And the loop count is 0
+      When a loop is initiated with target "etch"
+      Then the loop count is 1
+      And the last loop target is "etch"
+      And the stage statuses for "etch", "realize", "inspect", "settle" are "pending"
+      And the current stage is "etch"
+      And the stage status for "etch" is "running"
+      And stages before "etch" retain their prior statuses
 
-Record a stage result and move the pipeline forward.
+    Scenario: A loop to ascertain resets ascertain and all downstream stages
+      Given the current stage is "settle"
+      And the loop count is 0
+      When a loop is initiated with target "ascertain"
+      Then the loop count is 1
+      And the last loop target is "ascertain"
+      And the stage statuses for "ascertain" through "settle" are "pending"
+      And the current stage is "ascertain"
+      And the stage status for "ascertain" is "running"
 
-```
-FUNCTION advance_stage(state, stage, status, state_dir):
-  PRECONDITIONS:
-    — status must be "passed" or "failed"
-    — stage must be in STAGE_ORDER
-    — transition from state.current_stage to stage must be valid,
-      OR stage must equal state.current_stage
+    Scenario: A loop at maximum count is rejected
+      Given the loop count is 3
+      When a loop is initiated with target "etch"
+      Then the loop is rejected with error "Loop count already at maximum (3); escalate to user"
 
-  state.stage_statuses[stage] ← status
+    Scenario: A loop with an invalid target is rejected
+      Given the current stage is "settle"
+      When a loop is initiated with target "layout"
+      Then the loop is rejected with an error
 
-  IF status = "passed":
-    stage_idx ← index of stage in STAGE_ORDER
-    IF stage_idx + 1 < length(STAGE_ORDER):
-      next_stage ← STAGE_ORDER[stage_idx + 1]
-      state.current_stage ← next_stage
-      state.stage_statuses[next_stage] ← "running"
-    ELSE:
-      — Last stage (settle) passed; pipeline complete
-      state.current_stage ← stage
+  Rule: Resume — determine where to continue an interrupted pipeline
 
-  save_state(state, state_dir)
-  RETURN state
-```
+    Scenario: Resume returns the current stage
+      Given the current stage is "etch"
+      When the resume point is requested
+      Then the resume point is "etch"
 
-**Transition validation:** The advance function verifies that the requested stage is either the current stage or a valid forward transition from the current stage. Invalid transitions are rejected with an error.
+    Scenario: Resume after a loop returns the loop target
+      Given a loop was initiated with target "realize"
+      And the current stage is "realize" with status "running"
+      When the resume point is requested
+      Then the resume point is "realize"
 
-### 5. Loop (Settle Re-entry)
+  Rule: Subspec Progress — track sequential Etch/Realize execution
 
-Handle a Settle → re-entry loop. Increments the loop counter, records the target, and resets downstream stages.
+    Scenario: A subspec completes and the next one begins
+      Given the total subspecs count is 3
+      And the current subspec is 1
+      And subspecs completed is empty
+      When the current subspec is advanced
+      Then subspecs completed contains 1
+      And the current subspec is 2
 
-```
-FUNCTION increment_loop(state, target, state_dir):
-  PRECONDITIONS:
-    — target must be one of: ascertain, etch, realize
-    — state.loop_count < MAX_LOOPS
-
-  IF state.loop_count ≥ MAX_LOOPS:
-    ERROR "Loop count already at maximum ({MAX_LOOPS}); escalate to user"
-
-  state.loop_count ← state.loop_count + 1
-  state.last_loop_target ← target
-
-  — Reset stages from target onward (inclusive) to pending
-  target_idx ← index of target in STAGE_ORDER
-  FOR i FROM target_idx TO length(STAGE_ORDER) - 1:
-    state.stage_statuses[STAGE_ORDER[i]] ← "pending"
-
-  — Set current stage to the loop target
-  state.current_stage ← target
-  state.stage_statuses[target] ← "running"
-
-  save_state(state, state_dir)
-  RETURN state
-```
-
-**Reset scope:** On a loop to `etch`, the stages `etch`, `realize`, `inspect`, and `settle` are all reset to `pending`. Stages before the target retain their `passed` status.
-
-### 6. Resume
-
-Determine where to resume an interrupted pipeline run.
-
-```
-FUNCTION get_resume_point(state):
-  RETURN state.current_stage
+    Scenario: The last subspec completes
+      Given the total subspecs count is 2
+      And the current subspec is 2
+      And subspecs completed contains [1]
+      When the current subspec is advanced
+      Then subspecs completed contains [1, 2]
 ```
 
-The `current_stage` field always holds the next stage to run (set by `advance_stage` on the previous stage's success) or the stage that was running when interrupted.
+Load and Save are implementation concerns — the state is read from and written to `.haileris/features/{feature_id}/pipeline-state.yaml` with the `last_updated` timestamp refreshed on each write.
 
-### 7. Show
-
-Display the current pipeline state. Read-only — no state mutation.
-
-```
-FUNCTION show_state(state):
-  emit state as YAML to stdout
-```
-
-## Subspec Progress Tracking
-
-During Etch/Realize sequential execution, `etch_realize_progress` tracks which subspecs have completed:
-
-```
-FUNCTION advance_subspec(state, state_dir):
-  progress ← state.etch_realize_progress
-  progress.subspecs_completed.append(progress.current_subspec)
-
-  IF length(progress.subspecs_completed) < progress.total_subspecs:
-    progress.current_subspec ← progress.current_subspec + 1
-  — else: all subspecs complete; proceed to Inspect
-
-  save_state(state, state_dir)
-  RETURN state
-```
-
-The `total_subspecs` field is set by Layout when the task list is finalized.
+Show is a read-only operation that emits the current pipeline state as YAML to stdout.
 
 ## State File Path
 
@@ -202,17 +165,17 @@ The `total_subspecs` field is set by Layout when the task list is finalized.
 ## State Lifecycle
 
 1. **Created** by Harvest when the feature is first registered
-2. **Updated** after each stage transition via `advance_stage`
-3. **Reset** (partially) on Settle loops via `increment_loop`
+2. **Updated** after each stage transition via advance
+3. **Reset** (partially) on Settle loops
 4. **Read** by Inspect.Gate to verify constitution version
 5. **Read** on resume to determine where to continue
 6. **Never rolled back** — the state reflects the most recent completed transition
 
 ## Invariants
 
-- `current_stage` is always a valid stage name from `STAGE_ORDER`
+- `current_stage` is always a valid stage name from the stage order
 - `stage_statuses` always contains exactly the 8 pipeline stages
-- `loop_count` never exceeds `MAX_LOOPS` (3)
+- `loop_count` never exceeds 3
 - `last_loop_target` is `null` or one of `ascertain`, `etch`, `realize`
 - After a loop, all stages from the target onward have status `pending`, and stages before the target retain their prior status
 - `constitution_version` is immutable after initialization (set once at Harvest)
@@ -222,6 +185,6 @@ The `total_subspecs` field is set by Layout when the task list is finalized.
 
 - **Advance on a failed stage:** Setting a stage to `failed` does not advance `current_stage`. The pipeline stays at the failed stage until the issue is resolved and the stage is re-run.
 - **Double advance:** Advancing the same stage twice (e.g., calling advance with `harvest` / `passed` when harvest is already `passed`) is idempotent if the stage matches `current_stage`. If the stage has already been advanced past, the transition validation rejects it.
-- **Loop at maximum:** If `loop_count` equals `MAX_LOOPS`, `increment_loop` returns an error. The caller must escalate to the user.
+- **Loop at maximum:** If `loop_count` equals 3, the loop is rejected. The caller must escalate to the user.
 - **Resume after loop:** `current_stage` points to the loop target with status `running`. Resume picks up from there.
-- **Settle passes (no loop):** `advance_stage` with `settle` / `passed` leaves `current_stage` at `settle`. The pipeline is complete.
+- **Settle passes (no loop):** Advancing `settle` with `passed` leaves `current_stage` at `settle`. The pipeline is complete.

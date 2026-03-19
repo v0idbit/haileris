@@ -25,111 +25,106 @@ bids:
 
 The `#` separator delimits the file path from the function name. Parameterization suffixes (e.g., `[foo]`) may follow the function name.
 
-## Prerequisite: Extract Map BIDs
+### Map BID Extraction
 
-```
-FUNCTION extract_map_bids(etch_map):
-  RETURN set of keys in etch_map.bids that match regex "^BID-\d+$"
-```
+Map BIDs are the set of keys in `etch_map.bids` matching regex `^BID-\d+$`.
 
-## Checks
+### Non-trivial Lines
 
-### 1. MISSING
+A **non-trivial line** in a function body is one that is not blank, not a comment, not a docstring, and not a decorator/annotation. The implementation determines how to identify function boundaries and count these lines based on the target language.
 
-A Gherkin spec BID is absent from the etch-map.
+## Behavior
 
-```
-FUNCTION check_missing(spec_bids, map_bids):
-  missing ← spec_bids − map_bids
+```gherkin
+Feature: Etch Inspection
+  Validates etch-map.yaml BID-to-test-function mapping across 5 dimensions.
 
-  FOR EACH bid IN sorted(missing):
-    ADD finding(bid, check_type="MISSING", detail="{bid} has no entry in etch-map")
+  Background:
+    Given the spec files are in "tests/features/"
+    And the etch map is at ".haileris/features/{feature_id}/etch-map.yaml"
 
-  RETURN PASS if missing is empty, FAIL otherwise
-```
+  Rule: MISSING — every spec BID must have an etch-map entry
 
-### 2. HALLUCINATED
+    Scenario: All spec BIDs have etch-map entries
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the etch map contains entries for "BID-001, BID-002"
+      When the MISSING check runs
+      Then the check status is PASS
+      And no findings are produced
 
-A BID in the etch-map has no corresponding Gherkin spec entry.
+    Scenario: A spec BID is absent from the etch map
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the etch map contains entries for "BID-001"
+      When the MISSING check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "MISSING"
+      And the finding detail is "BID-002 has no entry in etch-map"
 
-```
-FUNCTION check_hallucinated(spec_bids, map_bids):
-  hallucinated ← map_bids − spec_bids
+    Scenario: Multiple missing BIDs are reported in sorted order
+      Given the spec contains BIDs "BID-001, BID-002, BID-003"
+      And the etch map contains entries for "BID-002"
+      When the MISSING check runs
+      Then the check status is FAIL
+      And findings are produced for "BID-001, BID-003" with check_type "MISSING"
+      And findings are reported in sorted BID order
 
-  FOR EACH bid IN sorted(hallucinated):
-    ADD finding(bid, check_type="HALLUCINATED", detail="{bid} is in etch-map but not in spec")
+  Rule: HALLUCINATED — every etch-map BID must have a corresponding spec entry
 
-  RETURN PASS if hallucinated is empty, FAIL otherwise
-```
+    Scenario: All etch-map BIDs exist in the spec
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the etch map contains entries for "BID-001, BID-002"
+      When the HALLUCINATED check runs
+      Then the check status is PASS
+      And no findings are produced
 
-### 3. INSUFFICIENT
+    Scenario: An etch-map BID has no corresponding spec entry
+      Given the spec contains BIDs "BID-001"
+      And the etch map contains entries for "BID-001, BID-002"
+      When the HALLUCINATED check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "HALLUCINATED"
+      And the finding detail is "BID-002 is in etch-map but not in spec"
 
-A mapped test function body is fewer than 3 non-trivial lines.
+  Rule: INSUFFICIENT — every mapped test function must have at least 3 non-trivial body lines
 
-**Non-trivial line:** A line in the function body that is not blank, not a comment, not a docstring, and not a decorator/annotation.
+    Scenario: A test function meets the line threshold
+      Given the etch map maps "BID-001" to "tests/unit/test_feature#test_create_user"
+      And the function "test_create_user" has 5 non-trivial body lines
+      When the INSUFFICIENT check runs
+      Then the check status is PASS
+      And no findings are produced
 
-```
-FUNCTION check_insufficient(etch_map, project_root):
-  threshold ← 3
+    Scenario: A test function has fewer than 3 non-trivial body lines
+      Given the etch map maps "BID-001" to "tests/unit/test_feature#test_create_user"
+      And the function "test_create_user" has 2 non-trivial body lines
+      When the INSUFFICIENT check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-001" with check_type "INSUFFICIENT"
+      And the finding detail contains "test function 'test_create_user' in tests/unit/test_feature has 2 body line(s) (need ≥3)"
 
-  FOR EACH (bid, entry) IN etch_map.bids:
-    FOR EACH test_ref IN entry.tests:
-      IF "#" NOT IN test_ref:
-        CONTINUE
+    Scenario: A test file does not exist
+      Given the etch map maps "BID-001" to "tests/unit/missing_file#test_func"
+      And the file "tests/unit/missing_file" does not exist
+      When the INSUFFICIENT check runs
+      Then no finding is produced for "BID-001"
 
-      (file_part, func_name) ← split test_ref at last "#"
+    Scenario: A test function is not found in its file
+      Given the etch map maps "BID-001" to "tests/unit/test_feature#nonexistent_func"
+      And the file "tests/unit/test_feature" exists
+      And the function "nonexistent_func" is not defined in the file
+      When the INSUFFICIENT check runs
+      Then no finding is produced for "BID-001"
 
-      — Strip parameterization suffix
-      IF "[" IN func_name:
-        func_name ← func_name up to first "["
+    Scenario: Parameterization suffixes are stripped before function lookup
+      Given the etch map maps "BID-001" to "tests/unit/test_feature#test_func[case_a]"
+      And the function "test_func" has 2 non-trivial body lines
+      When the INSUFFICIENT check runs
+      Then a finding is produced for "BID-001" with check_type "INSUFFICIENT"
 
-      file_path ← resolve(project_root, file_part)
-      — Append language-appropriate extension if file_path has none
-
-      IF file_path does not exist:
-        CONTINUE    — file absence is an etch-map structural issue, not INSUFFICIENT
-
-      source ← read(file_path)
-      line_count ← count_function_body_lines(source, func_name)
-
-      IF line_count is null:
-        CONTINUE    — function not found
-
-      IF line_count < threshold:
-        ADD finding(bid, check_type="INSUFFICIENT",
-                    detail="{bid} test function '{func_name}' in {file_part} has {line_count} body line(s) (need ≥{threshold})")
-
-  RETURN PASS if no findings, FAIL otherwise
-```
-
-### count_function_body_lines
-
-Counts non-trivial body lines of a named function. Language-agnostic algorithm:
-
-```
-FUNCTION count_function_body_lines(source, func_name):
-  — Step 1: Find the function definition line
-  Scan source lines for a function definition whose name matches func_name.
-  Detection is language-dependent:
-    — Indentation-based languages: "def func_name(" at some indentation level
-    — Brace-based languages: function/method signature containing func_name
-  IF not found: RETURN null
-  Record the indentation level of the definition line.
-
-  — Step 2: Extract body lines
-  Starting from the line after the definition:
-    — Indentation-based: collect lines until a non-blank line at the same
-      or lesser indentation as the definition (or a new definition/class)
-    — Brace-based: track brace nesting; collect until closing brace
-
-  — Step 3: Filter trivial lines
-  Remove from collected lines:
-    — Blank lines (whitespace only)
-    — Comment lines (language-appropriate comment syntax)
-    — Docstring/documentation blocks (language-appropriate)
-    — Decorator/annotation lines (language-appropriate)
-
-  RETURN count of remaining lines
+    Scenario: A test reference has no "#" separator
+      Given the etch map maps "BID-001" to "tests/unit/test_feature"
+      When the INSUFFICIENT check runs
+      Then no finding is produced for "BID-001"
 ```
 
 ### 4. DUPLICATED — SKIP
@@ -142,25 +137,7 @@ Deferred (J-v: requires semantic Then-step coverage analysis). Returns `status: 
 
 ## Aggregation
 
-```
-FUNCTION run_etch_inspection(feature_dir, spec_dir, project_root):
-  spec_bids ← extract_spec_bids(spec_dir)
-  etch_map  ← load_yaml(feature_dir / "etch-map.yaml")
-
-  IF etch_map is null or invalid:
-    RETURN InspectionResult(pass=false, single FAIL check: "etch-map.yaml not found or invalid")
-
-  map_bids ← extract_map_bids(etch_map)
-
-  checks ← [
-    check_missing(spec_bids, map_bids),
-    check_hallucinated(spec_bids, map_bids),
-    check_insufficient(etch_map, project_root),
-  ]
-
-  pass ← all active checks have status PASS
-  RETURN InspectionResult(timestamp=now_utc(), pass, checks, flatten(findings))
-```
+The inspection runs checks 1–5 in order. If the etch-map is missing or invalid, the inspection fails immediately. Overall status is PASS when all active checks pass.
 
 ## Output Path
 

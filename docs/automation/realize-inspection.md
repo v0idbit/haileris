@@ -34,85 +34,94 @@ bids:
 
 The `#` separator delimits the file path from the derivation name.
 
-## Checks
+### Entity Resolution
 
-### 1. Completeness
+Split derivation at `#`, verify file exists, then search the file text for the top-level entity name (the part before any `.`). This is a grep-level check, not full AST resolution. It catches missing files and renamed entities but does not validate member access (e.g., `ClassName.method_name` only checks that `ClassName` appears in the file, not that `method_name` exists on it). Full member validation requires AST tooling (deferred to Tier 2 — Realize Scope check).
 
-Every Gherkin spec BID has at least one derivation entry in the realize-map.
+## Behavior
 
+```gherkin
+Feature: Realize Inspection
+  Validates the realize-map BID-to-derivation mapping.
+
+  Background:
+    Given the spec files are in "tests/features/"
+    And the realize map is at ".haileris/features/{feature_id}/realize-map.yaml"
+
+  Rule: Completeness — every spec BID must have at least one derivation in the realize-map
+
+    Scenario: All spec BIDs have derivations in the realize map
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the realize map contains entries for "BID-001, BID-002"
+      When the Completeness check runs
+      Then the check status is PASS
+      And no findings are produced
+
+    Scenario: A spec BID has no derivation in the realize map
+      Given the spec contains BIDs "BID-001, BID-002"
+      And the realize map contains entries for "BID-001"
+      When the Completeness check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-002" with check_type "MISSING"
+      And the finding detail is "BID-002 has no derivation in realize-map"
+
+    Scenario: Multiple missing BIDs are reported in sorted order
+      Given the spec contains BIDs "BID-001, BID-002, BID-003"
+      And the realize map contains entries for "BID-002"
+      When the Completeness check runs
+      Then the check status is FAIL
+      And findings are produced for "BID-001, BID-003" with check_type "MISSING"
+      And findings are reported in sorted BID order
+
+  Rule: Broken Refs — every derivation must resolve to an existing source entity
+
+    Scenario: All derivations resolve to existing files and entities
+      Given the realize map maps "BID-001" to derivation "src/module#MyClass"
+      And the file "src/module" exists
+      And "MyClass" appears in "src/module"
+      When the Broken Refs check runs
+      Then the check status is PASS
+      And no findings are produced
+
+    Scenario: A derivation has invalid format (missing #)
+      Given the realize map maps "BID-001" to derivation "src/module.MyClass"
+      When the Broken Refs check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-001" with check_type "BROKEN_REF"
+      And the finding detail contains "invalid format (missing #)"
+
+    Scenario: A derivation file does not exist
+      Given the realize map maps "BID-001" to derivation "src/missing#MyClass"
+      And the file "src/missing" does not exist
+      When the Broken Refs check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-001" with check_type "BROKEN_REF"
+      And the finding detail contains "derivation file not found: src/missing"
+
+    Scenario: A derivation entity is not found in the file
+      Given the realize map maps "BID-001" to derivation "src/module#MyClass"
+      And the file "src/module" exists
+      And "MyClass" does not appear in "src/module"
+      When the Broken Refs check runs
+      Then the check status is FAIL
+      And a finding is produced for "BID-001" with check_type "BROKEN_REF"
+      And the finding detail contains "entity 'MyClass' not found in src/module"
+
+    Scenario: A derivation with dot notation checks only the top-level entity
+      Given the realize map maps "BID-001" to derivation "src/module#MyClass.my_method"
+      And the file "src/module" exists
+      And "MyClass" appears in "src/module"
+      When the Broken Refs check runs
+      Then the check status is PASS
 ```
-FUNCTION check_completeness(spec_bids, map_bids):
-  missing ← spec_bids − map_bids
-
-  FOR EACH bid IN sorted(missing):
-    ADD finding(bid, check_type="MISSING",
-                detail="{bid} has no derivation in realize-map")
-
-  RETURN PASS if missing is empty, FAIL otherwise
-```
-
-### 2. Broken Refs
-
-Every derivation in the realize-map resolves to an existing source entity.
-
-```
-FUNCTION check_broken_refs(realize_map_data, project_root):
-  FOR EACH (bid, entry) IN realize_map_data.bids:
-    IF bid does not match "^BID-\d+$":
-      CONTINUE
-
-    FOR EACH ref IN entry.derivations:
-      IF "#" NOT IN ref:
-        ADD finding(bid, check_type="BROKEN_REF",
-                    detail="{bid} derivation '{ref}' has invalid format (missing #)")
-        CONTINUE
-
-      (file_part, entity_part) ← split ref at last "#"
-      file_path ← resolve(project_root, file_part)
-      — Append language-appropriate extension if file_path has none
-
-      IF file_path does not exist:
-        ADD finding(bid, check_type="BROKEN_REF",
-                    detail="{bid} derivation file not found: {file_part}")
-        CONTINUE
-
-      — Extract top-level entity name (before any dot)
-      entity_name ← entity_part split at "." → first element
-
-      source ← read(file_path)
-      IF entity_name NOT IN source:
-        ADD finding(bid, check_type="BROKEN_REF",
-                    detail="{bid} entity '{entity_name}' not found in {file_part}")
-
-  RETURN PASS if no findings, FAIL otherwise
-```
-
-**Entity resolution strategy:** Split derivation at `#`, verify file exists, then search the file text for the top-level entity name (the part before any `.`). This is a grep-level check, not full AST resolution. It catches missing files and renamed entities but does not validate member access (e.g., `ClassName.method_name` only checks that `ClassName` appears in the file, not that `method_name` exists on it). Full member validation requires AST tooling (deferred to Tier 2 — Realize Scope check).
 
 ### 3. Scope — SKIP
 
-Deferred (M-c: requires language-specific AST tooling to discover all derivations in source files and compare against the realize-map). Returns `status: SKIP`.
+Deferred (M-c: requires language-specific AST tooling to discover all derivations in source files and compare against the realize-map). Returns `status: SKIP`. See [realize-scope.md](realize-scope.md) for the Tier 2 spec.
 
 ## Aggregation
 
-```
-FUNCTION run_realize_inspection(feature_dir, spec_dir, project_root):
-  spec_bids    ← extract_spec_bids(spec_dir)
-  realize_map  ← load_yaml(feature_dir / "realize-map.yaml")
-
-  IF realize_map is null or invalid:
-    RETURN InspectionResult(pass=false, single FAIL check: "realize-map.yaml not found or invalid")
-
-  map_bids ← set of keys in realize_map.bids matching "^BID-\d+$"
-
-  checks ← [
-    check_completeness(spec_bids, map_bids),
-    check_broken_refs(realize_map, project_root),
-  ]
-
-  pass ← all active checks have status PASS
-  RETURN InspectionResult(timestamp=now_utc(), pass, checks, flatten(findings))
-```
+The inspection runs checks 1–3 in order. If the realize-map is missing or invalid, the inspection fails immediately. Overall status is PASS when all active checks pass.
 
 ## Output Path
 

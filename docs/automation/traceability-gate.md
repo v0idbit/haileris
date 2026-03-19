@@ -13,66 +13,101 @@ Pre-review verification that all upstream inspection artifacts exist and passed.
 | Etch inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | YAML per [audit-reports.md](../artifacts/audit-reports.md) |
 | Realize inspection | `.haileris/features/{feature_id}/realize-inspection.yaml` | YAML per [audit-reports.md](../artifacts/audit-reports.md) |
 
-## Checks
-
-### 1. Constitution Version
-
-Verify the constitution version matches the version recorded in `pipeline-state.yaml` at Harvest.
-
-```
-FUNCTION check_constitution_version(state_path, constitution_path):
-  state ← load_yaml(state_path)
-  IF state is null:
-    RETURN FAIL with finding("pipeline-state.yaml not found")
-
-  recorded ← state.constitution_version
-
-  — Case 1: No constitution recorded and none exists
-  IF recorded is null AND constitution_path does not exist:
-    RETURN PASS ("No constitution recorded or present")
-
-  — Case 2: Constitution exists but wasn't recorded
-  IF recorded is null AND constitution_path exists:
-    RETURN FAIL with finding("Constitution exists but no version recorded in pipeline-state.yaml")
-
-  — Case 3: Constitution was recorded but file is gone
-  IF recorded is not null AND constitution_path does not exist:
-    RETURN FAIL with finding("constitution.md not found but version was recorded")
-
-  — Case 4: Both exist — compare versions
-  constitution ← load(constitution_path)
-  current_version ← extract version from constitution
-
-  IF current_version ≠ recorded:
-    RETURN FAIL with finding("Constitution changed since Harvest: recorded={recorded}, current={current_version}")
-
-  RETURN PASS ("Constitution version matches: {recorded}")
-```
-
 **Version extraction:** The constitution version can be stored as YAML frontmatter, a heading, or a metadata field. The implementation must match the project's constitution format. If the constitution is plain markdown without machine-readable version, this check verifies file existence only.
 
-### 2–5. Inspection Artifact Checks (×4)
+## Behavior
 
-For each of the four inspection artifacts, verify existence and `pass: true`.
+```gherkin
+Feature: Traceability Gate
+  Pre-review verification that constitution version matches and all upstream
+  inspection artifacts exist and passed.
 
-```
-FUNCTION check_artifact_exists_and_passed(artifact_path, artifact_name):
-  data ← load_yaml(artifact_path)
+  Background:
+    Given the pipeline state is at ".haileris/features/{feature_id}/pipeline-state.yaml"
+    And the constitution is at ".haileris/project/constitution.md"
 
-  IF data is null:
-    RETURN FAIL with finding(
-      check_type="MISSING",
-      detail="Critical: {artifact_name} not found; traceability unverified")
+  Rule: Constitution Version — recorded version must match current constitution
 
-  passed ← data["pass"]
+    Scenario: No constitution recorded and none exists
+      Given the pipeline state has no recorded constitution version
+      And "constitution.md" does not exist
+      When the Constitution Version check runs
+      Then the check status is PASS
 
-  IF NOT passed:
-    finding_count ← length(data["findings"]) if "findings" in data else 0
-    RETURN FAIL with finding(
-      check_type="FAILED",
-      detail="Critical: {artifact_name} failed with {finding_count} finding(s)")
+    Scenario: Constitution exists but was not recorded at Harvest
+      Given the pipeline state has no recorded constitution version
+      And "constitution.md" exists
+      When the Constitution Version check runs
+      Then the check status is FAIL
+      And a finding is produced with detail "Constitution exists but no version recorded in pipeline-state.yaml"
 
-  RETURN PASS ("{artifact_name} exists and passed")
+    Scenario: Constitution was recorded but the file is gone
+      Given the pipeline state records constitution version "1.0"
+      And "constitution.md" does not exist
+      When the Constitution Version check runs
+      Then the check status is FAIL
+      And a finding is produced with detail "constitution.md not found but version was recorded"
+
+    Scenario: Constitution version matches the recorded version
+      Given the pipeline state records constitution version "1.0"
+      And "constitution.md" exists with version "1.0"
+      When the Constitution Version check runs
+      Then the check status is PASS
+
+    Scenario: Constitution version has changed since Harvest
+      Given the pipeline state records constitution version "1.0"
+      And "constitution.md" exists with version "2.0"
+      When the Constitution Version check runs
+      Then the check status is FAIL
+      And a finding is produced with detail "Constitution changed since Harvest: recorded=1.0, current=2.0"
+
+    Scenario: Pipeline state file is missing
+      Given the pipeline state file does not exist
+      When the Constitution Version check runs
+      Then the check status is FAIL
+      And a finding is produced with detail "pipeline-state.yaml not found"
+
+  Rule: Inspection Artifacts — each upstream inspection must exist and have passed
+
+    Scenario Outline: An inspection artifact exists and passed
+      Given "<artifact>" exists and contains "pass: true"
+      When the <artifact> check runs
+      Then the check status is PASS
+
+      Examples:
+        | artifact                    |
+        | harvest-inspection.yaml     |
+        | layout-inspection.yaml      |
+        | etch-inspection.yaml        |
+        | realize-inspection.yaml     |
+
+    Scenario Outline: An inspection artifact is missing
+      Given "<artifact>" does not exist
+      When the <artifact> check runs
+      Then the check status is FAIL
+      And a finding is produced with check_type "MISSING"
+      And the finding detail contains "Critical: <artifact> not found"
+
+      Examples:
+        | artifact                    |
+        | harvest-inspection.yaml     |
+        | layout-inspection.yaml      |
+        | etch-inspection.yaml        |
+        | realize-inspection.yaml     |
+
+    Scenario Outline: An inspection artifact exists but failed
+      Given "<artifact>" exists and contains "pass: false" with <N> findings
+      When the <artifact> check runs
+      Then the check status is FAIL
+      And a finding is produced with check_type "FAILED"
+      And the finding detail contains "Critical: <artifact> failed with <N> finding(s)"
+
+      Examples:
+        | artifact                    | N |
+        | harvest-inspection.yaml     | 2 |
+        | layout-inspection.yaml      | 1 |
+        | etch-inspection.yaml        | 3 |
+        | realize-inspection.yaml     | 0 |
 ```
 
 The four artifacts and their expected error messages on absence:
@@ -86,26 +121,7 @@ The four artifacts and their expected error messages on absence:
 
 ## Aggregation
 
-```
-FUNCTION run_traceability_gate(feature_dir, project_dir):
-  checks ← [
-    check_constitution_version(
-      feature_dir / "pipeline-state.yaml",
-      project_dir / "constitution.md"),
-
-    check_artifact_exists_and_passed(
-      feature_dir / "harvest-inspection.yaml",  "harvest-inspection.yaml"),
-    check_artifact_exists_and_passed(
-      feature_dir / "layout-inspection.yaml",   "layout-inspection.yaml"),
-    check_artifact_exists_and_passed(
-      feature_dir / "etch-inspection.yaml",     "etch-inspection.yaml"),
-    check_artifact_exists_and_passed(
-      feature_dir / "realize-inspection.yaml",  "realize-inspection.yaml"),
-  ]
-
-  pass ← all checks have status PASS
-  RETURN InspectionResult(timestamp=now_utc(), pass, checks, flatten(findings))
-```
+The gate runs checks 1–5 in order (constitution version + 4 artifact checks). Overall status is PASS when all checks pass.
 
 ## Output
 
