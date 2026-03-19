@@ -5,6 +5,7 @@ Create the primary spec from the improved decomposition.
 ## Inputs
 
 - Improved decomposition
+- Ascertainments
 - Constitution
 
 ## Process

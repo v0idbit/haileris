@@ -37,7 +37,7 @@
 #### Outputs
 
 **Decomposition** (tentative) — a distillation covering description and delivery details (blockers, story relations, external requirements). Plain English spec
-**Technical Details**
+**Technical Details** — synthesized technical context (standards, conventions, dependencies, file inventory) consumed by downstream stages
 
 ---
 
@@ -64,6 +64,7 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 #### Inputs
 
 - Improved decomposition
+- Ascertainments
 - Constitution
 
 #### Outputs
@@ -180,7 +181,7 @@ last_loop_target: null
 
 ## Cross-Feature Dependencies
 
-Each feature runs in its own `.haileris/features/{id}/` directory. When Feature B depends on Feature A's implementation:
+Each feature runs in its own `.haileris/features/{feature_id}/` directory. When Feature B depends on Feature A's implementation:
 
 1. **At Harvest**: note the dependency in the decomposition under Delivery Details (blockers section)
 2. **At Inscribe**: reference Feature A's BIDs in Given preconditions where applicable (e.g., `Given Feature A's BID-003 behavior is available`)

@@ -31,30 +31,30 @@ flowchart TD
 
 ## 2. Artifact File Paths
 
-Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-slug}`):
+Concrete paths for each artifact (substituting `{feature_id}` = `{YYYY-MM-DD}-{branch-slug}`):
 
 | Artifact | Concrete path | Committed? |
 |----------|--------------|------------|
-| Decomposition | `.haileris/features/{id}/decomposition.md` | Yes |
-| Technical details | `.haileris/features/{id}/technical-details.md` | Yes |
-| Ascertainments | `.haileris/features/{id}/ascertainments.md` | Yes |
+| Decomposition | `.haileris/features/{feature_id}/decomposition.md` | Yes |
+| Technical details | `.haileris/features/{feature_id}/technical-details.md` | Yes |
+| Ascertainments | `.haileris/features/{feature_id}/ascertainments.md` | Yes |
 | Primary spec | `tests/features/primary.feature` | Yes |
 | Subspecs | `tests/features/{deliverable}.feature` | Yes |
-| Delivery order | `.haileris/features/{id}/delivery-order.yaml` | Yes |
+| Delivery order | `.haileris/features/{feature_id}/delivery-order.yaml` | Yes |
 | Red-phase tests | `tests/` (repo) | Yes |
 | Green-phase implementation | `src/` (repo) | Yes |
-| Implementation failure details | `.haileris/features/{id}/verify_{ts}.md` | Yes |
+| Implementation failure details | `.haileris/features/{feature_id}/verify_{timestamp}.md` | Yes |
 | Project standards | `.haileris/project/standards.md` | Yes |
 | Project test conventions | `.haileris/project/test-conventions.md` | Yes |
 | Constitution | `.haileris/project/constitution.md` | Yes |
-| **Harvest inspection** | `.haileris/features/{id}/harvest-inspection.yaml` | Yes |
-| **Layout inspection** | `.haileris/features/{id}/layout-inspection.yaml` | Yes |
-| **Etch map** | `.haileris/features/{id}/etch-map.yaml` | Yes |
-| **Etch inspection** | `.haileris/features/{id}/etch-inspection.yaml` | Yes |
-| **Realize map** | `.haileris/features/{id}/realize-map.yaml` | Yes |
-| **Realize inspection** | `.haileris/features/{id}/realize-inspection.yaml` | Yes |
+| **Harvest inspection** | `.haileris/features/{feature_id}/harvest-inspection.yaml` | Yes |
+| **Layout inspection** | `.haileris/features/{feature_id}/layout-inspection.yaml` | Yes |
+| **Etch map** | `.haileris/features/{feature_id}/etch-map.yaml` | Yes |
+| **Etch inspection** | `.haileris/features/{feature_id}/etch-inspection.yaml` | Yes |
+| **Realize map** | `.haileris/features/{feature_id}/realize-map.yaml` | Yes |
+| **Realize inspection** | `.haileris/features/{feature_id}/realize-inspection.yaml` | Yes |
 | Harvest metadata | `.haileris/project/last-harvest.json` | Yes |
-| Pipeline state | `.haileris/features/{id}/pipeline-state.yaml` | Yes |
+| Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | Yes |
 
 Inspection artifacts (bold) all converge at stage 7 (Inspect) as the **Traceability Gate**.
 
@@ -77,12 +77,15 @@ flowchart TD
     CON([Constitution])
 
     H[1. Harvest] -->|creates| DEC
+    H -->|creates| TD([Technical Details])
     DEC -->|ingested by| A[2. Ascertain]
+    TD -->|ingested by| A
 
     A -->|creates| ID
     A -->|creates| ASC
     ID -->|ingested by| I[3. Inscribe]
     ASC -->|ingested by| I
+    TD -->|ingested by| I
     CON -->|ingested by| I
 
     I -->|creates| PS
@@ -91,6 +94,7 @@ flowchart TD
 
     L -->|creates| CS
     CS -->|ingested by| E[5. Etch]
+    TD -->|ingested by| E
     CON -->|ingested by| E
 
     E -->|creates| RT
@@ -98,6 +102,7 @@ flowchart TD
     CS -->|ingested by| R[6. Realize]
     RT -->|ingested by| R
     ETM -->|ingested by| R
+    TD -->|ingested by| R
     CON -->|ingested by| R
 
     R -->|creates| GI

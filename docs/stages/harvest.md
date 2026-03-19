@@ -83,7 +83,7 @@ On FAIL: present findings to user with options to re-run, fix manually, or proce
 
 ## Notes
 
-- **Constructivist framing**: project-wide artifacts (`standards.md`, `test-conventions.md`, `constitution.md`) are consumed by LLM agents at every downstream stage. Prefer constructive statements ("use X", "organize by Y") over negations ("avoid X", "do not Y"). Agents follow positive instructions more reliably than prohibitions.
+- **Constructive framing**: project-wide artifacts (`standards.md`, `test-conventions.md`, `constitution.md`) are consumed by LLM agents at every downstream stage. Prefer constructive statements ("use X", "organize by Y") over negations ("avoid X", "do not Y"). Agents follow positive instructions more reliably than prohibitions.
 - Project standards files are reused across runs unless `--reharvest` is passed; use `--reharvest` when project standards change
 - `harvest-inspection.yaml` is the earliest inspection artifact and feeds the Traceability Gate at Inspect (stage 7)
 

@@ -27,18 +27,18 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 
 | Artifact | Stage | Path |
 |----------|-------|------|
-| Decomposition | Harvest | `.haileris/features/{id}/decomposition.md` |
-| Technical details | Harvest | `.haileris/features/{id}/technical-details.md` |
-| Ascertainments | Ascertain | `.haileris/features/{id}/ascertainments.md` |
+| Decomposition | Harvest | `.haileris/features/{feature_id}/decomposition.md` |
+| Technical details | Harvest | `.haileris/features/{feature_id}/technical-details.md` |
+| Ascertainments | Ascertain | `.haileris/features/{feature_id}/ascertainments.md` |
 | Primary spec | Inscribe | `tests/features/primary.feature` |
 | Subspecs | Layout | `tests/features/{deliverable}.feature` |
-| Delivery order | Layout | `.haileris/features/{id}/delivery-order.yaml` |
+| Delivery order | Layout | `.haileris/features/{feature_id}/delivery-order.yaml` |
 | Red-phase tests | Etch | `tests/` (repo) |
-| Etch map | Etch | `.haileris/features/{id}/etch-map.yaml` |
+| Etch map | Etch | `.haileris/features/{feature_id}/etch-map.yaml` |
 | Green-phase implementation | Realize | `src/` (repo) |
-| Realize map | Realize | `.haileris/features/{id}/realize-map.yaml` |
-| Implementation failure details | Inspect | `.haileris/features/{id}/verify_{ts}.md` |
-| Pipeline state | Harvest | `.haileris/features/{id}/pipeline-state.yaml` |
+| Realize map | Realize | `.haileris/features/{feature_id}/realize-map.yaml` |
+| Implementation failure details | Inspect | `.haileris/features/{feature_id}/verify_{timestamp}.md` |
+| Pipeline state | Harvest | `.haileris/features/{feature_id}/pipeline-state.yaml` |
 
 Project-wide artifacts:
 
@@ -51,7 +51,7 @@ Project-wide artifacts:
 
 ## Inspecting
 
-Stages 1, 4, 5, and 6 each produce an inspect artifact. All four converge at Inspect as the **Traceability Gate** — a missing or failed inspect triggers a Critical finding before reviews begin.
+Stages 1, 4, 5, and 6 each produce an inspection artifact. All four converge at Inspect as the **Traceability Gate** — a missing or failed inspect triggers a Critical finding before reviews begin.
 
 | Inspection artifact | Produced by | Validates |
 |---------------------|------------|-----------|
