@@ -28,6 +28,20 @@ Medium ROI operations that become fully mechanical under a stated constraint. Ea
 | [RED Diagnostics](red-diagnostics.md) | Default-value + tautological assertion detection | Per-language default value tables; AAA structure | [etch.md](../stages/etch.md) |
 | [Mutation Testing](mutation-testing.md) | BID-targeted mutation generation and kill rate | Standard mutation operators + realize-map traceability | [inspect.md](../stages/inspect.md) |
 
+## Tier 3: Mechanical Verification of Judgment Operations (J-v)
+
+Operations where production requires judgment but a mechanical verification layer catches errors.
+Each spec defines the verification layer only — the judgment-dependent production step is out of scope.
+Source: [investment map](../../.notes/mechanical/investment-map.md) items 11–14.
+
+| Spec | Operation | Constraint | Source |
+|------|-----------|-----------|--------|
+| [ANLZ-001](anlz-001.md) | Contradiction detection (verification) | Typed propositions available | [inscribe.md](../stages/inscribe.md) |
+| [ANLZ-004](anlz-004.md) | Composition validation (effect coverage) | Steps 1–2 always; steps 3–4 require effect vocabulary | [inscribe.md](../stages/inscribe.md) |
+| [Second-Reader Test](second-reader.md) | Assertion correction verification | Formulaic relationship in Gherkin step | [settle.md](../stages/settle.md) |
+
+Note: item 13 (tautological detection) is already specified in [red-diagnostics.md](red-diagnostics.md) under Tier 2.
+
 ## Conventions
 
 Each spec uses Gherkin (Feature/Rule/Scenario) to define observable behaviors. Scenarios describe what the check does, not how.
