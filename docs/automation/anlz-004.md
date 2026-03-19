@@ -1,6 +1,6 @@
 # ANLZ-004: Composition Validation (Effect Coverage)
 
-Verifies that primary scenario traces are complete and that traced subspecs collectively cover all effects declared in the primary scenario. Steps 1–2 (tag and BID existence) are fully mechanical. Steps 3–4 (effect extraction and coverage) are mechanical when Gherkin steps use effect-indicating vocabulary from the keyword table. Source: [inscribe.md](../stages/inscribe.md) (ANLZ-004 section).
+Verifies that primary scenario traces are complete and that traced subspecs collectively cover all effects declared in the primary scenario. Steps 1–2 (tag and BID existence) are fully mechanical. Steps 3–4 (effect extraction and coverage) are mechanical when Gherkin steps use effect-indicating vocabulary from the keyword table. Source: [layout.md](../stages/layout.md) (ANLZ-004 section).
 
 ## Constraint
 
@@ -30,7 +30,7 @@ The effect vocabulary table is the mechanization lever: steps using listed verbs
 Scenario: Full user workflow
 ```
 
-**Effect extraction scope:** Then/And steps and When steps that contain effect verbs are effect candidates. Given steps are treated as context (preconditions) and excluded — per inscribe.md: "Given preconditions restating already-covered state are context, and context is excluded."
+**Effect extraction scope:** Then/And steps and When steps that contain effect verbs are effect candidates. Given steps are treated as context (preconditions) and excluded — per layout.md: "Given preconditions restating already-covered state are context, and context is excluded."
 
 ### Effect Vocabulary Table
 
@@ -161,7 +161,7 @@ Feature: ANLZ-004 Composition Validation
 
 ## Output
 
-ANLZ-004 does not write a standalone inspection artifact. Its result is part of the Inscribe.Verify consistency check output, alongside ANLZ-001, ANLZ-002, and ANLZ-003. Implementations may emit the result to stdout for tooling use.
+ANLZ-004 does not write a standalone inspection artifact. Its result is part of the Layout.Verify consistency check output, alongside ANLZ-003. Implementations may emit the result to stdout for tooling use.
 
 Results follow the standard Finding format:
 

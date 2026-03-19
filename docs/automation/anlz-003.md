@@ -1,6 +1,6 @@
 # ANLZ-003: Domain Coverage
 
-Fully mechanical consistency check. Verifies that every subspec referenced by primary scenario `@traces` tags has declared `Domains:` metadata. Source: [inscribe.md](../stages/inscribe.md) (ANLZ-003 section).
+Fully mechanical consistency check. Verifies that every subspec referenced by primary scenario `@traces` tags has declared `Domains:` metadata. Source: [layout.md](../stages/layout.md) (ANLZ-003 section).
 
 ## Inputs
 
@@ -105,7 +105,7 @@ Feature: ANLZ-003 Domain Coverage
 
 ## Output
 
-ANLZ-003 does not write a standalone inspection artifact. Its result is part of the Inscribe.Verify consistency check output. Implementations may emit the result to stdout for tooling use.
+ANLZ-003 does not write a standalone inspection artifact. Its result is part of the Layout.Verify consistency check output. Implementations may emit the result to stdout for tooling use.
 
 ## Edge Cases
 

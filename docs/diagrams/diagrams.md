@@ -17,7 +17,7 @@ flowchart TD
     A -->|ascertainments needed| A
     A --> I
     I --> L
-    L -->|user approves tasks| E
+    L -->|user approves subspecs| E
     E --> R
     R --> IN
     IN --> S
@@ -38,8 +38,9 @@ Concrete paths for each artifact (substituting `{id}` = `{YYYY-MM-DD}-{branch-sl
 | Decomposition | `.haileris/features/{id}/decomposition.md` | Yes |
 | Technical details | `.haileris/features/{id}/technical-details.md` | Yes |
 | Ascertainments | `.haileris/features/{id}/ascertainments.md` | Yes |
-| Spec | `tests/features/` (repo) | Yes |
-| Task list | `.haileris/features/{id}/tasks.md` | Yes |
+| Primary spec | `tests/features/primary.feature` | Yes |
+| Subspecs | `tests/features/{deliverable}.feature` | Yes |
+| Delivery order | `.haileris/features/{id}/delivery-order.yaml` | Yes |
 | Red-phase tests | `tests/` (repo) | Yes |
 | Green-phase implementation | `src/` (repo) | Yes |
 | Implementation failure details | `.haileris/features/{id}/verify_{ts}.md` | Yes |
@@ -67,11 +68,10 @@ flowchart TD
     ASC([Ascertainments])
     PS([Primary Spec<br>primary.feature])
     CS([Deliverable Subspecs<br>deliverable.feature])
-    SS([Spec Subspecs])
     RT([Red-phase Tests])
     ETM([Etch Map])
     GI([Green-phase Implementation])
-    IM([Implementation Map])
+    RM([Realize Map])
     IF([Implementation Failure Details])
     CON([Constitution])
 
@@ -85,29 +85,27 @@ flowchart TD
     CON -->|ingested by| I
 
     I -->|creates| PS
-    I -->|creates| CS
     PS -->|ingested by| L[4. Layout]
-    CS -->|ingested by| L
     CON -->|ingested by| L
 
-    L -->|creates| SS
-    SS -->|ingested by| E[5. Etch]
+    L -->|creates| CS
+    CS -->|ingested by| E[5. Etch]
     CON -->|ingested by| E
 
     E -->|creates| RT
     E -->|creates| ETM
-    SS -->|ingested by| R[6. Realize]
+    CS -->|ingested by| R[6. Realize]
     RT -->|ingested by| R
     ETM -->|ingested by| R
     CON -->|ingested by| R
 
     R -->|creates| GI
-    R -->|creates| IM
+    R -->|creates| RM
     PS -->|ingested by| IN[7. Inspect]
     CS -->|ingested by| IN
     GI -->|ingested by| IN
     ETM -->|ingested by| IN
-    IM -->|ingested by| IN
+    RM -->|ingested by| IN
     CON -->|ingested by| IN
 
     IN -->|creates| IF
@@ -121,20 +119,20 @@ flowchart TD
 
 ## 3a. Spec Composition Flow
 
-Primary spec is authored first, then decomposed into subspecs. ANLZ-004 validates that subspecs compose back into the primary spec.
+Inscribe creates the primary spec. Layout decomposes it into subspecs and adds `@traces` tags. ANLZ-004 validates at Layout.Verify that subspecs compose back into the primary spec.
 
 ```mermaid
 flowchart LR
-    ID([Improved Decomposition]) --> AUTH["Inscribe.Author"]
+    PS_IN["primary.feature<br>(from Inscribe)"] --> DEC["Layout.Decompose"]
 
-    AUTH -->|"step 1"| PS["primary.feature<br>(end-to-end scenarios<br>with @traces tags)"]
-    AUTH -->|"step 2"| CS["{deliverable}.feature<br>(per-deliverable BIDs)"]
+    DEC -->|"step 2"| CS["{deliverable}.feature<br>(per-deliverable BIDs)"]
+    DEC -->|"step 4"| TR["@traces tags<br>added to primary.feature"]
 
-    PS --> V["Inscribe.Verify<br>ANLZ-004"]
-    CS --> V
+    CS --> V["Layout.Verify<br>ANLZ-003, ANLZ-004"]
+    TR --> V
 
     V -->|"validates composition"| RESULT{"Subspecs cover<br>all primary steps?"}
-    RESULT -->|PASS| AP["Inscribe.Approve"]
+    RESULT -->|PASS| AP["Layout.Approve"]
     RESULT -->|FAIL| FIX["Show uncovered steps;<br>user fixes or proceeds"]
 ```
 
@@ -169,16 +167,14 @@ flowchart TD
     end
 
     I --> PS2(["Primary Spec<br>(end-to-end workflow BIDs)"])
-    I --> CS2(["Deliverable Subspecs<br>(per-deliverable BIDs)"])
     PS2 --> L
-    CS2 --> L
 
     subgraph L["4. Layout + Constitution"]
-        L_P["Break spec into vertical<br>disjoint subspecs"]
+        L_D["Decompose"] --> L_V["Verify"] --> L_AP["Approve"]
     end
 
-    L --> SS(["Spec Subspecs (BID groups)"])
-    SS --> E
+    L --> CS2(["Deliverable Subspecs<br>(per-deliverable BIDs)"])
+    CS2 --> E
 
     subgraph E["5. Etch + Constitution"]
         E_P["Write red-phase tests per subspec"]
@@ -186,7 +182,7 @@ flowchart TD
 
     E --> RT(["Red-phase Tests (per subspec)"])
     E --> ETM2(["Etch Map"])
-    SS --> R
+    CS2 --> R
     RT --> R
     ETM2 --> R
 
@@ -195,12 +191,12 @@ flowchart TD
     end
 
     R --> GI(["Green-phase Implementation (per subspec)"])
-    R --> IM2(["Implementation Map"])
+    R --> RM2(["Realize Map"])
     PS2 --> IN
     CS2 --> IN
     GI --> IN
     ETM2 --> IN
-    IM2 --> IN
+    RM2 --> IN
 
     subgraph IN["7. Inspect + Constitution"]
         IN_G["Gate"] --> IN_R["Review"] --> IN_S["Synthesize"]
@@ -245,7 +241,7 @@ flowchart LR
 | Inspection | Validates |
 |-------|-----------|
 | `harvest-inspection.yaml` | decomposition.md and technical-details.md across 4 dimensions: template compliance (×2), artifact preflight, dependency doc coverage |
-| `layout-inspection.yaml` | task list BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
+| `layout-inspection.yaml` | subspec BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
 | `etch-inspection.yaml` | etch-map.yaml BID → test mapping: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
 | `realize-inspection.yaml` | implementation map: completeness (BID → derivation), scope (unmapped derivations via AST), broken refs (ghost derivations) |
 

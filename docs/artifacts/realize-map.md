@@ -2,11 +2,11 @@
 
 A derivation is any named callable or type that static analysis can discover: functions, methods, classes, and their equivalents in the target language.
 
-A structured mapping from BIDs to the derivations that implement them. Built incrementally by Realize after each task completes. Used by the realize inspection to verify completeness, scope, and derivation integrity.
+A structured mapping from BIDs to the derivations that implement them. Built incrementally by Realize after each subspec completes. Used by the realize inspection to verify completeness, scope, and derivation integrity.
 
 ## What It Contains
 
-For each BID in the spec: a list of derivations (in `path/to/file#Class.member` format) and the tasks that contributed them. Metadata: `feature_id`, `tasks_completed`, `tasks_total`, `last_updated`.
+For each BID in the spec: a list of derivations (in `path/to/file#Class.member` format) and the subspec that owns them. Metadata: `feature_id`, `subspecs_completed`, `subspecs_total`, `last_updated`.
 
 ## Derivation Format
 
@@ -19,7 +19,7 @@ All derivations — including private helpers and internal methods — must be m
 
 ## Lifecycle
 
-Created by Realize when the first task completes. Appended to after each subsequent task. Read by the realize inspection after all tasks complete. Stable after the realize inspection passes. A derivation may appear under multiple BIDs when shared logic legitimately satisfies multiple behaviors.
+Created by Realize when the first subspec completes. Appended to after each subsequent subspec. Read by the realize inspection after all subspecs complete. Stable after the realize inspection passes. A derivation may appear under multiple BIDs when shared logic legitimately satisfies multiple behaviors.
 
 ## Path
 

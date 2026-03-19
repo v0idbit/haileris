@@ -21,7 +21,7 @@ Then verify all four BID inspection artifacts exist and passed:
 | Artifact | Source stage | Failure = |
 |----------|-------------|-----------|
 | `harvest-inspection.yaml` | Harvest | Critical: "harvest-inspection.yaml not found; context coverage unverified" |
-| `layout-inspection.yaml` | Layout | Critical: "layout-inspection.yaml not found; BID coverage for task list unverified" |
+| `layout-inspection.yaml` | Layout | Critical: "layout-inspection.yaml not found; BID coverage for subspecs unverified" |
 | `etch-inspection.yaml` | Etch | Critical: "etch-inspection.yaml not found; test BID mapping unverified" |
 | `realize-inspection.yaml` | Realize | Critical: "realize-inspection.yaml not found; build BID mapping unverified" |
 

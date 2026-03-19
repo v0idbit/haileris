@@ -6,11 +6,11 @@
 |---|-------|---------|
 | 1 | [Harvest](stages/harvest.md) | Harvest the codebase and distill all relevant context |
 | 2 | [Ascertain](stages/ascertain.md) | Resolve ambiguities, contradictions, and gaps |
-| 3 | [Inscribe](stages/inscribe.md) | Author the formal spec with enumerated BIDs |
-| 4 | [Layout](stages/layout.md) | Partition the spec into vertical delivery slices |
-| 5 | [Etch](stages/etch.md) | Write red-phase tests for each delivery slice |
-| 6 | [Realize](stages/realize.md) | Implement green-phase code against each test module |
-| 7 | [Inspect](stages/inspect.md) | Review each completed slice for correctness and traceability |
+| 3 | [Inscribe](stages/inscribe.md) | Author the primary spec with enumerated BIDs |
+| 4 | [Layout](stages/layout.md) | Decompose the primary spec into ordered delivery subspecs |
+| 5 | [Etch](stages/etch.md) | Write red-phase tests for each subspec |
+| 6 | [Realize](stages/realize.md) | Implement green-phase code to make each subspec's tests pass |
+| 7 | [Inspect](stages/inspect.md) | Review the finished implementation for correctness and traceability |
 | 8 | [Settle](stages/settle.md) | Evaluate failures; loop back or declare completion |
 
 ---
@@ -36,7 +36,7 @@
 
 #### Outputs
 
-**Decomposed Context** (tentative) — a distillation covering description and delivery details (blockers, story relations, external requirements). Plain English spec
+**Decomposition** (tentative) — a distillation covering description and delivery details (blockers, story relations, external requirements). Plain English spec
 **Technical Details**
 
 ---
@@ -45,7 +45,7 @@
 
 #### Input
 
-Decomposed Context
+Decomposition
 
 #### Process
 
@@ -68,23 +68,22 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 #### Outputs
 
-**Gherkin spec** — end-to-end workflow scenarios with BIDs and `@traces` tags.
-**Gherkin subspecs** — per-deliverable behavioral contracts with BIDs. Subspecs compose into the primary spec; ANLZ-004 validates this.
+**Primary spec** — end-to-end workflow scenarios with BIDs.
 
 ---
 
 ### 4. Layout
 
+**Sub-stages:** Layout.Decompose → Layout.Verify → Layout.Approve
+
 #### Inputs
 
-- Gherkin spec (primary spec + deliverable subspecs)
+- Primary spec (`primary.feature`)
 - Constitution
 
 #### Outputs
 
-**Gherkin subspecs** — one per vertical delivery slice, each containing the relevant BIDs. All BIDs (both primary and subspec) are grouped into tasks; primary BIDs naturally land in later tasks due to cross-deliverable dependencies.
-
-Gherkin subspecs must be disjoint and their union must equal the full Gherkin spec.
+**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, and validates composition (ANLZ-003, ANLZ-004).
 
 ---
 
@@ -106,7 +105,7 @@ This ensures later subspecs can depend on earlier subspecs' implementations.
 #### 6. Realize
 
 **Inputs:** Gherkin subspec (current subspec), Red-phase tests, Etch map, Constitution
-**Outputs:** Green-phase implementation, Implementation map (BID → derivation mapping)
+**Outputs:** Green-phase implementation, Realize map (BID → derivation mapping)
 
 ---
 
@@ -119,7 +118,7 @@ This ensures later subspecs can depend on earlier subspecs' implementations.
 - Gherkin spec
 - Green-phase implementation
 - Etch map
-- Implementation map
+- Realize map
 - Constitution
 
 #### Output

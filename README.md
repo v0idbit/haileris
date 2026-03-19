@@ -4,20 +4,20 @@ A spec-driven pipeline. Takes raw feature context as input; produces verified, g
 
 ## Pipeline
 
-Eight stages in sequence. Stages 5–6 repeat per spec subset (sequentially: Etch→Realize per subset). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize.
+Eight stages in sequence. Stages 5–6 repeat per subspec (sequentially: Etch→Realize per subspec). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize.
 
 | # | Stage | What it does |
 |---|-------|-------------|
 | 1 | **Harvest** | Ingest all feature context; synthesize into a Decomposition and Technical Details |
 | 2 | **Ascertain** | Surface and resolve ambiguities in the Decomposition |
-| 3 | **Inscribe** | Write the behavioral spec: primary workflow scenarios, then per-concern subspecs |
-| 4 | **Layout** | Break the spec into ordered, non-overlapping implementation tasks |
-| 5 | **Etch** | Generate red-phase (failing) tests per spec subset |
+| 3 | **Inscribe** | Write the primary spec: end-to-end workflow scenarios with BIDs |
+| 4 | **Layout** | Decompose the primary spec into ordered delivery subspecs |
+| 5 | **Etch** | Generate red-phase (failing) tests per subspec |
 | 6 | **Realize** | Implement minimum code to turn red tests green |
 | 7 | **Inspect** | Review the finished implementation against the spec |
 | 8 | **Settle** | Fix failures by domain; loop to earliest required stage if any remain |
 
-> Harvest, Inscribe, Inspect, and Settle each contain named sub-stages (e.g., `Harvest.Explore → Harvest.Synthesize → Harvest.Validate → Harvest.Initialize`). See individual stage docs for details.
+> Harvest, Inscribe, Layout, Inspect, and Settle each contain named sub-stages (e.g., `Harvest.Explore → Harvest.Synthesize → Harvest.Validate → Harvest.Initialize`). See individual stage docs for details.
 
 See [`docs/pipeline.md`](docs/pipeline.md) for the full input/output spec and [`docs/diagrams/diagrams.md`](docs/diagrams/diagrams.md) for stage flow and artifact maps.
 
@@ -30,8 +30,9 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Decomposition | Harvest | `.haileris/features/{id}/decomposition.md` |
 | Technical details | Harvest | `.haileris/features/{id}/technical-details.md` |
 | Ascertainments | Ascertain | `.haileris/features/{id}/ascertainments.md` |
-| Spec | Inscribe | `tests/features/` (repo) |
-| Task list | Layout | `.haileris/features/{id}/tasks.md` |
+| Primary spec | Inscribe | `tests/features/primary.feature` |
+| Subspecs | Layout | `tests/features/{deliverable}.feature` |
+| Delivery order | Layout | `.haileris/features/{id}/delivery-order.yaml` |
 | Red-phase tests | Etch | `tests/` (repo) |
 | Etch map | Etch | `.haileris/features/{id}/etch-map.yaml` |
 | Green-phase implementation | Realize | `src/` (repo) |
@@ -55,7 +56,7 @@ Stages 1, 4, 5, and 6 each produce an inspect artifact. All four converge at Ins
 | Inspection artifact | Produced by | Validates |
 |---------------------|------------|-----------|
 | `harvest-inspection.yaml` | Harvest | decomposition.md and technical-details.md across 4 dimensions |
-| `layout-inspection.yaml` | Layout | Task list BID coverage (5 check types) |
+| `layout-inspection.yaml` | Layout | Subspec BID coverage (5 check types) |
 | `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping (5 check types) |
 | `realize-inspection.yaml` | Realize | Realize map: completeness, scope, broken refs |
 

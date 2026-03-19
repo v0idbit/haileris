@@ -13,9 +13,9 @@ High frequency, high error cost, low implementation difficulty. All operations c
 | [Etch Inspection](etch-inspection.md) | 3 active checks + 2 SKIP | [etch.md](../stages/etch.md) |
 | [Realize Inspection](realize-inspection.md) | 2 active checks + 1 SKIP | [realize.md](../stages/realize.md) |
 | [Traceability Gate](traceability-gate.md) | 5 checks | [inspect.md](../stages/inspect.md) |
-| [ANLZ-003](anlz-003.md) | 1 check (5-step algorithm) | [inscribe.md](../stages/inscribe.md) |
+| [ANLZ-003](anlz-003.md) | 1 check (5-step algorithm) | [layout.md](../stages/layout.md) |
 | [TEST-001](test-001.md) | 1 check | [etch.md](../stages/etch.md) |
-| [Pipeline State](pipeline-state.md) | State machine + 5 operations | [pipeline-state.md](../artifacts/pipeline-state.md), [Pipeline.md](../Pipeline.md) |
+| [Pipeline State](pipeline-state.md) | State machine + 5 operations | [pipeline-state.md](../artifacts/pipeline-state.md), [pipeline.md](../pipeline.md) |
 
 ## Tier 2: Mechanical with Constraints (M-c)
 
@@ -37,7 +37,7 @@ Source: [investment map](../../.notes/mechanical/investment-map.md) items 11–1
 | Spec | Operation | Constraint | Source |
 |------|-----------|-----------|--------|
 | [ANLZ-001](anlz-001.md) | Contradiction detection (verification) | Typed propositions available | [inscribe.md](../stages/inscribe.md) |
-| [ANLZ-004](anlz-004.md) | Composition validation (effect coverage) | Steps 1–2 always; steps 3–4 require effect vocabulary | [inscribe.md](../stages/inscribe.md) |
+| [ANLZ-004](anlz-004.md) | Composition validation (effect coverage) | Steps 1–2 always; steps 3–4 require effect vocabulary | [layout.md](../stages/layout.md) |
 | [Second-Reader Test](second-reader.md) | Assertion correction verification | Formulaic relationship in Gherkin step | [settle.md](../stages/settle.md) |
 
 Note: item 13 (tautological detection) is already specified in [red-diagnostics.md](red-diagnostics.md) under Tier 2.

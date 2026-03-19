@@ -1,6 +1,6 @@
 # Spec
 
-The central artifact of the pipeline. Produced by Inscribe, consumed by every downstream stage. It is the source of truth for what must be built and the traceability anchor for all tests, tasks, and implementation.
+The central artifact of the pipeline. The primary spec is produced by Inscribe; subspecs are decomposed from the primary spec by Layout. Consumed by every downstream stage. It is the source of truth for what must be built and the traceability anchor for all subspecs, tests, and implementation.
 
 The spec is a set of `.feature` files written directly to the repo's test tree (`tests/features/`). It contains a **primary spec** and one or more **subspecs**. The primary spec defines end-to-end workflow scenarios (integration-level contract). The subspecs define per-deliverable behavioral scenarios (unit-level contracts). Their union, when composed, must cover all primary spec behaviors.
 
@@ -21,7 +21,7 @@ Feature files are source artifacts — permanent repo fixtures committed alongsi
 | Primary | `primary.feature` | End-to-end workflow scenarios | Integration-level contract |
 | Subspec | `{deliverable}.feature` | Per-deliverable behavioral scenarios | Unit-level contracts |
 
-The primary spec is written first. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for effects that cross deliverable boundaries. Subspecs are decompositions of the primary spec — each owns one deliverable's behavioral contract. A deliverable is a set of BIDs that share a delivery boundary — they can be implemented and verified as a unit, independent of other subspecs. The breaking points between deliverables are where one subspec's output becomes another's input. ANLZ-004 validates that subspecs compose back into the primary spec with no gaps.
+The primary spec is written by Inscribe. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for effects that cross deliverable boundaries. Subspecs are decomposed from the primary spec by Layout — each owns one deliverable's behavioral contract. A deliverable is a set of BIDs that share a delivery boundary — they can be implemented and verified as a unit, independent of other subspecs. The breaking points between deliverables are where one subspec's output becomes another's input. ANLZ-004 validates at Layout.Verify that subspecs compose back into the primary spec with no gaps.
 
 ## Format
 
@@ -47,7 +47,7 @@ Feature: {feature_name} — Primary Spec
     Then {outcome}
 ```
 
-Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it traces through. The `@traces` tag makes composition explicit and auditable.
+Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it traces through. The `@traces` tags are added by Layout after subspec creation. The `@traces` tag makes composition explicit and auditable.
 
 ### Subspecs (`{deliverable}.feature`)
 
@@ -109,7 +109,7 @@ Each primary spec scenario must have a `@traces` tag. ANLZ-004 validates:
 
 ## BID Format
 
-`BID-{NNN}` — sequentially numbered from `001`. Every Scenario carries exactly one BID as a tag (`@BID-001`). BIDs are the unit of traceability: every task, test, and derivation in the pipeline is traced back to a BID.
+`BID-{NNN}` — sequentially numbered from `001`. Every Scenario carries exactly one BID as a tag (`@BID-001`). BIDs are the unit of traceability: every subspec, test, and derivation in the pipeline is traced back to a BID.
 
 ## Pipeline Metadata
 

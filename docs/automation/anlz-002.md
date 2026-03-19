@@ -125,7 +125,7 @@ Feature: ANLZ-002 Standards Compliance
 
 ## Output
 
-ANLZ-002 does not write a standalone inspection artifact. Its result is part of the Inscribe.Verify consistency check output, alongside ANLZ-001, ANLZ-003, and ANLZ-004. Implementations may emit the result to stdout for tooling use.
+ANLZ-002 does not write a standalone inspection artifact. Its result is part of the Inscribe.Verify consistency check output, alongside ANLZ-001. Implementations may emit the result to stdout for tooling use.
 
 Results follow the standard Finding format:
 

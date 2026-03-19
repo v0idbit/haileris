@@ -1,6 +1,6 @@
 # Realize Inspection
 
-Validates the implementation map after all tasks complete. Source: [realize.md](../stages/realize.md) (Realize Inspection table).
+Validates the implementation map after all subspecs complete. Source: [realize.md](../stages/realize.md) (Realize Inspection table).
 
 ## Inputs
 
@@ -14,17 +14,17 @@ Validates the implementation map after all tasks complete. Source: [realize.md](
 
 ```yaml
 feature_id: "{feature_id}"
-tasks_completed: 3
-tasks_total: 3
+subspecs_completed: 3
+subspecs_total: 3
 bids:
   BID-001:
     derivations:
       - src/module#MyClass.my_method
-    tasks: [TASK-1]
+    subspec: "users.feature"
   BID-002:
     derivations:
       - src/module#function_name
-    tasks: [TASK-2]
+    subspec: "auth.feature"
 ```
 
 ### Derivation Format

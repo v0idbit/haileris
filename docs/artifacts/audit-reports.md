@@ -7,7 +7,7 @@ Machine-readable YAML files produced at validation gates throughout the pipeline
 | Artifact | Produced By | Checks |
 |---|---|---|
 | `harvest-inspection.yaml` | Harvest | decomposition.md and technical-details.md across 4 dimensions: decomposition template compliance, technical details template compliance, artifact preflight, dependency doc coverage |
-| `layout-inspection.yaml` | Layout | Task list vs. spec BIDs: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL |
+| `layout-inspection.yaml` | Layout | Subspec vs. primary spec BIDs: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL |
 | `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL |
 | `realize-inspection.yaml` | Realize | Implementation vs. spec BIDs: Completeness, Scope, Broken refs |
 

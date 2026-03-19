@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-03-19
+
+### Changed
+- **Subspec creation moved from Inscribe to Layout** — Inscribe now produces only the primary spec (`primary.feature`); Layout decomposes it into ordered delivery subspecs (`{deliverable}.feature`), adds `@traces` tags, and validates composition (ANLZ-003, ANLZ-004)
+- **Task concept eliminated** — `tasks.md` with `TASK-{NNN}` identifiers replaced by `delivery-order.yaml` listing subspecs in implementation order with dependency edges; subspecs are identified by filename
+- **Layout gains sub-stages** — Layout.Decompose → Layout.Verify → Layout.Approve, mirroring Inscribe's pattern
+- **`@traces` tags authored by Layout** — primary spec scenarios receive `@traces` tags after subspec creation, when the referenced BIDs exist
+- **Realize map field changes** — `tasks_completed`/`tasks_total` → `subspecs_completed`/`subspecs_total`; per-BID `tasks: [TASK-1]` → `subspec: "users.feature"`
+
 ## 2026-03-18
 
 ### Changed
@@ -11,12 +20,12 @@
 
 ### Added
 - **Primary spec and two-level spec hierarchy** — Inscribe now produces `primary.feature` (integration-level workflow scenarios) before decomposing into `{concern}.feature` subspecs (unit-level contracts)
-- **ANLZ-006 composition validation** — new consistency check in Inscribe.Verify ensures subspecs collectively cover all primary spec scenarios with no unowned data transformations
+- **ANLZ-004 composition validation** — new consistency check in Inscribe.Verify ensures subspecs collectively cover all primary spec scenarios with no unowned data transformations
 - **`@traces` tags** — each primary spec scenario carries `@traces:BID-xxx,...` listing the subspec BIDs it traces through
 - **Project artifact pre-check** — before any stage runs, the pipeline checks for `.haileris/project/` artifacts (standards, test-conventions, constitution) and generates missing ones
 - **Ascertain assumption checkpoint** — when no ambiguities are found, Ascertain lists assumptions for user confirmation to prevent silent assumptions propagating
 - **Inscribe three approval options** — Approve, Request changes (minor edits), Request changes (needs ascertainment)
-- **Realize per-task map validation** — validates map entries immediately after each task completes (broken refs, missing BID mappings) before proceeding to the next task
+- **Realize per-subspec map validation** — validates map entries immediately after each subspec completes (broken refs, missing BID mappings) before proceeding to the next subspec
 - **Settle max 3 loops** — prevents infinite Settle loops; escalates to user after 3 cycles
 
 ### Changed

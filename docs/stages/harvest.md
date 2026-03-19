@@ -94,7 +94,7 @@ On FAIL: present findings to user with options to re-run, fix manually, or proce
 
 A feature that produces more than **~20 BIDs** at Inscribe should be considered for splitting. Large features cause:
 - Massive specs that are hard to review at the Inscribe approval gate
-- Many Layout tasks with complex dependency chains
+- Many Layout subspecs with complex dependency chains
 - Long Etch → Realize loops that delay feedback
 - Broad Inspect reviews where findings are harder to triage
 

@@ -8,7 +8,7 @@ Minimum production code that makes all red-phase tests pass. Scoped strictly to 
 
 ## Lifecycle
 
-Written by Realize task-by-task. Updated by Settle (via implementation fixes) when Inspect finds Critical, High, or Medium `domain: impl` findings. The test suite must be fully green after each update. Changes are scoped strictly to the spec's BIDs.
+Written by Realize subspec-by-subspec. Updated by Settle (via implementation fixes) when Inspect finds Critical, High, or Medium `domain: impl` findings. The test suite must be fully green after each update. Changes are scoped strictly to the spec's BIDs.
 
 ## Path
 

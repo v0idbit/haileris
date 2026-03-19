@@ -115,7 +115,7 @@ The four artifacts and their expected error messages on absence:
 | Artifact | Critical message |
 |----------|-----------------|
 | `harvest-inspection.yaml` | "harvest-inspection.yaml not found; context coverage unverified" |
-| `layout-inspection.yaml` | "layout-inspection.yaml not found; BID coverage for task list unverified" |
+| `layout-inspection.yaml` | "layout-inspection.yaml not found; BID coverage for subspecs unverified" |
 | `etch-inspection.yaml` | "etch-inspection.yaml not found; test BID mapping unverified" |
 | `realize-inspection.yaml` | "realize-inspection.yaml not found; build BID mapping unverified" |
 

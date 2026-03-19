@@ -1,6 +1,6 @@
 # Pipeline State Machine
 
-State management operations for tracking feature progress through the pipeline. Source: [pipeline-state.md](../artifacts/pipeline-state.md), [Pipeline.md](../Pipeline.md).
+State management operations for tracking feature progress through the pipeline. Source: [pipeline-state.md](../artifacts/pipeline-state.md), [pipeline.md](../pipeline.md).
 
 ## State Schema
 

@@ -179,7 +179,7 @@ Feature: ANLZ-001 Contradiction Detection
 
 ## Output
 
-ANLZ-001 does not write a standalone inspection artifact. Its result is part of the Inscribe.Verify consistency check output, alongside ANLZ-002, ANLZ-003, and ANLZ-004. Implementations may emit the result to stdout for tooling use.
+ANLZ-001 does not write a standalone inspection artifact. Its result is part of the Inscribe.Verify consistency check output, alongside ANLZ-002. Implementations may emit the result to stdout for tooling use.
 
 Results follow the standard Finding format:
 
