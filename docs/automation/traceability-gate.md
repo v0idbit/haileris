@@ -130,6 +130,6 @@ The traceability gate does not write its own inspection artifact. Its result is 
 ## Edge Cases
 
 - **All artifacts missing:** Each produces an independent Critical finding. The gate fails with 4 MISSING findings (plus any constitution finding).
-- **Artifact exists but malformed YAML:** Treated as missing. The gate cannot distinguish "file not found" from "file unreadable" — both are gate blockers.
+- **Artifact exists but malformed YAML:** Treated as missing. The gate treats both "file not found" and "file unreadable" identically — both are gate blockers.
 - **`pass` field absent from artifact:** If the YAML loads but has no `pass` key, treat as `pass: false`.
 - **Constitution version is `null` in state:** This is the expected state when no constitution was present at Harvest. Only a problem if a constitution file now exists (Case 2).

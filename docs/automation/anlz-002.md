@@ -71,7 +71,7 @@ Feature: ANLZ-002 Standards Compliance
       Then the check status is SKIP
       And the detail is "No parseable RULE/SCOPE pairs found in standards.md"
 
-  Rule: Violation detection — BID assertions must not contradict applicable standards
+  Rule: Violation detection — BID assertions must comply with applicable standards
 
     Scenario: A BID's domain matches a rule scope and assertions are consistent
       Given a standard "RULE: use TLS for all connections" with "SCOPE: src/network"
@@ -138,9 +138,9 @@ Finding:
 
 ## Edge Cases
 
-- **No `standards.md`:** If the file does not exist, emit SKIP with detail "standards.md not found." This is not a FAIL — the project may not have defined standards yet.
+- **No `standards.md`:** If the file is absent, emit SKIP with detail "standards.md not found." This is not a FAIL — the project may not have defined standards yet.
 - **Rule with wildcard scope:** `SCOPE: *` or `SCOPE: **/*` matches all domains. Every BID is checked against this rule.
-- **BID with no `Domains:` line:** The BID has no domain paths to match against rule scopes. No rules apply; no findings for this BID from ANLZ-002. (Missing domains is an ANLZ-003 concern.)
+- **BID with no `Domains:` line:** The BID has an empty domain set; all rules are outside scope; ANLZ-002 produces zero findings for this BID. (Missing domains is an ANLZ-003 concern.)
 - **Multiple rules with overlapping scopes:** Each rule is checked independently. A BID can violate multiple rules, producing multiple findings.
-- **Contradiction detection false negatives:** Keyword-based contradiction detection misses semantic contradictions that do not manifest as direct negation patterns. This is an accepted limitation of the M-c boundary — semantic analysis requires judgment.
+- **Contradiction detection false negatives:** Keyword-based contradiction detection catches only contradictions that manifest as direct negation patterns. This is an accepted limitation of the M-c boundary — semantic analysis requires judgment.
 - **Rule without SCOPE line:** A `RULE:` line not followed by a `SCOPE:` line before the next `RULE:` is dropped. Implementations should warn about unpaired rules.

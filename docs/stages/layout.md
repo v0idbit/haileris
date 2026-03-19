@@ -16,7 +16,7 @@ Break the Gherkin spec into small, vertical deliverables.
 5. Validate BID coverage; write `.haileris/features/{feature_id}/layout-inspection.yaml`
 6. Present task list to user for approval (APPROVE / REJECT); wait for confirmation before proceeding to Etch
    - User may request task regrouping, reordering, or splitting — revise and re-validate if so
-   - This gate catches over-bundled tasks, awkward groupings, or poor dependency ordering that the layout inspection cannot detect
+   - This gate catches over-bundled tasks, awkward groupings, or poor dependency ordering that require human judgment beyond the layout inspection
 
 ## Outputs
 

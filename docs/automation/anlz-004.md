@@ -175,7 +175,7 @@ Finding:
 
 ## Edge Cases
 
-- **No primary.feature:** The entire check fails with a `MISSING_TRACES` finding. Steps 3–4 do not run.
+- **Missing primary.feature:** The entire check fails with a `MISSING_TRACES` finding. Steps 3–4 are skipped.
 - **Primary scenario with `@traces` but empty BID list:** `@traces:` with no BIDs after the colon produces no trace entries. The traces tag check passes (the tag exists); the BID existence check has nothing to check.
 - **Effect keyword in both primary and subspec:** Coverage matching is by effect type category, not exact keyword. Primary step "creates" is covered by subspec step "produces" (both `STATE_CREATED`).
 - **Multiple effect categories in one step:** A step like "creates a record and sends a notification" produces two effect entries (`STATE_CREATED`, `DATA_FLOW`). Each is checked independently for coverage.

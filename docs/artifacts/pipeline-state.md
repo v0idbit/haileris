@@ -39,7 +39,7 @@ last_loop_target: null
 
 ## Lifecycle
 
-Created by Harvest when the feature is first registered. Updated after each stage transition. On a Settle loop, downstream stage statuses reset to `pending` from the loop target onward. Remains in place until the feature is closed. Never rolled back — the state reflects the most recent completed transition.
+Created by Harvest when the feature is first registered. Updated after each stage transition. On a Settle loop, downstream stage statuses reset to `pending` from the loop target onward. Remains in place until the feature is closed. Append-forward — the state always reflects the most recent completed transition.
 
 ## Path
 

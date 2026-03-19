@@ -61,7 +61,7 @@ After all reviews complete, synthesize.
 
 ### Verify Report Retention
 
-Multiple `verify_{timestamp}.md` files accumulate across Settle loops. Settle always reads the most recent report. Older reports are retained for audit purposes and are never automatically deleted. To reduce clutter, users may archive or remove old reports after the feature reaches COMPLETE.
+Multiple `verify_{timestamp}.md` files accumulate across Settle loops. Settle always reads the most recent report. Older reports are retained for audit purposes and persist until manually archived. To reduce clutter, users may archive or remove old reports after the feature reaches COMPLETE.
 
 ## Status Rules
 

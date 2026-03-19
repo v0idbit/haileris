@@ -49,7 +49,7 @@ Two propositions contradict when they assert incompatible states for the same su
 - `REQUIRES_STATE(subject, object)` vs. `FORBIDS_STATE(subject, object)` — one BID requires a state that another forbids
 - `CREATES(subject, object)` vs. `DELETES(subject, object)` within the same execution scope — one BID creates what another deletes
 
-Same-subject, different-object propositions are compatible (e.g., `REQUIRES_STATE(user, active)` and `REQUIRES_STATE(user, verified)` do not contradict).
+Same-subject, different-object propositions are compatible (e.g., `REQUIRES_STATE(user, active)` and `REQUIRES_STATE(user, verified)` are compatible).
 
 ### Numeric Bound Contradictions
 
@@ -58,7 +58,7 @@ Propositions with numeric bound objects contradict when their bounds are unsatis
 - `PRODUCES_STATE(subject, "> N")` vs. `REQUIRES_STATE(subject, "<= N")` — one BID produces a value above N while another requires it at or below N
 - Applies symmetrically to all bound combinations where the intersection is empty
 
-Different subjects with conflicting bounds do not contradict.
+Different subjects with conflicting bounds are compatible.
 
 ### Transitive Contradictions
 
@@ -193,9 +193,9 @@ Finding:
 
 ## Edge Cases
 
-- **Single proposition:** A single proposition cannot contradict itself under these rules. The check produces PASS.
+- **Single proposition:** A single proposition is always self-consistent under these rules. The check produces PASS.
 - **Same BID, contradicting propositions:** A BID that both REQUIRES and FORBIDS the same state on the same subject is a self-contradiction. This is flagged the same as a cross-BID contradiction.
 - **Transitive chain depth:** Implementations may limit chain depth for performance. Any limit must be documented and should be at least 3 (direct → intermediate → conflicting).
 - **Partial proposition sets:** If only some Gherkin steps were translated to propositions, the check runs on what is available. Unrepresented steps are not flagged — they are outside the verification boundary.
-- **MUTATES and READS relations:** These relations do not participate in contradiction rules. They are included in the proposition format for completeness and may support future analysis.
+- **MUTATES and READS relations:** These relations are excluded from contradiction rules. They are included in the proposition format for completeness and may support future analysis.
 - **Duplicate propositions:** Multiple propositions with identical fields are treated as one. Deduplication happens before contradiction checking.

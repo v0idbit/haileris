@@ -35,9 +35,9 @@ detail: "No default value table available for target language; mechanical defaul
 
 Section boundaries are identified by:
 1. **Comment markers** — `# Arrange`, `// Arrange`, `# Act`, `// Act`, `# Assert`, `// Assert` (or language-appropriate comment syntax)
-2. **Positional heuristic** — when no markers are present: initial assignments are Arrange, the first call to a production callable is Act, subsequent assertions are Assert
+2. **Positional heuristic** — when markers are absent: initial assignments are Arrange, the first call to a production callable is Act, subsequent assertions are Assert
 
-When AAA boundaries cannot be determined:
+When AAA boundaries are indeterminate:
 
 ```
 status: SKIP
@@ -59,7 +59,7 @@ Both diagnostics iterate over BID → test function mappings in the etch-map. Fo
 
 ### AAA Section Identification
 
-The tautological detection requires segmenting test function body lines into Arrange, Act, and Assert sections. Comment markers are preferred; when absent, a positional heuristic identifies Arrange (initial assignments), Act (first production callable invocation), and Assert (assertion statements). If section boundaries cannot be determined, the function is skipped.
+The tautological detection requires segmenting test function body lines into Arrange, Act, and Assert sections. Comment markers are preferred; when absent, a positional heuristic identifies Arrange (initial assignments), Act (first production callable invocation), and Assert (assertion statements). If section boundaries are indeterminate, the function is skipped.
 
 ## Behavior
 
@@ -76,7 +76,7 @@ Feature: RED Diagnostics
       Then the check status is SKIP
       And the detail is "No default value table available for target language; mechanical default-value detection unavailable"
 
-  Rule: Default-value detection — assertions must not expect language default values
+  Rule: Default-value detection — assertions must expect values distinct from language defaults
 
     Scenario: An assertion expects a non-default value
       Given the etch map maps "BID-001" to "tests/test_feature#test_create_user"
@@ -192,4 +192,4 @@ These findings feed the RED correction workflow defined in [etch.md](../stages/e
 - **Parameterized test expected values:** For parameterized tests (`test_func[param]`), the expected value may come from the parameter. If the parameter value is a default value, this is flagged. The parameterization suffix is stripped before function lookup, so the same function body is analyzed for all parameter values.
 - **AAA section ambiguity:** When the positional heuristic fails (e.g., multiple production calls, assertions interleaved with assignments), the tautological check skips that function. This degrades gracefully rather than producing false results.
 - **Language-specific assertion libraries:** Assertion pattern matching requires an extensible set of patterns. Each new assertion style (pytest, unittest, Jest, JUnit, testify, etc.) adds patterns but does not change the algorithm.
-- **Negation assertions:** `assertIsNone(result)` explicitly asserts a default value. This should match `None` in the default value table. `assertIsNotNone(result)` is a positive assertion and should not be flagged.
+- **Negation assertions:** `assertIsNone(result)` explicitly asserts a default value. This should match `None` in the default value table. `assertIsNotNone(result)` is a positive assertion and passes the check.

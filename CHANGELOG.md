@@ -5,6 +5,7 @@
 ### Changed
 - **Settle test-domain fix boundary** — three-tier policy replaces blanket "structural quality only": (1) structural refactors apply directly, (2) assertion-level corrections use a closed derivation scope (Gherkin Then/And step + test Arrange data) with user notification, (3) genuinely wrong tests escalate for approval. "Test count" clarified as function count; assertion count is a separate measure adjusted by tier 2.
 - **Etch RED state confirmation** — structured diagnostic protocol for passing tests replaces "fix it" handwave. Three mechanical detections (existing import, default-value assertion, tautological assertion) with prescribed corrections. One correction pass, then escalate. Assertion corrections reuse the closed-derivation-scope principle.
+- **Constructivist framing audit** — reframed ~30 prose negations across 15 files in `docs/` to constructive statements ("append-only" instead of "never overwritten", "are compatible" instead of "do not contradict", etc.). Gherkin BDD step language kept as-is.
 
 ## 2026-03-15
 

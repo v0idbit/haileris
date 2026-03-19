@@ -133,7 +133,7 @@ The realize-scope findings directly feed the Inspect.Review complexity and scope
 
 ## Edge Cases
 
-- **Generated code:** Code generators, build tool outputs, and vendored dependencies may produce derivations that should not be mapped. Implementations should support an exclusion list (e.g., `realize-scope-exclude.yaml`) of directory patterns or file globs to skip during AST discovery.
+- **Generated code:** Code generators, build tool outputs, and vendored dependencies may produce derivations that fall outside the mapping boundary. Implementations should support an exclusion list (e.g., `realize-scope-exclude.yaml`) of directory patterns or file globs to skip during AST discovery.
 - **Metaprogramming and dynamic definitions:** Derivations created at runtime (e.g., Python `type()`, Ruby `define_method`, JavaScript `eval`) are invisible to static AST analysis. This is an accepted limitation of the M-c boundary. The constraint section documents this explicitly.
 - **Test files in source directories:** If test files coexist with source files in the same directory, their test functions will appear as AST-discovered derivations. Implementations should exclude files matching test naming conventions (e.g., `test_*.py`, `*.test.js`) or directories named `tests/`, `__tests__/`.
 - **Nested classes and inner functions:** `discover_derivations` enumerates class methods via dot notation. Deeply nested structures (inner classes, closures with names) should use the same dot-delimited convention: `file#Outer.Inner.method`.

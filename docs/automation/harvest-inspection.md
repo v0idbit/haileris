@@ -126,4 +126,4 @@ The inspection runs checks 1â€“4 in order. Overall status is PASS when checks 1â
 
 - **Empty file:** A file that exists but contains only whitespace has 0 non-blank lines. Treated as insufficient for both template checks and artifact preflight.
 - **Heading-only section:** A section heading with no content lines before the next heading fails `has_non_empty_section`.
-- **Missing feature directory:** If the feature directory itself does not exist, all checks fail with MISSING findings.
+- **Missing feature directory:** If the feature directory itself is absent, all checks fail with MISSING findings.

@@ -109,8 +109,8 @@ ANLZ-003 does not write a standalone inspection artifact. Its result is part of 
 
 ## Edge Cases
 
-- **No subspecs:** If only `primary.feature` exists, no domain-declaration findings are produced. Trace resolution will produce MISSING findings for any traced BIDs that don't resolve.
+- **No subspecs:** If only `primary.feature` exists, domain-declaration checks are skipped. Trace resolution will produce MISSING findings for any traced BIDs that remain unresolved.
 - **Subspec with `Domains:` but empty value:** `Domains:   ` (whitespace only) is treated as no domains — same as missing the line.
 - **BID in multiple files:** BID-to-file resolution returns the first file found. BIDs should be unique across files; duplicate BIDs are a separate validation concern.
-- **Primary scenario without `@traces`:** No entries in the traces map for that scenario. ANLZ-003 does not flag this — it only checks scenarios that *have* traces. Missing `@traces` tags are an ANLZ-004 concern.
+- **Primary scenario without `@traces`:** No entries in the traces map for that scenario. ANLZ-003 checks only scenarios with existing traces. Missing `@traces` tags are an ANLZ-004 concern.
 - **Traced BID resolves to primary.feature:** Skip — primary self-references are not domain coverage issues. This happens when a primary scenario traces another primary BID.

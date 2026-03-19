@@ -169,13 +169,13 @@ Show is a read-only operation that emits the current pipeline state as YAML to s
 3. **Reset** (partially) on Settle loops
 4. **Read** by Inspect.Gate to verify constitution version
 5. **Read** on resume to determine where to continue
-6. **Never rolled back** — the state reflects the most recent completed transition
+6. **Append-forward** — the state always reflects the most recent completed transition
 
 ## Invariants
 
 - `current_stage` is always a valid stage name from the stage order
 - `stage_statuses` always contains exactly the 8 pipeline stages
-- `loop_count` never exceeds 3
+- `loop_count` has a maximum of 3
 - `last_loop_target` is `null` or one of `ascertain`, `etch`, `realize`
 - After a loop, all stages from the target onward have status `pending`, and stages before the target retain their prior status
 - `constitution_version` is immutable after initialization (set once at Harvest)

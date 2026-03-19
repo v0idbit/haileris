@@ -29,7 +29,7 @@ detail: "Formulaic pattern detected but operands not available in Arrange data; 
 | Arrange section data | From test source file | Variable assignments in Arrange section |
 | Proposed correction | From Settle.Fix output | New assertion expected value |
 
-**Closed derivation scope:** The second-reader derives its expected value from exactly two sources: the Gherkin step text and the test's Arrange section data. No other inputs (production code, external data, prior step results) are consulted. This closed scope is what makes the derivation independent — it cannot be influenced by the same errors that produced the proposed correction.
+**Closed derivation scope:** The second-reader derives its expected value from exactly two sources: the Gherkin step text and the test's Arrange section data. Only these two sources are consulted — production code, external data, and prior step results are outside the derivation boundary. This closed scope keeps the derivation independent: it is isolated from the same errors that produced the proposed correction.
 
 ## Formulaic Relationship Patterns
 

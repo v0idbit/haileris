@@ -49,7 +49,7 @@ Decomposed Context
 
 #### Process
 
-Repeat until no ascertainments remain: identify ambiguities or gaps, output a list of ascertainment needs, receive answers, update `ascertainments.md` and `decomposition.md`, and repeat. If no ambiguities are found, list assumptions for user confirmation before proceeding.
+Repeat until all ascertainments are resolved: identify ambiguities or gaps, output a list of ascertainment needs, receive answers, update `ascertainments.md` and `decomposition.md`, and repeat. If the decomposition is unambiguous, list assumptions for user confirmation before proceeding.
 
 #### Output
 

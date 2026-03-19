@@ -8,7 +8,7 @@ A list of ascertainment entries, each with the ambiguity, the default assumption
 
 ## Lifecycle
 
-Created by Ascertain when the first ascertainment is recorded. Appended to as each round of ascertainment completes. Appended to again by Settle when spec-domain findings are auto-resolved. Never overwritten — entries accumulate as a decision log.
+Created by Ascertain when the first ascertainment is recorded. Appended to as each round of ascertainment completes. Appended to again by Settle when spec-domain findings are auto-resolved. Append-only — entries accumulate as a decision log.
 
 ## Path
 
