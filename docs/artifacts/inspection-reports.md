@@ -9,9 +9,10 @@ Machine-readable YAML files produced at validation gates throughout the pipeline
 | `harvest-inspection.yaml` | Harvest | decomposition.md and technical-details.md across 4 dimensions: decomposition template compliance, technical details template compliance, artifact preflight, dependency doc coverage |
 | `layout-inspection.yaml` | Layout | Subspec vs. primary spec BIDs: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL* |
 | `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping: MISSING, HALLUCINATED, DUPLICATED*, INSUFFICIENT, PARTIAL* |
-| `realize-inspection.yaml` | Realize | Implementation vs. spec BIDs: Completeness, Scope*, Broken refs |
+| `realize-inspection.yaml` | Realize | Implementation vs. spec BIDs: Completeness, Scope†, Broken refs |
 
 *Agent-evaluated — no mechanical verification; inspection records status: SKIP. See [automation specs](../automation/README.md).
+†Constraint-gated — has a mechanical algorithm but requires AST tooling; records SKIP when unavailable.
 
 ## Inspection Check Types
 

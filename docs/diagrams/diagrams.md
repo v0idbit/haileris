@@ -91,12 +91,15 @@ flowchart TD
     CON -->|ingested by| L
 
     L -->|creates| CS
+    L -->|creates| DO([Delivery Order])
     CS -->|ingested by| E[5. Etch]
+    TD -->|ingested by| E
     CON -->|ingested by| E
 
     E -->|creates| RT
     E -->|creates| ETM
     CS -->|ingested by| R[6. Realize]
+    TD -->|ingested by| R
     RT -->|ingested by| R
     ETM -->|ingested by| R
     CON -->|ingested by| R
@@ -245,9 +248,10 @@ flowchart LR
 | `harvest-inspection.yaml` | decomposition.md and technical-details.md across 4 dimensions: template compliance (×2), artifact preflight, dependency doc coverage |
 | `layout-inspection.yaml` | subspec BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL* |
 | `etch-inspection.yaml` | etch-map.yaml BID → test mapping: MISSING / HALLUCINATED / DUPLICATED* / INSUFFICIENT / PARTIAL* |
-| `realize-inspection.yaml` | Realize map: completeness (BID → derivation), scope* (unmapped derivations via AST), broken refs (ghost derivations) |
+| `realize-inspection.yaml` | Realize map: completeness (BID → derivation), scope† (unmapped derivations via AST), broken refs (ghost derivations) |
 
 *Agent-evaluated — no mechanical verification; inspection records SKIP. See [automation specs](../automation/README.md).
+†Constraint-gated — has a mechanical algorithm but requires AST tooling; records SKIP when unavailable.
 
 Missing or `pass: false` on any inspection artifact = **Critical** finding at Inspect.
 

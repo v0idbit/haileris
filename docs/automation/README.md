@@ -4,7 +4,7 @@ Precise, language-agnostic behavioral specifications for the pipeline's mechanic
 
 ## Tier 1: Fully Mechanical (M)
 
-High frequency, high error cost, low implementation difficulty. All operations classified **M** (fully mechanical). Source: [investment map](../../.notes/mechanical/investment-map.md) items 1–5.
+High frequency, high error cost, low implementation difficulty. Each spec below covers the mechanical checks; agent-evaluated checks within these inspections are listed in [Checks Without Mechanical Specifications](#checks-without-mechanical-specifications). Source: [investment map](../../.notes/mechanical/investment-map.md) items 1–5.
 
 | Spec | Operations | Source |
 |------|-----------|--------|

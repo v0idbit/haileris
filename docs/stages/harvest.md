@@ -59,7 +59,7 @@ This pre-check ensures every stage has stable access to project conventions with
 | Artifact | Path | Notes |
 |----------|------|-------|
 | Decomposition | `.haileris/features/{feature_id}/decomposition.md` | Stage output; ingested by Ascertain and Inscribe |
-| Technical details | `.haileris/features/{feature_id}/technical-details.md` | Stage output; ingested by Inscribe; available to downstream stages via project standards |
+| Technical details | `.haileris/features/{feature_id}/technical-details.md` | Stage output; ingested by Inscribe, Etch, and Realize |
 | Project standards | `.haileris/project/standards.md` | Committed; refreshed by `--reharvest` |
 | Project test conventions | `.haileris/project/test-conventions.md` | Committed |
 | Harvest inspection | `.haileris/features/{feature_id}/harvest-inspection.yaml` | Traceability gate input for Inspect |
