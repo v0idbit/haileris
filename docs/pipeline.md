@@ -65,6 +65,7 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 - Improved decomposition
 - Ascertainments
+- Technical details
 - Constitution
 
 #### Outputs

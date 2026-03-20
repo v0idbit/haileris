@@ -46,7 +46,8 @@ Project-wide artifacts:
 .haileris/project/
 ├── standards.md
 ├── test-conventions.md
-└── constitution.md
+├── constitution.md
+└── last-harvest.json
 ```
 
 ## Inspecting

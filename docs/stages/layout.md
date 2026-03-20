@@ -27,7 +27,7 @@ Decompose the primary spec into ordered delivery subspecs.
 | ID | Check |
 |----|-------|
 | ANLZ-003 | Integration behaviors reference domains listed in the Gherkin spec |
-| ANLZ-004 | Subspecs compose into primary spec — every primary scenario's Given/When/Then steps are collectively covered by subspec BIDs (every effect is owned) |
+| ANLZ-004 | Subspecs compose into primary spec — every primary scenario's When/Then steps (effects only) are collectively covered by subspec BIDs (every effect is owned) |
 
 If any check returns FAIL: show which checks failed; ask user to fix or proceed anyway.
 

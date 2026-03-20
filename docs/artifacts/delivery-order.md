@@ -1,6 +1,6 @@
 # Delivery Order
 
-The sequenced list of subspecs for implementation. Produced by Layout, consumed by Etch and Realize.
+The sequenced list of subspecs for implementation. Produced by Layout, consumed by the pipeline orchestration layer to sequence Etch and Realize execution.
 
 ## What It Contains
 

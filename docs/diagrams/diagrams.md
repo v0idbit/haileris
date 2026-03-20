@@ -79,8 +79,6 @@ flowchart TD
     H[1. Harvest] -->|creates| DEC
     H -->|creates| TD([Technical Details])
     DEC -->|ingested by| A[2. Ascertain]
-    TD -->|ingested by| A
-
     A -->|creates| ID
     A -->|creates| ASC
     ID -->|ingested by| I[3. Inscribe]
@@ -94,7 +92,6 @@ flowchart TD
 
     L -->|creates| CS
     CS -->|ingested by| E[5. Etch]
-    TD -->|ingested by| E
     CON -->|ingested by| E
 
     E -->|creates| RT
@@ -102,7 +99,6 @@ flowchart TD
     CS -->|ingested by| R[6. Realize]
     RT -->|ingested by| R
     ETM -->|ingested by| R
-    TD -->|ingested by| R
     CON -->|ingested by| R
 
     R -->|creates| GI

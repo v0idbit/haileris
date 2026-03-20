@@ -6,6 +6,7 @@ Create the primary spec from the improved decomposition.
 
 - Improved decomposition
 - Ascertainments
+- Technical details (supplementary context)
 - Constitution
 
 ## Process
