@@ -2,6 +2,9 @@
 
 ## 2026-03-19
 
+### Fixed
+- **Cross-reference coherence across docs/** — added missing Technical Details edges to Etch and Realize in artifact creation diagram; added Delivery Order as Layout output; distinguished constraint-gated (†) from agent-evaluated (*) footnotes in inspection-reports.md and diagrams.md; corrected Tier 1 heading overclaim in automation/README.md; aligned harvest.md artifacts table with pipeline.md TD input listings
+
 ### Changed
 - **Subspec creation moved from Inscribe to Layout** — Inscribe now produces only the primary spec (`primary.feature`); Layout decomposes it into ordered delivery subspecs (`{deliverable}.feature`), adds `@traces` tags, and validates composition (ANLZ-003, ANLZ-004)
 - **Task concept eliminated** — `tasks.md` with `TASK-{NNN}` identifiers replaced by `delivery-order.yaml` listing subspecs in implementation order with dependency edges; subspecs are identified by filename
