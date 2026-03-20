@@ -6,6 +6,7 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 
 - Gherkin subspec
 - Red-phase tests for the Gherkin subspec
+- Technical details
 - Etch map (`etch-map.yaml`) — BID → test function mapping from Etch
 - Constitution
 

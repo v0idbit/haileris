@@ -52,14 +52,14 @@ Project-wide artifacts:
 
 ## Inspecting
 
-Stages 1, 4, 5, and 6 each produce an inspection artifact. All four converge at Inspect as the **Traceability Gate** — a missing or failed inspect triggers a Critical finding before reviews begin.
+Stages 1, 4, 5, and 6 each produce an inspection artifact. All four converge at Inspect as the **Traceability Gate** — a missing or failed inspection artifact triggers a Critical finding before reviews begin.
 
 | Inspection artifact | Produced by | Validates |
 |---------------------|------------|-----------|
 | `harvest-inspection.yaml` | Harvest | decomposition.md and technical-details.md across 4 dimensions |
-| `layout-inspection.yaml` | Layout | Subspec BID coverage (5 check types) |
-| `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping (5 check types) |
-| `realize-inspection.yaml` | Realize | Realize map: completeness, scope, broken refs |
+| `layout-inspection.yaml` | Layout | Subspec BID coverage (5 check types; 4 active, 1 deferred) |
+| `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping (5 check types; 3 active, 2 deferred) |
+| `realize-inspection.yaml` | Realize | Realize map: completeness, scope (deferred), broken refs |
 
 ## Inspect Status Rules
 

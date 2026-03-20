@@ -21,7 +21,7 @@ Refactor and resolve failures. Gate on completeness.
      1. **Structural refactors** — changes to *how* a test is written that preserve what it verifies: deduplicating fixtures, reorganizing setup, changing assertion style. Apply directly.
      2. **Assertion-level corrections** — adding a missing assertion or correcting a wrong expected value. The derivation scope is **closed**: use only (a) the BID's Gherkin Then/And step and (b) the test's own Arrange section (fixture data written by Etch). Derive the expected value by applying the relationship stated in the Gherkin step to the concrete data in the Arrange section. **Verification test:** a second reader, given the same step and Arrange data, independently arrives at the same assertion. Apply the fix and **notify the user** with: the BID reference, the change made, the Gherkin step, and the Arrange values used in the derivation. Route to Etch for regeneration when the derivation requires knowledge beyond these two sources.
      3. **Genuinely wrong tests** (wrong interface, unrealistic fixture, mismatched assertion granularity) — escalate to user with a proposed correction (APPROVE / REJECT).
-   - **`domain: spec`** → resolve spec ambiguity (present reasonable default assumption; update Gherkin spec wording if needed)
+   - **`domain: spec`** → resolve spec ambiguity (present reasonable default assumption; update Gherkin spec wording if needed); append the resolution to `ascertainments.md` with an `[AUTO-RESOLVED]` tag and rationale
    - **`domain: impl`** → apply targeted production code fixes (test files are read-only; fix only the listed findings in production code)
 
 ### Settle.Confirm
@@ -36,6 +36,14 @@ Refactor and resolve failures. Gate on completeness.
   - **`domain: spec`** → loop to **Ascertain** (spec needs clarification; full downstream re-run)
   - **Mixed domains** → loop to the earliest required stage (spec → Ascertain, test → Etch, impl → Realize)
 - If no failures remain: **COMPLETE**
+
+## Artifacts Written
+
+| Artifact | Path | Notes |
+|----------|------|-------|
+| Green-phase implementation (updated) | `src/` (repo) | Updated by domain:impl fixes |
+| Etch map (updated) | `.haileris/features/{feature_id}/etch-map.yaml` | Updated if genuinely wrong test fixes change mappings |
+| Ascertainments (appended) | `.haileris/features/{feature_id}/ascertainments.md` | Auto-resolved spec findings appended with [AUTO-RESOLVED] tag |
 
 ## Finding Severity Handling
 

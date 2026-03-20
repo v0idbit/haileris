@@ -101,12 +101,12 @@ This ensures later subspecs can depend on earlier subspecs' implementations. Aft
 
 #### 5. Etch
 
-**Inputs:** Gherkin subspec (current subspec), Constitution
+**Inputs:** Gherkin subspec (current subspec), Technical details, Constitution
 **Outputs:** Red-phase test suite, Etch map (BID → test function mapping)
 
 #### 6. Realize
 
-**Inputs:** Gherkin subspec (current subspec), Red-phase tests, Etch map, Constitution
+**Inputs:** Gherkin subspec (current subspec), Red-phase tests, Technical details, Etch map, Constitution
 **Outputs:** Green-phase implementation, Realize map (BID → derivation mapping)
 
 ---

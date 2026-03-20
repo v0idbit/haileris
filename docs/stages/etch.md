@@ -5,6 +5,7 @@ Write red-phase tests for each Gherkin subspec.
 ## Inputs
 
 - Gherkin subspec
+- Technical details
 - Constitution
 
 ## Process
@@ -41,6 +42,8 @@ Validates `etch-map.yaml` across 5 check types:
 | DUPLICATED | The same BID maps to more than one substantially similar test function |
 | INSUFFICIENT | A mapped test function body is fewer than 3 lines (excluding doc comments, annotations, blanks) |
 | PARTIAL | A BID's mapped tests leave one or more Gherkin Then clauses uncovered |
+
+DUPLICATED and PARTIAL are deferred (return SKIP). Active checks: MISSING, HALLUCINATED, INSUFFICIENT.
 
 On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate to user.
 

@@ -19,7 +19,7 @@ Subspecs are identified by filename. Each entry declares its dependencies on oth
 
 ## Lifecycle
 
-Written once by Layout after subspecs are created and validated. Read by Etch (for test ordering) and Realize (for implementation order). Stable after writing — downstream stages treat it as a fixed input. Kept after the feature completes as an inspection record of how the spec was decomposed.
+Written once by Layout after subspecs are created and validated. Read by the pipeline orchestration layer to sequence Etch and Realize execution per subspec. Stable after writing — downstream stages treat it as a fixed input. Kept after the feature completes as an inspection record of how the spec was decomposed.
 
 ## Path
 

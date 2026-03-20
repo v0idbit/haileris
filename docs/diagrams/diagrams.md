@@ -49,9 +49,9 @@ Concrete paths for each artifact (substituting `{feature_id}` = `{YYYY-MM-DD}-{b
 | Constitution | `.haileris/project/constitution.md` | Yes |
 | **Harvest inspection** | `.haileris/features/{feature_id}/harvest-inspection.yaml` | Yes |
 | **Layout inspection** | `.haileris/features/{feature_id}/layout-inspection.yaml` | Yes |
-| **Etch map** | `.haileris/features/{feature_id}/etch-map.yaml` | Yes |
+| Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | Yes |
 | **Etch inspection** | `.haileris/features/{feature_id}/etch-inspection.yaml` | Yes |
-| **Realize map** | `.haileris/features/{feature_id}/realize-map.yaml` | Yes |
+| Realize map | `.haileris/features/{feature_id}/realize-map.yaml` | Yes |
 | **Realize inspection** | `.haileris/features/{feature_id}/realize-inspection.yaml` | Yes |
 | Harvest metadata | `.haileris/project/last-harvest.json` | Yes |
 | Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | Yes |
@@ -243,9 +243,11 @@ flowchart LR
 | Inspection | Validates |
 |-------|-----------|
 | `harvest-inspection.yaml` | decomposition.md and technical-details.md across 4 dimensions: template compliance (×2), artifact preflight, dependency doc coverage |
-| `layout-inspection.yaml` | subspec BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
-| `etch-inspection.yaml` | etch-map.yaml BID → test mapping: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL |
-| `realize-inspection.yaml` | Realize map: completeness (BID → derivation), scope (unmapped derivations via AST), broken refs (ghost derivations) |
+| `layout-inspection.yaml` | subspec BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL* |
+| `etch-inspection.yaml` | etch-map.yaml BID → test mapping: MISSING / HALLUCINATED / DUPLICATED* / INSUFFICIENT / PARTIAL* |
+| `realize-inspection.yaml` | Realize map: completeness (BID → derivation), scope* (unmapped derivations via AST), broken refs (ghost derivations) |
+
+*Deferred — returns SKIP. See [automation specs](../automation/README.md).
 
 Missing or `pass: false` on any inspection artifact = **Critical** finding at Inspect.
 
