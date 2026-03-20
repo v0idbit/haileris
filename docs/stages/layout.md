@@ -87,7 +87,7 @@ Validates subspecs against primary spec BIDs across 5 check types:
 | INSUFFICIENT | A subspec Feature description is fewer than 10 words, or contains none of the keywords from the BID's Gherkin clauses |
 | PARTIAL | A BID is split across subspecs such that neither subspec alone covers its full acceptance criteria |
 
-Overall `pass: true` only when all active check types produce zero findings. PARTIAL is deferred (returns SKIP).
+Overall `pass: true` only when all mechanically verified check types produce zero findings. PARTIAL is agent-evaluated (no mechanical verification; inspection records SKIP).
 
 On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate to user.
 

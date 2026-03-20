@@ -1,6 +1,6 @@
 # Automation Specifications
 
-Precise, language-agnostic behavioral specifications for the pipeline's mechanical operations. Each spec defines inputs, behavioral specifications, outputs, and edge cases with enough precision that any implementation — in any language — produces identical results on identical inputs.
+Precise, language-agnostic behavioral specifications for the pipeline's mechanical verification layers. Each spec defines inputs, behavioral specifications, outputs, and edge cases with enough precision that any implementation — in any language — produces identical results on identical inputs. Checks without mechanical specs are still mandatory pipeline behaviors — the pipeline agent evaluates them using judgment.
 
 ## Tier 1: Fully Mechanical (M)
 
@@ -8,10 +8,10 @@ High frequency, high error cost, low implementation difficulty. All operations c
 
 | Spec | Operations | Source |
 |------|-----------|--------|
-| [Harvest Inspection](harvest-inspection.md) | 3 active checks + 1 SKIP | [harvest.md](../stages/harvest.md) |
-| [Layout Inspection](layout-inspection.md) | 4 active checks + 1 SKIP | [layout.md](../stages/layout.md) |
-| [Etch Inspection](etch-inspection.md) | 3 active checks + 2 SKIP | [etch.md](../stages/etch.md) |
-| [Realize Inspection](realize-inspection.md) | 2 active checks + 1 SKIP | [realize.md](../stages/realize.md) |
+| [Harvest Inspection](harvest-inspection.md) | 3 mechanically verified, 1 agent-evaluated | [harvest.md](../stages/harvest.md) |
+| [Layout Inspection](layout-inspection.md) | 4 mechanically verified, 1 agent-evaluated | [layout.md](../stages/layout.md) |
+| [Etch Inspection](etch-inspection.md) | 3 mechanically verified, 2 agent-evaluated | [etch.md](../stages/etch.md) |
+| [Realize Inspection](realize-inspection.md) | 2 mechanically verified, 1 constraint-gated | [realize.md](../stages/realize.md) |
 | [Traceability Gate](traceability-gate.md) | 5 checks | [inspect.md](../stages/inspect.md) |
 | [ANLZ-003](anlz-003.md) | 1 check (5-step algorithm) | [layout.md](../stages/layout.md) |
 | [TEST-001](test-001.md) | 1 check | [etch.md](../stages/etch.md) |
@@ -75,17 +75,17 @@ When run as a CLI tool:
 
 | Exit code | Meaning |
 |-----------|---------|
-| 0 | PASS — all active checks passed |
+| 0 | PASS — all mechanically verified checks passed |
 | 1 | FAIL — one or more checks failed |
 | 2 | Error — invalid input, missing files, or internal error |
 
-### Deferred Checks
+### Agent-Evaluated Checks
 
-Checks classified J-v that require judgment are marked SKIP. A SKIP check always produces `status: SKIP` with an explanatory detail string and zero findings. SKIP does not affect the overall pass/fail result.
+All inspection checks are mandatory pipeline behaviors. Checks without mechanical algorithms are evaluated by the pipeline agent using judgment. A check recorded as `status: SKIP` means mechanical verification was not performed — it does not mean the check was skipped. SKIP does not affect the mechanical pass/fail result.
 
 ### M-c Constraint Convention
 
-Tier 2 specs include a **Constraint** section documenting the condition under which the algorithm is fully mechanical. When the constraint is not met, the check emits SKIP with a detail string explaining why mechanical checking is unavailable. This is distinct from Tier 1 deferred checks: M-c checks *have* an algorithm but require a precondition; deferred checks have no algorithm yet.
+Tier 2 specs include a **Constraint** section documenting the condition under which the algorithm is fully mechanical. When the constraint is not met, the check emits SKIP with a detail string explaining why mechanical checking is unavailable. This is distinct from agent-evaluated checks: constraint-gated checks *have* an algorithm but require a precondition; agent-evaluated checks have no mechanical algorithm — the pipeline agent evaluates them using judgment.
 
 ### Path Conventions
 
@@ -99,14 +99,16 @@ All paths in these specs use forward slashes and are relative to the project roo
 
 The canonical BID format is `BID-{NNN}` where `{NNN}` is one or more digits. The regex `BID-\d+` matches all valid BIDs. When extracting BIDs from Gherkin files, match on the tag form `@BID-\d+` and strip the `@` prefix.
 
-## What These Specs Do Not Cover
+## Checks Without Mechanical Specifications
 
-| Deferred item | Reason | Spec produces |
-|---------------|--------|---------------|
-| Layout PARTIAL | J-v — requires semantic coverage analysis | SKIP |
-| Etch PARTIAL | J-v — requires semantic coverage analysis | SKIP |
-| Etch DUPLICATED | J-v — requires test similarity analysis | SKIP |
-| Harvest dependency coverage | M-c — requires package resolution | SKIP |
+All checks below are mandatory pipeline behaviors — they lack mechanical verification algorithms, not implementation requirements.
+
+| Check | Reason | Mechanical verification |
+|-------|--------|------------------------|
+| Layout PARTIAL | J-v — requires semantic coverage analysis | Agent-evaluated (SKIP) |
+| Etch PARTIAL | J-v — requires semantic coverage analysis | Agent-evaluated (SKIP) |
+| Etch DUPLICATED | J-v — requires test similarity analysis | Agent-evaluated (SKIP) |
+| Harvest dependency coverage | M-c — requires package resolution | Agent-evaluated (SKIP) |
 | TEST-002 (RED state) | Language-specific test runner | Out of scope |
 | Etch RED import detection | Language-specific import resolution | Out of scope |
 

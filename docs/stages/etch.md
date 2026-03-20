@@ -43,7 +43,7 @@ Validates `etch-map.yaml` across 5 check types:
 | INSUFFICIENT | A mapped test function body is fewer than 3 lines (excluding doc comments, annotations, blanks) |
 | PARTIAL | A BID's mapped tests leave one or more Gherkin Then clauses uncovered |
 
-DUPLICATED and PARTIAL are deferred (return SKIP). Active checks: MISSING, HALLUCINATED, INSUFFICIENT.
+DUPLICATED and PARTIAL are agent-evaluated (no mechanical verification; inspection records SKIP). Mechanically verified checks: MISSING, HALLUCINATED, INSUFFICIENT.
 
 On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate to user.
 

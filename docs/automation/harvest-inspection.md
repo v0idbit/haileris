@@ -110,13 +110,13 @@ Feature: Harvest Inspection
       And a finding is produced with check_type "INSUFFICIENT" and detail "standards.md has 3 non-blank lines (need >5)"
 ```
 
-### 4. Dependency Doc Coverage — SKIP
+### 4. Dependency Doc Coverage — Agent-Evaluated
 
-Deferred. Returns `status: SKIP` with detail "Dependency doc coverage check deferred (requires package resolution)".
+No mechanical specification (requires package resolution). The pipeline agent evaluates dependency doc coverage using judgment. The inspection records `status: SKIP` for this check.
 
 ## Aggregation
 
-The inspection runs checks 1–4 in order. Overall status is PASS when checks 1–3 pass. Check 4 (SKIP) does not affect the result.
+The inspection runs checks 1–4 in order. Overall status is PASS when checks 1–3 pass. Check 4 is agent-evaluated; the inspection records SKIP for mechanical verification.
 
 ## Output Path
 

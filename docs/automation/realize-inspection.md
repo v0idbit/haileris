@@ -115,13 +115,13 @@ Feature: Realize Inspection
       Then the check status is PASS
 ```
 
-### 3. Scope — SKIP
+### 3. Scope — Constraint-Gated
 
-Deferred (M-c: requires language-specific AST tooling to discover all derivations in source files and compare against the realize-map). Returns `status: SKIP`. See [realize-scope.md](realize-scope.md) for the Tier 2 spec.
+When AST tooling is available, runs mechanically per [realize-scope.md](realize-scope.md). When unavailable, the pipeline agent evaluates scope using judgment. The inspection records `status: SKIP` when mechanical verification was not performed.
 
 ## Aggregation
 
-The inspection runs checks 1–3 in order. If the realize-map is missing or invalid, the inspection fails immediately. Overall status is PASS when all active checks pass.
+The inspection runs checks 1–3 in order. If the realize-map is missing or invalid, the inspection fails immediately. Overall status is PASS when all mechanically verified checks pass.
 
 ## Output Path
 

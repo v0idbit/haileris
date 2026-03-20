@@ -127,17 +127,17 @@ Feature: Etch Inspection
       Then no finding is produced for "BID-001"
 ```
 
-### 4. DUPLICATED — SKIP
+### 4. DUPLICATED — Agent-Evaluated
 
-Deferred (J-v: requires test similarity analysis). Returns `status: SKIP`.
+No mechanical specification. The pipeline agent evaluates whether two test functions mapped to the same BID are substantially similar. The inspection records `status: SKIP` for this check.
 
-### 5. PARTIAL — SKIP
+### 5. PARTIAL — Agent-Evaluated
 
-Deferred (J-v: requires semantic Then-step coverage analysis). Returns `status: SKIP`.
+No mechanical specification. The pipeline agent evaluates whether a BID's mapped tests leave Gherkin Then clauses uncovered. The inspection records `status: SKIP` for this check.
 
 ## Aggregation
 
-The inspection runs checks 1–5 in order. If the etch-map is missing or invalid, the inspection fails immediately. Overall status is PASS when all active checks pass.
+The inspection runs checks 1–5 in order. If the etch-map is missing or invalid, the inspection fails immediately. Overall status is PASS when all mechanically verified checks pass.
 
 ## Output Path
 

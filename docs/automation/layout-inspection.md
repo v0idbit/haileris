@@ -128,13 +128,13 @@ Feature: Layout Inspection
 
 Keyword extraction: For each BID, find the scenario tagged with `@{bid}` in the spec directory. Collect the text of all Given/When/Then/And/But steps in that scenario. Split into individual words (lowercased). Compare against words in the subspec Feature description (case-insensitive).
 
-### 5. PARTIAL — SKIP
+### 5. PARTIAL — Agent-Evaluated
 
-Deferred (J-v: requires semantic coverage analysis). Returns `status: SKIP`.
+No mechanical specification. The pipeline agent evaluates whether a BID split across subspecs has full acceptance criteria coverage in each subspec. The inspection records `status: SKIP` for this check.
 
 ## Aggregation
 
-The inspection runs checks 1–5 in order. Overall status is PASS when all active checks pass.
+The inspection runs checks 1–5 in order. Overall status is PASS when all mechanically verified checks pass.
 
 ## Output Path
 

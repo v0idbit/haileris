@@ -247,7 +247,7 @@ flowchart LR
 | `etch-inspection.yaml` | etch-map.yaml BID → test mapping: MISSING / HALLUCINATED / DUPLICATED* / INSUFFICIENT / PARTIAL* |
 | `realize-inspection.yaml` | Realize map: completeness (BID → derivation), scope* (unmapped derivations via AST), broken refs (ghost derivations) |
 
-*Deferred — returns SKIP. See [automation specs](../automation/README.md).
+*Agent-evaluated — no mechanical verification; inspection records SKIP. See [automation specs](../automation/README.md).
 
 Missing or `pass: false` on any inspection artifact = **Critical** finding at Inspect.
 
