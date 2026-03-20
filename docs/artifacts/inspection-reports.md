@@ -7,9 +7,11 @@ Machine-readable YAML files produced at validation gates throughout the pipeline
 | Artifact | Produced By | Checks |
 |---|---|---|
 | `harvest-inspection.yaml` | Harvest | decomposition.md and technical-details.md across 4 dimensions: decomposition template compliance, technical details template compliance, artifact preflight, dependency doc coverage |
-| `layout-inspection.yaml` | Layout | Subspec vs. primary spec BIDs: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL |
-| `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL |
-| `realize-inspection.yaml` | Realize | Implementation vs. spec BIDs: Completeness, Scope, Broken refs |
+| `layout-inspection.yaml` | Layout | Subspec vs. primary spec BIDs: MISSING, HALLUCINATED, DUPLICATED, INSUFFICIENT, PARTIAL* |
+| `etch-inspection.yaml` | Etch | etch-map.yaml BID → test mapping: MISSING, HALLUCINATED, DUPLICATED*, INSUFFICIENT, PARTIAL* |
+| `realize-inspection.yaml` | Realize | Implementation vs. spec BIDs: Completeness, Scope*, Broken refs |
+
+*Deferred — returns status: SKIP. See [automation specs](../automation/README.md).
 
 ## Inspection Check Types
 
@@ -20,10 +22,14 @@ Machine-readable YAML files produced at validation gates throughout the pipeline
 - `INSUFFICIENT` — coverage exists but does not fully address the behavior
 - `PARTIAL` — BID partially covered; some sub-conditions unaddressed
 
+Layout defers PARTIAL; Etch defers DUPLICATED and PARTIAL. Deferred checks return SKIP.
+
 **Realize inspection (3 checks):**
 - `Completeness` — every BID maps to at least one derivation
 - `Scope` — every derivation in impl files maps to a BID (AST-checked)
 - `Broken refs` — every derivation in the realize-map resolves to an existing, importable source path
+
+Scope is deferred (requires AST tooling). Returns SKIP.
 
 ## Traceability Gate
 

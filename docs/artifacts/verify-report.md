@@ -2,6 +2,8 @@
 
 The user-readable output of Inspect. Produced at the end of the review phase, it summarises every finding raised by the four reviews and records the overall pass/fail status of the feature.
 
+In pipeline input/output tables, this artifact appears as "Implementation failure details."
+
 ## What It Contains
 
 - Overall status: `PASS` or `FAIL`
