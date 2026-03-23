@@ -4,7 +4,7 @@ A spec-driven pipeline. Takes raw feature context as input; produces verified, g
 
 ## Pipeline
 
-Eight stages in sequence. Stages 5–6 repeat per subspec (sequentially: Etch→Realize per subspec). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize.
+Eight stages in sequence. Stages 5–6 repeat per subspec (sequentially: Etch→Realize per subspec). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize. Settle re-runs are scoped: only the failing subspec(s) and their downstream dependents are re-processed, leaving passing subspecs untouched.
 
 | # | Stage | What it does |
 |---|-------|-------------|
@@ -32,7 +32,7 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Ascertainments | Ascertain | `.haileris/features/{feature_id}/ascertainments.md` |
 | Primary spec | Inscribe | `tests/features/primary.feature` |
 | Subspecs | Layout | `tests/features/{deliverable}.feature` |
-| Delivery order | Layout | `.haileris/features/{feature_id}/delivery-order.yaml` |
+| Delivery order | Layout (compiled) | `.haileris/features/{feature_id}/delivery-order.yaml` |
 | Red-phase tests | Etch | `tests/` (repo) |
 | Etch map | Etch | `.haileris/features/{feature_id}/etch-map.yaml` |
 | Green-phase implementation | Realize | `src/` (repo) |
