@@ -10,9 +10,21 @@ Refactor and resolve failures. Gate on completeness.
 
 ## Process
 
+`Settle.Triage → Settle.Scope → Settle.Fix → Settle.Confirm`
+
 ### Settle.Triage
 
 1. Locate the most recent `verify_{timestamp}.md`; parse Critical, High, and Medium findings only (skip Low and Nit)
+2. For each finding, identify the owning subspec via BID → subspec mapping (etch-map.yaml or realize-map.yaml)
+3. Group findings by owning subspec
+
+### Settle.Scope
+
+1. Regenerate `delivery-order.yaml` from current subspec `Requires:` and `Provides:` declarations.
+2. From grouped findings, identify `target_subspecs` — subspecs owning failing BIDs.
+3. Compute `blast_radius` — downstream dependents of target subspecs. Walk the dependency graph transitively: if C requires B which requires target A, both B and C are in the blast radius.
+4. Write `rerun_scope` to `pipeline-state.yaml`: `target_subspecs`, `blast_radius`, `provides_changed: false`.
+5. `_integration` is always included in the re-run scope.
 
 ### Settle.Fix
 
@@ -23,18 +35,24 @@ Refactor and resolve failures. Gate on completeness.
      3. **Genuinely wrong tests** (wrong interface, unrealistic fixture, mismatched assertion granularity) — escalate to user with a proposed correction (APPROVE / REJECT).
    - **`domain: spec`** → resolve spec ambiguity (present reasonable default assumption; update Gherkin spec wording if needed); append the resolution to `ascertainments.md` with an `[AUTO-RESOLVED]` tag and rationale
    - **`domain: impl`** → apply targeted production code fixes (test files are read-only; fix only the listed findings in production code)
+2. After all fixes, check whether any target subspec's `Provides:` line changed compared to the stored `provides_hash`. If changed, set `rerun_scope.provides_changed` to `true`.
 
 ### Settle.Confirm
 
-1. After all domain-specific fixes, re-run Inspect to confirm resolution
+1. After all domain-specific fixes, re-run Inspect to confirm resolution.
+2. If failures remain and a loop is needed:
+   a. If `provides_changed` is `false`: only `target_subspecs` re-run at the target stage; `blast_radius` subspecs are skipped.
+   b. If `provides_changed` is `true`: `target_subspecs` and all `blast_radius` subspecs re-run.
+   c. In `pipeline-state.yaml`, reset only the affected subspecs to `pending`. Unaffected subspecs retain `passed`.
+3. Route by domain as before, but execution at the target stage is scoped to the identified subspecs.
 
 ## Outputs
 
 - If failures remain after re-Inspect, route by domain of remaining findings:
-  - **`domain: impl`** → loop to **Realize** (re-implement against existing tests; skip Ascertain/Inscribe/Layout/Etch)
-  - **`domain: test`** → loop to **Etch** (regenerate tests for affected BIDs; then Realize)
-  - **`domain: spec`** → loop to **Ascertain** (spec needs clarification; full downstream re-run)
-  - **Mixed domains** → loop to the earliest required stage (spec → Ascertain, test → Etch, impl → Realize)
+  - **`domain: impl`** → loop to **Realize** (scoped: only affected subspecs and blast radius)
+  - **`domain: test`** → loop to **Etch** (scoped: only affected subspecs and blast radius)
+  - **`domain: spec`** → loop to **Ascertain** (full re-run from Ascertain; Layout regenerates delivery-order)
+  - **Mixed domains** → loop to earliest required stage; scoping applies to Etch/Realize targets
 - If no failures remain: **COMPLETE**
 
 ## Artifacts Written
