@@ -85,7 +85,7 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 #### Outputs
 
-**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, and validates composition (ANLZ-003, ANLZ-004).
+**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, validates composition (ANLZ-003, ANLZ-004, ANLZ-005), and generates interface contracts. The delivery order (`delivery-order.yaml`) is compiled from the `provides`/`consumes` declarations in each subspec.
 
 ---
 
@@ -98,6 +98,8 @@ Etch(subspec 1) → Realize(subspec 1) → Etch(subspec 2) → Realize(subspec 2
 ```
 
 This ensures later subspecs can depend on earlier subspecs' implementations. After all subspec cycles complete, a final Etch pass writes integration tests for primary BIDs; Realize then ensures those pass.
+
+On re-entry after a Settle loop, only subspecs in `rerun_scope` execute. Passing subspecs are skipped; their etch-map and realize-map entries are preserved.
 
 #### 5. Etch
 
@@ -170,6 +172,23 @@ etch_realize_progress:
   subspecs_completed: [1]
 loop_count: 0
 last_loop_target: null
+subspec_statuses:
+  "users.feature":
+    status: passed
+    provides_hash: "a1b2c3"
+    last_completed_at: "2026-03-10T15:30:00Z"
+  "auth.feature":
+    status: running
+    provides_hash: null
+    last_completed_at: null
+  "_integration":
+    status: pending
+    provides_hash: null
+    last_completed_at: null
+rerun_scope:
+  target_subspecs: []
+  blast_radius: []
+  provides_changed: false
 ```
 
 ### Resume Semantics
@@ -177,6 +196,7 @@ last_loop_target: null
 - If execution is interrupted, the pipeline resumes from `current_stage` using the progress fields.
 - For Etch/Realize interruptions: `etch_realize_progress` tracks which subspecs are complete. The pipeline resumes at the current subspec; completed subspecs are skipped.
 - After a Settle loop, `loop_count` increments and `last_loop_target` records where the loop re-entered. Downstream stages reset to `pending` in `stage_statuses` from the loop target onward.
+- After a Settle loop with subspec-scoped re-run, `rerun_scope` identifies which subspecs need re-running. The pipeline skips Etch/Realize for subspecs not in scope.
 
 ---
 
