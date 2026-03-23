@@ -10,11 +10,20 @@ Write red-phase tests for each Gherkin subspec.
 
 ## Process
 
-1. Write one test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail at import time. Import paths derive from the subspec's `Domains:` declarations (domain path) and project naming conventions (entity names) — the agent derives all import paths from these conventions. Primary BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`). Exact directory names and test framework follow project conventions. Test assertions must verify observable effects from the BID's Gherkin Then/And steps: state changes, outputs produced, and data passed between components.
+1. Write one test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail at import time. Import paths derive from the subspec's `Domains:` declarations (domain path) and project naming conventions (entity names) — the agent derives all import paths from these conventions. Primary BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`). Exact directory names and test framework follow project conventions. Test assertions must verify observable effects from the BID's Gherkin Then/And steps: state changes, outputs produced, and data passed between components. When the subspec has a `Requires:` line, the required interface contracts inform test fixture design: the test Arrange section can reference the contracted data shapes declared in the upstream subspec's `Provides:` metadata.
 2. Write `etch-map.yaml` mapping each BID to its test functions
 3. Verify every BID has at least one test function via the map (TEST-001 gate); if FAIL, add missing tests and update the map
 4. Run the test suite to confirm RED state (TEST-002 gate) — every generated test must fail. For each passing test, apply the diagnostic protocol (see RED State Confirmation); re-run after corrections. Escalate to user when any test still passes after one correction pass.
 5. Validate the map across 5 check types; write `.haileris/features/{feature_id}/etch-inspection.yaml`
+
+### Re-entry Behavior (Settle Loop)
+
+When Etch is re-entered after a Settle loop with subspec-scoped re-run:
+
+1. Read `rerun_scope` from `pipeline-state.yaml` to identify subspecs needing re-run.
+2. Skip Etch for subspecs not in `target_subspecs` or `blast_radius`. Their existing etch-map entries and test files are preserved.
+3. Re-run Etch normally for subspecs in the re-run scope. New etch-map entries replace old entries for these subspecs only (merge semantics).
+4. `_integration` always re-runs when any subspec re-runs.
 
 ## Outputs
 
@@ -70,3 +79,4 @@ One correction pass, then re-run. Escalate to user when a test still passes afte
 - See RED State Confirmation above for the full diagnostic protocol applied to passing tests
 - Import paths are derived from the subspec's `Domains:` declarations and project naming conventions — `Domains:` provides the module root, naming conventions provide entity names. This makes import paths a shared contract with Realize (see [spec Domains metadata](../artifacts/spec.md#pipeline-metadata))
 - After all subspec Etch→Realize cycles complete and the full suite is green, a final Etch pass writes integration tests for primary BIDs. These verify end-to-end composition (the wiring that `@traces` tags describe). The etch-map includes primary BIDs.
+- On re-entry, `etch-map.yaml` uses merge semantics: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim.
