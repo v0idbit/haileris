@@ -12,12 +12,22 @@ Implement each Gherkin subspec to make its red-phase tests pass.
 
 ## Process
 
-1. For each subspec in dependency order, write production code that implements the behavior described by the subspec's BID scenarios (Gherkin spec = intent, tests = source of truth; test files are read-only from Etch forward). Source modules must be importable at the domain paths declared in the subspec's `Domains:` line, following the same naming conventions Etch used to derive import paths.
+1. For each subspec in dependency order, write production code that implements the behavior described by the subspec's BID scenarios (Gherkin spec = intent, tests = source of truth; test files are read-only from Etch forward). Source modules must be importable at the domain paths declared in the subspec's `Domains:` line, following the same naming conventions Etch used to derive import paths. The subspec's `Provides:` metadata defines the output contract this implementation must satisfy.
 2. If tests still fail: analyze root cause; retry with findings — max 3 cycles per subspec; if still failing, escalate to user. If the failure is an import path mismatch, adjust source module structure to match the domain path convention before counting a retry cycle.
 3. After each subspec's tests pass, map BIDs → derivations in `realize-map.yaml`
 4. Validate the subspec's new map entries: every mapped derivation must exist in source and every BID must have at least one derivation entry. On FAIL: fix the mapping or escalate to user before proceeding to the next subspec.
 5. After all subspecs complete, run the full test suite to confirm GREEN state
 6. Validate the full Realize map; write `realize-inspection.yaml`
+
+### Re-entry Behavior (Settle Loop)
+
+When Realize is re-entered after a Settle loop:
+
+1. Read `rerun_scope` from `pipeline-state.yaml`.
+2. Skip Realize for subspecs not in the re-run scope. Their existing realize-map entries and implementation are preserved.
+3. Re-run Realize normally for subspecs in scope. New realize-map entries replace old entries (merge semantics).
+4. After a subspec completes, update its `provides_hash` in `subspec_statuses`. If the hash changed from the previous value, set `rerun_scope.provides_changed` to `true` — downstream dependents must re-run.
+5. `_integration` always re-runs.
 
 ## Outputs
 
@@ -66,3 +76,5 @@ bids:
 - `realize-inspection.yaml` is the third Traceability Gate input at Inspect — missing or failed = Critical finding
 - The realize inspection can be re-run on demand (no `--fix` available for build stage)
 - After all subspecs' implementations pass, primary BID integration tests should also pass (since subspecs compose into primary scenarios per ANLZ-004). If any fail, treat as an implementation gap and retry.
+- On re-entry, `realize-map.yaml` uses merge semantics.
+- If Realize changes the implementation such that the `Provides:` contract changes, this triggers re-runs of downstream dependents via the `provides_changed` flag.
