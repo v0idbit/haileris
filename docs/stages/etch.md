@@ -10,11 +10,12 @@ Write red-phase tests for each Gherkin subspec.
 
 ## Process
 
-1. Write one test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail at import time. Import paths derive from the subspec's `Domains:` declarations (domain path) and project naming conventions (entity names) — the agent derives all import paths from these conventions. Primary BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`). Exact directory names and test framework follow project conventions. Test assertions must verify observable effects from the BID's Gherkin Then/And steps: state changes, outputs produced, and data passed between components. When the subspec has a `Requires:` line, the required interface contracts inform test fixture design: the test Arrange section can reference the contracted data shapes declared in the upstream subspec's `Provides:` metadata.
+1. Write one test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail at import time. Import paths derive from the subspec's `Domains:` declarations (domain path) and project naming conventions (entity names) — the agent derives all import paths from these conventions. Primary BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`). Exact directory names and test framework follow project conventions. Test assertions must verify observable effects from the BID's Gherkin Then/And steps: state changes, outputs produced, and data passed between components. When the subspec has a `Requires:` line, the required interface contracts inform test fixture design: the test Arrange section can reference the contracted data shapes declared in the upstream subspec's `Provides:` metadata. All test function parameters and return types must use named data contract types for collections and compound types — bare generic annotations (`dict`, `list`, `tuple`, `set`, `Any`, `object`, and language equivalents) are prohibited. Scalar primitives (`str`, `int`, `float`, `bool`) are allowed bare. This applies to all functions. The language-specific contract mechanism is documented in technical-details. ANLZ-007 validates compliance.
 2. Write `etch-map.yaml` mapping each BID to its test functions
 3. Verify every BID has at least one test function via the map (TEST-001 gate); if FAIL, add missing tests and update the map
 4. Run the test suite to confirm RED state (TEST-002 gate) — every generated test must fail. For each passing test, apply the diagnostic protocol (see RED State Confirmation); re-run after corrections. Escalate to user when any test still passes after one correction pass.
 5. Validate the map across 5 check types; write `.haileris/features/{feature_id}/etch-inspection.yaml`
+6. Run data contract compliance check (ANLZ-007) on all test function signatures. If FAIL, replace bare generics with named contract types; re-run.
 
 ### Re-entry Behavior (Settle Loop)
 
@@ -70,6 +71,20 @@ Assertion corrections in this table use the same closed-derivation-scope princip
 
 One correction pass, then re-run. Escalate to user when a test still passes after correction — the test requires regeneration.
 
+## Data Contract Compliance
+
+Every test function parameter and return type annotation must use a named data contract type for collections and compound types. Bare generic annotations are prohibited. Scalar primitives are allowed bare.
+
+| Category | Examples | Allowed? |
+|----------|----------|----------|
+| Bare generics | `dict`, `list`, `tuple`, `set`, `Any`, `object`, `Dict[str, Any]`, `List[int]` | No |
+| Scalar primitives | `str`, `int`, `float`, `bool` | Yes |
+| Named contract types | `UserRecord`, `AuthPayload`, `OrderSummary` | Yes |
+
+The contract mechanism is language-specific — technical-details documents which construct to use (e.g., dataclass, TypedDict, struct, interface) for the target language. The rule applies to all functions regardless of visibility — no exceptions for private or helper functions.
+
+ANLZ-007 validates compliance. See [anlz-007.md](../automation/anlz-007.md) for the full mechanical specification.
+
 ## Notes
 
 - Test naming convention follows the project's test framework (e.g., `test_create_user`) — BID traceability is carried by `etch-map.yaml`, not by test names
@@ -80,3 +95,4 @@ One correction pass, then re-run. Escalate to user when a test still passes afte
 - Import paths are derived from the subspec's `Domains:` declarations and project naming conventions — `Domains:` provides the module root, naming conventions provide entity names. This makes import paths a shared contract with Realize (see [spec Domains metadata](../artifacts/spec.md#pipeline-metadata))
 - After all subspec Etch→Realize cycles complete and the full suite is green, a final Etch pass writes integration tests for primary BIDs. These verify end-to-end composition (the wiring that `@traces` tags describe). The etch-map includes primary BIDs.
 - On re-entry, `etch-map.yaml` uses merge semantics: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim.
+- ANLZ-007 runs at Etch step 6 after the etch-map is validated. It checks all test function signatures for bare generic annotations. Bare generics in nested positions (e.g., `list[UserRecord]`) still fail — the outer container is bare.

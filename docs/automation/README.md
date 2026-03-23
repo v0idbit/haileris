@@ -15,6 +15,7 @@ High frequency, high error cost, low implementation difficulty. Each spec below 
 | [Traceability Gate](traceability-gate.md) | 5 checks | [inspect.md](../stages/inspect.md) |
 | [ANLZ-003](anlz-003.md) | 1 check (5-step algorithm) | [layout.md](../stages/layout.md) |
 | [ANLZ-005](anlz-005.md) | 1 check (6-step algorithm) | [layout.md](../stages/layout.md) |
+| [ANLZ-006](anlz-006.md) | 1 check (4-step algorithm) | [layout.md](../stages/layout.md) |
 | [TEST-001](test-001.md) | 1 check | [etch.md](../stages/etch.md) |
 | [Pipeline State](pipeline-state.md) | State machine + 5 operations | [pipeline-state.md](../artifacts/pipeline-state.md), [pipeline.md](../pipeline.md) |
 
@@ -28,6 +29,7 @@ Medium ROI operations that become fully mechanical under a stated constraint. Ea
 | [Realize Scope](realize-scope.md) | AST-based derivation discovery + scope creep | AST tooling available for target language | [realize.md](../stages/realize.md) |
 | [RED Diagnostics](red-diagnostics.md) | Default-value + tautological assertion detection | Per-language default value tables; AAA structure | [etch.md](../stages/etch.md) |
 | [Mutation Testing](mutation-testing.md) | BID-targeted mutation generation and kill rate | Standard mutation operators + realize-map traceability | [inspect.md](../stages/inspect.md) |
+| [ANLZ-007](anlz-007.md) | Data contract compliance | Type annotation parsing available for target language | [etch.md](../stages/etch.md) |
 
 ## Tier 3: Mechanical Verification of Judgment Operations (J-v)
 

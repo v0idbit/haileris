@@ -85,7 +85,7 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 #### Outputs
 
-**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, validates composition (ANLZ-003, ANLZ-004, ANLZ-005), and generates interface contracts. The delivery order (`delivery-order.yaml`) is compiled from the `Requires:`/`Provides:` declarations in each subspec.
+**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, validates composition (ANLZ-003, ANLZ-004, ANLZ-005, ANLZ-006), and generates interface contracts. `Provides:`/`Requires:` entries include field hints validated by ANLZ-006 for completeness and subset consistency. The delivery order (`delivery-order.yaml`) is compiled from the `Requires:`/`Provides:` declarations in each subspec.
 
 ---
 
@@ -104,7 +104,7 @@ On re-entry after a Settle loop, only subspecs in `rerun_scope` execute. Passing
 #### 5. Etch
 
 **Inputs:** Gherkin subspec (current subspec), Technical details, Constitution
-**Outputs:** Red-phase test suite, Etch map (BID → test function mapping)
+**Outputs:** Red-phase test suite, Etch map (BID → test function mapping). Test function signatures must use named data contract types — bare generic annotations are prohibited (ANLZ-007).
 
 #### 6. Realize
 

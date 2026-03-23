@@ -56,8 +56,8 @@ Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it 
 Feature: {deliverable_name}
   {plain-English description of what this deliverable covers}
   Domains: path/to/domain (role), path/to/other (role)
-  Requires: {upstream}.feature -> {ContractName} ({description})
-  Provides: {ContractName} ({description})
+  Requires: {upstream}.feature -> {ContractName} (field1, field2 — description)
+  Provides: {ContractName} (field1, field2, field3 — description)
 
   Background:
     Given {shared precondition for all scenarios in this file}
@@ -98,12 +98,14 @@ Subspecs declare inter-subspec data dependencies via `Requires:` and `Provides:`
 
 | Field | Requirement | Format |
 |-------|------------|--------|
-| `Requires:` | Optional on subspecs | `{file}.feature -> {ContractName} ({description})`, comma-separated |
-| `Provides:` | Required on subspecs | `{ContractName} ({description})`, comma-separated |
+| `Requires:` | Optional on subspecs | `{file}.feature -> {ContractName} (field1, field2 — description)`, comma-separated |
+| `Provides:` | Required on subspecs | `{ContractName} (field1, field2 — description)`, comma-separated |
 
 The arrow syntax (`->`) connects the source subspec file to the contract name it provides. Multiple entries are comma-separated on a single line.
 
-Every `ContractName` appearing in a `Requires:` must be satisfied by a matching `Provides:` in some subspec. ANLZ-005 validates this at Layout.Verify. A subspec with no `Requires:` is a dependency root. `Requires:` implies the dependency edge — there is no separate `Depends-on:` mechanism.
+**Field hint format:** The parenthetical after each `ContractName` contains comma-separated field hint identifiers before an em dash (`—` or ASCII `---`), followed by a prose description. Field hints are language-agnostic identifiers naming the data fields the contract carries — not language-specific types. At least one field hint is required per `Provides:` entry (ANLZ-006). `Requires:` field hints, when present, must be a subset of the corresponding `Provides:` fields (ANLZ-006). A `Requires:` entry with no field hints (description only) is valid — it consumes the full contract without narrowing.
+
+Every `ContractName` appearing in a `Requires:` must be satisfied by a matching `Provides:` in some subspec. ANLZ-005 validates this at Layout.Verify. ANLZ-006 validates field hint completeness. A subspec with no `Requires:` is a dependency root. `Requires:` implies the dependency edge — there is no separate `Depends-on:` mechanism.
 
 See also the [Pipeline Metadata](#pipeline-metadata) table for a summary of all feature-level metadata fields.
 
@@ -137,8 +139,8 @@ Carried as Feature-level tags and the Feature description block — no separate 
 | Status | `@status:inscribing`, `@status:ascertaining`, `@status:approved` |
 | Type | `@type:greenfield`, `@type:modification`, `@type:refactor` |
 | Domains | Required on subspecs. `Domains:` line in the Feature description block. Format: `path/to/domain (role)`, comma-separated. Declares which domains the deliverable's BIDs will touch. Serves as the shared import contract between Etch (derives test import paths) and Realize (creates source at these paths). Validated mechanically by ANLZ-003. |
-| Requires | Optional on subspecs. `Requires:` line in Feature description block. Format: `{file}.feature -> {ContractName} ({description})`, comma-separated. Declares what this subspec needs from upstream subspecs. Implies a dependency edge. A subspec with no `Requires:` is a dependency root. Validated by ANLZ-005. |
-| Provides | Required on subspecs. `Provides:` line in Feature description block. Format: `{ContractName} ({description})`, comma-separated. Declares what this subspec makes available to downstream subspecs. Validated by ANLZ-005. |
+| Requires | Optional on subspecs. `Requires:` line in Feature description block. Format: `{file}.feature -> {ContractName} (field1, field2 — description)`, comma-separated. Declares what this subspec needs from upstream subspecs. Implies a dependency edge. A subspec with no `Requires:` is a dependency root. Validated by ANLZ-005 (contract name consistency) and ANLZ-006 (field hint subset). |
+| Provides | Required on subspecs. `Provides:` line in Feature description block. Format: `{ContractName} (field1, field2 — description)`, comma-separated. Declares what this subspec makes available to downstream subspecs. At least one field hint required. Validated by ANLZ-005 (contract name consistency) and ANLZ-006 (field hint completeness). |
 
 ## Status Lifecycle
 

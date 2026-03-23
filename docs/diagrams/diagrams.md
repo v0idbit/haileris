@@ -134,7 +134,7 @@ flowchart LR
     DEC -->|"step 3"| RP["Requires/Provides<br>per BID"]
     DEC -->|"step 4"| TR["@traces tags<br>added to primary.feature"]
 
-    CS --> V["Layout.Verify<br>ANLZ-003, ANLZ-004, ANLZ-005"]
+    CS --> V["Layout.Verify<br>ANLZ-003, ANLZ-004, ANLZ-005, ANLZ-006"]
     RP --> V
     TR --> V
 

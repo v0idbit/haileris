@@ -8,6 +8,7 @@ One test function per BID behavior, each:
 - Named descriptively following the project's test framework conventions (e.g., `test_create_user`)
 - Structured in AAA (Arrange / Act / Assert) format
 - Importing not-yet-existing source modules so all tests fail at import/build time before implementation
+- Using named data contract types for all collection/compound type annotations — no bare generics (`dict`, `list`, `Any`, etc.); scalar primitives (`str`, `int`, `float`, `bool`) allowed. See [etch.md Data Contract Compliance](../stages/etch.md#data-contract-compliance).
 
 BID traceability is carried by `etch-map.yaml`, not by test names or in-code annotations.
 
