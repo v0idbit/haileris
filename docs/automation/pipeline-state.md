@@ -25,6 +25,23 @@ etch_realize_progress:
   subspecs_completed: []
 loop_count: 0
 last_loop_target: null
+subspec_statuses:
+  "users.feature":
+    status: passed
+    provides_hash: "a1b2c3"
+    last_completed_at: "2026-03-10T15:30:00Z"
+  "auth.feature":
+    status: running
+    provides_hash: null
+    last_completed_at: null
+  "_integration":
+    status: pending
+    provides_hash: null
+    last_completed_at: null
+rerun_scope:
+  target_subspecs: []
+  blast_radius: []
+  provides_changed: false
 ```
 
 ## Constants
@@ -152,6 +169,47 @@ Feature: Pipeline State Machine
       And subspecs completed contains [1]
       When the current subspec is advanced
       Then subspecs completed contains [1, 2]
+
+  Rule: Subspec Initialize — populate subspec statuses after Layout
+
+    Scenario: Layout completes and subspec statuses are populated
+      Given Layout has just completed
+      And the layout produced subspecs "users.feature", "auth.feature", and an integration entry "_integration"
+      When subspec statuses are initialized
+      Then subspec_statuses contains an entry for "users.feature" with status "pending"
+      And subspec_statuses contains an entry for "auth.feature" with status "pending"
+      And subspec_statuses contains an entry for "_integration" with status "pending"
+      And provides_hash is null for all entries
+      And last_completed_at is null for all entries
+
+  Rule: Subspec Advance — track per-subspec completion
+
+    Scenario: A subspec passes and its status is recorded
+      Given subspec_statuses contains an entry for "users.feature" with status "running"
+      When "users.feature" completes with provides_hash "a1b2c3"
+      Then the status for "users.feature" is "passed"
+      And the provides_hash for "users.feature" is "a1b2c3"
+      And the last_completed_at for "users.feature" is set to the current UTC timestamp
+
+  Rule: Scoped Loop — Settle loop resets only affected subspecs
+
+    Scenario: A scoped loop resets only targeted and blast-radius subspecs
+      Given subspec_statuses contains "users.feature" with status "passed"
+      And subspec_statuses contains "auth.feature" with status "passed"
+      And subspec_statuses contains "_integration" with status "passed"
+      When a scoped loop is initiated with target_subspecs ["auth.feature"] and blast_radius ["auth.feature"]
+      Then the status for "auth.feature" is "pending"
+      And the status for "_integration" is "pending"
+      And the status for "users.feature" remains "passed"
+
+    Scenario: A domain:spec loop to Ascertain resets all subspec statuses
+      Given subspec_statuses contains "users.feature" with status "passed"
+      And subspec_statuses contains "auth.feature" with status "passed"
+      And subspec_statuses contains "_integration" with status "passed"
+      When a loop is initiated with target "ascertain"
+      Then the status for "users.feature" is "pending"
+      And the status for "auth.feature" is "pending"
+      And the status for "_integration" is "pending"
 ```
 
 Load and Save are implementation concerns — the state is read from and written to `.haileris/features/{feature_id}/pipeline-state.yaml` with the `last_updated` timestamp refreshed on each write.
@@ -180,6 +238,10 @@ Show is a read-only operation that emits the current pipeline state as YAML to s
 - After a loop, all stages from the target onward have status `pending`, and stages before the target retain their prior status
 - `constitution_version` is immutable after initialization (set once at Harvest)
 - `started_at` is immutable after initialization
+- `subspec_statuses` is empty before Layout completes; populated after
+- `rerun_scope` is null except during Settle-initiated loops
+- `_integration` is always reset when any subspec is reset
+- `provides_hash` is null until a subspec completes its first Etch/Realize cycle
 
 ## Edge Cases
 

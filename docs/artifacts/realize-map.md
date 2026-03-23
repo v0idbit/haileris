@@ -19,7 +19,7 @@ All derivations — including private helpers and internal methods — must be m
 
 ## Lifecycle
 
-Created by Realize when the first subspec completes. Appended to after each subsequent subspec. Read by the realize inspection after all subspecs complete. Stable after the realize inspection passes. A derivation may appear under multiple BIDs when shared logic legitimately satisfies multiple behaviors.
+Created by Realize when the first subspec completes. Appended to after each subsequent subspec. Read by the realize inspection after all subspecs complete. Stable after the realize inspection passes. A derivation may appear under multiple BIDs when shared logic legitimately satisfies multiple behaviors. On re-entry after a Settle loop, merge semantics apply: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim.
 
 ## Path
 

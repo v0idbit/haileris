@@ -42,7 +42,7 @@ The parameterization suffix (e.g., `[foo]`) follows the project's test framework
 
 ## Lifecycle
 
-Written by Etch once all test functions are generated. Read by the etch inspection to validate coverage. Ingested by Realize to guide implementation scoping. Ingested by Inspect as input to the Traceability Gate. Updated by Settle when genuinely wrong test fixes change mappings (see [Settle](../stages/settle.md)).
+Written by Etch once all test functions are generated. Read by the etch inspection to validate coverage. Ingested by Realize to guide implementation scoping. Ingested by Inspect as input to the Traceability Gate. Updated by Settle when genuinely wrong test fixes change mappings (see [Settle](../stages/settle.md)). On re-entry after a Settle loop, merge semantics apply: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim.
 
 ## Path
 
