@@ -37,6 +37,7 @@ Run all reviews in parallel:
 2. **Architecture review** — validate domain boundaries against Gherkin spec BIDs; check README.md existence; API boundary type checking per project conventions; constitution violations = Critical
 3. **Complexity and scope** — evaluate every abstraction for BID traceability; scope creep = HIGH, over-engineering = MEDIUM
 4. **Mutation testing** — design targeted mutations per BID; report kill rate per BID. Each mutation must break an observable behavioral assertion from the BID's Gherkin Then/And steps: boundary conditions, comparison operators, argument order, branch logic, return values. A surviving mutation = Medium finding tagged to the BID, with the mutation and the untested behavioral gap described
+5. **Interface contract compliance** — for each subspec, verify the implementation satisfies its `Provides:` declarations and correctly consumes its `Requires:` contracts. Missing or malformed contract implementations = High finding. Findings are tagged `domain: impl` (implementation doesn't satisfy contract) or `domain: spec` (contract declaration is ambiguous).
 
 After all reviews complete, synthesize.
 
