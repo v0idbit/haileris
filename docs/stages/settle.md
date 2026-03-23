@@ -7,6 +7,8 @@ Refactor and resolve failures. Gate on completeness.
 - Gherkin spec
 - Constitution
 - Implementation failure details
+- Etch map (`etch-map.yaml`) — BID → test function mapping from Etch
+- Realize map (`realize-map.yaml`) — BID → derivation mapping from Realize
 
 ## Process
 
@@ -60,6 +62,8 @@ Refactor and resolve failures. Gate on completeness.
 | Artifact | Path | Notes |
 |----------|------|-------|
 | Green-phase implementation (updated) | `src/` (repo) | Updated by domain:impl fixes |
+| Test files (updated) | `tests/` (repo) | Updated by three-tier test-domain fix policy (structural refactors, assertion corrections, genuinely wrong test fixes) |
+| Gherkin spec (updated) | `tests/features/*.feature` | Updated by domain:spec auto-resolve; append resolution to ascertainments |
 | Etch map (updated) | `.haileris/features/{feature_id}/etch-map.yaml` | Updated if genuinely wrong test fixes change mappings |
 | Ascertainments (appended) | `.haileris/features/{feature_id}/ascertainments.md` | Auto-resolved spec findings appended with [AUTO-RESOLVED] tag |
 

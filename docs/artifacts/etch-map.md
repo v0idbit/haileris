@@ -17,14 +17,15 @@ bids:
   BID-002:
     tests:
       - tests/unit/test_feature#test_delete_user
-  BID-060:
+  BID-005:
     tests:
+      - tests/unit/test_auth#test_login_flow
       - tests/integration/test_workflow#test_full_pipeline
 ```
 
 The `#` separator delimits the file path from the function name.
 
-Primary BIDs map to `tests/integration/`; subspec BIDs map to `tests/unit/`.
+BIDs get unit tests during subspec Etch cycles (`tests/unit/`). BIDs with `@traces` tags additionally get integration tests during the final Etch pass (`tests/integration/`).
 
 ## Scenario Outline Mapping
 

@@ -70,10 +70,10 @@ bids:
 
 ## Notes
 
-- Test files are read-only from Etch forward — all stages after Etch treat them as fixed inputs
+- Test files are read-only from Etch forward — Realize and Inspect treat them as fixed inputs (Settle applies a controlled three-tier fix policy for test-domain findings; see [Settle](settle.md))
 - Source modules must be importable at the domain paths from the subspec's `Domains:` declarations — this is the shared import contract with Etch. If an import mismatch occurs, Realize adjusts its source structure to conform to the spec's domain paths (the spec is the authority)
 - `realize-map.yaml` is built incrementally after each subspec; the realize inspection reads the final map
-- `realize-inspection.yaml` is the third Traceability Gate input at Inspect — missing or failed = Critical finding
+- `realize-inspection.yaml` is a Traceability Gate input at Inspect — missing or failed = Critical finding
 - The realize inspection can be re-run on demand (no `--fix` available for build stage)
 - After all subspecs' implementations pass, primary BID integration tests should also pass (since subspecs compose into primary scenarios per ANLZ-004). If any fail, treat as an implementation gap and retry.
 - On re-entry, `realize-map.yaml` uses merge semantics.

@@ -3,13 +3,13 @@
 ## 2026-03-22
 
 ### Added
-- **Interface contracts on subspecs** — subspecs now carry `Requires:` and `Provides:` metadata alongside `Domains:`, declaring the data contracts between subspecs; Layout.Verify validates that every `Requires:` entry is satisfied by a `Provides:` entry from a subspec ordered earlier in `delivery-order.yaml`
+- **Interface contracts on subspecs** — subspecs now carry `Requires:` and `Provides:` metadata alongside `Domains:`, declaring the data contracts between subspecs; Layout.Verify validates that every `Requires:` entry is satisfied by a corresponding `Provides:` entry
 - **ANLZ-005 interface contract check** — new mechanical check at Layout.Verify: verifies that all inter-subspec `Requires:`/`Provides:` pairs are consistent (no unsatisfied requirement, no declaration mismatch); classified as agent-evaluated (*)
 - **`_integration` pseudo-subspec** — a reserved subspec entry in `delivery-order.yaml` that groups cross-cutting integration scenarios not owned by any single delivery subspec; Etch uses it to place integration-level tests
 - **Per-subspec status tracking in pipeline-state** — `pipeline-state.yaml` now records pass/fail status per subspec so Settle can identify exactly which subspecs need re-processing
 
 ### Changed
-- **`delivery-order.yaml` is a derived (compiled) artifact** — the delivery order is compiled from subspec `Requires:`/`Provides:` declarations at Layout.Verify rather than hand-authored; the file reflects the resolved dependency ordering
+- **`delivery-order.yaml` is a derived (compiled) artifact** — the delivery order is compiled from subspec `Requires:`/`Provides:` declarations at Layout.Decompose rather than hand-authored; the file reflects the resolved dependency ordering
 - **Subspec-scoped re-runs at Settle** — Settle re-runs target only the failing subspec(s) and their downstream dependents (determined via `delivery-order.yaml` dependency edges), leaving passing subspecs untouched
 
 ## 2026-03-19

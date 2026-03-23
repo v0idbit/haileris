@@ -92,7 +92,8 @@ flowchart TD
 
     L -->|creates| CS
     L -->|"compiles (derived from Requires/Provides)"| DO([Delivery Order])
-    CS -->|ingested by| E[5. Etch]
+    DO -->|"sequences"| E[5. Etch]
+    CS -->|ingested by| E
     TD -->|ingested by| E
     CON -->|ingested by| E
 
@@ -117,6 +118,8 @@ flowchart TD
     PS -->|ingested by| S[8. Settle]
     CS -->|ingested by| S
     IF -->|ingested by| S
+    ETM -->|ingested by| S
+    RM -->|ingested by| S
     CON -->|ingested by| S
 ```
 
@@ -130,12 +133,10 @@ Inscribe creates the primary spec. Layout decomposes it into subspecs and adds `
 flowchart LR
     PS_IN["primary.feature<br>(from Inscribe)"] --> DEC["Layout.Decompose"]
 
-    DEC -->|"step 2"| CS["{deliverable}.feature<br>(per-deliverable BIDs)"]
-    DEC -->|"step 3"| RP["Requires/Provides<br>per BID"]
+    DEC -->|"step 2"| CS["{deliverable}.feature<br>(per-deliverable BIDs +<br>Domains/Requires/Provides)"]
     DEC -->|"step 4"| TR["@traces tags<br>added to primary.feature"]
 
     CS --> V["Layout.Verify<br>ANLZ-003, ANLZ-004, ANLZ-005, ANLZ-006"]
-    RP --> V
     TR --> V
 
     V -->|"validates composition"| RESULT{"Subspecs cover<br>all primary steps?"}
@@ -213,6 +214,8 @@ flowchart TD
     PS2 --> S
     CS2 --> S
     IF --> S
+    ETM2 --> S
+    RM2 --> S
 
     subgraph S["8. Settle + Constitution"]
         S_T["Triage"] --> S_SC["Scope"] --> S_F["Fix"] --> S_C["Confirm"]

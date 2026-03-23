@@ -133,13 +133,15 @@ On re-entry after a Settle loop, only subspecs in `rerun_scope` execute. Passing
 
 ### 8. Settle
 
-**Sub-stages:** Settle.Triage → Settle.Fix → Settle.Confirm
+**Sub-stages:** Settle.Triage → Settle.Scope → Settle.Fix → Settle.Confirm
 
 #### Inputs
 
 - Gherkin spec
 - Constitution
 - Implementation failure details
+- Etch map
+- Realize map
 
 #### Output
 

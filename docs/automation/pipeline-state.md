@@ -239,7 +239,7 @@ Show is a read-only operation that emits the current pipeline state as YAML to s
 - `constitution_version` is immutable after initialization (set once at Harvest)
 - `started_at` is immutable after initialization
 - `subspec_statuses` is empty before Layout completes; populated after
-- `rerun_scope` is null except during Settle-initiated loops
+- `rerun_scope` carries default-empty values except during Settle-initiated loops
 - `_integration` is always reset when any subspec is reset
 - `provides_hash` is null until a subspec completes its first Etch/Realize cycle
 

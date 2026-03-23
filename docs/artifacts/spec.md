@@ -21,7 +21,7 @@ Feature files are source artifacts — permanent repo fixtures committed alongsi
 | Primary | `primary.feature` | End-to-end workflow scenarios | Integration-level contract |
 | Subspec | `{deliverable}.feature` | Per-deliverable behavioral scenarios | Unit-level contracts |
 
-The primary spec is written by Inscribe. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for effects that cross deliverable boundaries. Subspecs are decomposed from the primary spec by Layout — each owns one deliverable's behavioral contract. A deliverable is a set of BIDs that share a delivery boundary — they can be implemented and verified as a unit, independent of other subspecs. The breaking points between deliverables are where one subspec's output becomes another's input. ANLZ-004 validates at Layout.Verify that subspecs compose back into the primary spec with no gaps. Subspecs declare explicit interface contracts via `Requires:` and `Provides:` metadata. These make inter-subspec data dependencies explicit and enable subspec-scoped re-runs when failures occur.
+The primary spec is written by Inscribe. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for effects that cross deliverable boundaries. Subspecs are decomposed from the primary spec by Layout — each owns one deliverable's behavioral contract. Layout distributes every primary BID to exactly one subspec; after Layout, the same BID set appears in both `primary.feature` and the union of all subspecs. A deliverable is a set of BIDs that share a delivery boundary — they can be implemented and verified as a unit, independent of other subspecs. The breaking points between deliverables are where one subspec's output becomes another's input. ANLZ-004 validates at Layout.Verify that subspecs compose back into the primary spec with no gaps. Subspecs declare explicit interface contracts via `Requires:` and `Provides:` metadata. These make inter-subspec data dependencies explicit and enable subspec-scoped re-runs when failures occur.
 
 ## Format
 
@@ -34,20 +34,32 @@ Standard Gherkin feature files (`.feature`). Plain Gherkin only.
 Feature: {feature_name} — Primary Spec
   End-to-end workflow scenarios for the feature.
 
-  @BID-060 @traces:BID-003,BID-015,BID-024
+  @BID-001
+  Scenario: {behavior A}
+    Given {initial state}
+    When {action}
+    Then {expected outcome}
+
+  @BID-002
+  Scenario: {behavior B}
+    Given {initial state}
+    When {action}
+    Then {expected outcome}
+
+  @BID-005 @traces:BID-001,BID-003,BID-004
   Scenario: {end-to-end workflow description}
     Given {full system precondition}
     When {user-facing action}
     Then {observable end-to-end outcome}
 
-  @BID-061 @traces:BID-007,BID-031
+  @BID-006 @traces:BID-002,BID-004
   Scenario: {another workflow}
     Given {precondition}
     When {action}
     Then {outcome}
 ```
 
-Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it traces through. The `@traces` tags are added by Layout after subspec creation. The `@traces` tag makes composition explicit and auditable.
+Every primary scenario has a BID. Scenarios with `@traces` tags are integration-level — they define end-to-end workflows composed from other BIDs. Layout adds `@traces` tags after distributing all BIDs to subspecs. Every BID in `primary.feature` also appears in exactly one subspec (verified by the layout inspection's MISSING and DUPLICATED checks).
 
 ### Subspecs (`{deliverable}.feature`)
 
