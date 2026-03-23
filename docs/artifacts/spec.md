@@ -21,7 +21,7 @@ Feature files are source artifacts — permanent repo fixtures committed alongsi
 | Primary | `primary.feature` | End-to-end workflow scenarios | Integration-level contract |
 | Subspec | `{deliverable}.feature` | Per-deliverable behavioral scenarios | Unit-level contracts |
 
-The primary spec is written by Inscribe. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for effects that cross deliverable boundaries. Subspecs are decomposed from the primary spec by Layout — each owns one deliverable's behavioral contract. A deliverable is a set of BIDs that share a delivery boundary — they can be implemented and verified as a unit, independent of other subspecs. The breaking points between deliverables are where one subspec's output becomes another's input. ANLZ-004 validates at Layout.Verify that subspecs compose back into the primary spec with no gaps.
+The primary spec is written by Inscribe. Its scenarios define the observable end-to-end behavior of the feature and force BIDs for effects that cross deliverable boundaries. Subspecs are decomposed from the primary spec by Layout — each owns one deliverable's behavioral contract. A deliverable is a set of BIDs that share a delivery boundary — they can be implemented and verified as a unit, independent of other subspecs. The breaking points between deliverables are where one subspec's output becomes another's input. ANLZ-004 validates at Layout.Verify that subspecs compose back into the primary spec with no gaps. Subspecs declare explicit interface contracts via `Requires:` and `Provides:` metadata. These make inter-subspec data dependencies explicit and enable subspec-scoped re-runs when failures occur.
 
 ## Format
 
@@ -56,6 +56,8 @@ Each primary scenario has a BID and a `@traces` tag listing the subspec BIDs it 
 Feature: {deliverable_name}
   {plain-English description of what this deliverable covers}
   Domains: path/to/domain (role), path/to/other (role)
+  Requires: {upstream}.feature -> {ContractName} ({description})
+  Provides: {ContractName} ({description})
 
   Background:
     Given {shared precondition for all scenarios in this file}
@@ -90,6 +92,21 @@ Each primary spec scenario must have a `@traces` tag. ANLZ-004 validates:
 - All referenced BIDs exist in subspecs
 - The referenced BIDs collectively cover every effect in the scenario's steps
 
+## Interface Contract Metadata
+
+Subspecs declare inter-subspec data dependencies via `Requires:` and `Provides:` lines in the Feature description block.
+
+| Field | Requirement | Format |
+|-------|------------|--------|
+| `Requires:` | Optional on subspecs | `{file}.feature -> {ContractName} ({description})`, comma-separated |
+| `Provides:` | Required on subspecs | `{ContractName} ({description})`, comma-separated |
+
+The arrow syntax (`->`) connects the source subspec file to the contract name it provides. Multiple entries are comma-separated on a single line.
+
+Every `ContractName` appearing in a `Requires:` must be satisfied by a matching `Provides:` in some subspec. ANLZ-005 validates this at Layout.Verify. A subspec with no `Requires:` is a dependency root. `Requires:` implies the dependency edge — there is no separate `Depends-on:` mechanism.
+
+See also the [Pipeline Metadata](#pipeline-metadata) table for a summary of all feature-level metadata fields.
+
 ## Keywords
 
 | Keyword | Role |
@@ -120,6 +137,8 @@ Carried as Feature-level tags and the Feature description block — no separate 
 | Status | `@status:inscribing`, `@status:ascertaining`, `@status:approved` |
 | Type | `@type:greenfield`, `@type:modification`, `@type:refactor` |
 | Domains | Required on subspecs. `Domains:` line in the Feature description block. Format: `path/to/domain (role)`, comma-separated. Declares which domains the deliverable's BIDs will touch. Serves as the shared import contract between Etch (derives test import paths) and Realize (creates source at these paths). Validated mechanically by ANLZ-003. |
+| Requires | Optional on subspecs. `Requires:` line in Feature description block. Format: `{file}.feature -> {ContractName} ({description})`, comma-separated. Declares what this subspec needs from upstream subspecs. Implies a dependency edge. A subspec with no `Requires:` is a dependency root. Validated by ANLZ-005. |
+| Provides | Required on subspecs. `Provides:` line in Feature description block. Format: `{ContractName} ({description})`, comma-separated. Declares what this subspec makes available to downstream subspecs. Validated by ANLZ-005. |
 
 ## Status Lifecycle
 
