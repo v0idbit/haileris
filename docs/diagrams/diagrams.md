@@ -215,7 +215,7 @@ flowchart TD
     IF --> S
 
     subgraph S["8. Settle + Constitution"]
-        S_SC["Scope"] --> S_T["Triage"] --> S_F["Fix"] --> S_C["Confirm"]
+        S_T["Triage"] --> S_SC["Scope"] --> S_F["Fix"] --> S_C["Confirm"]
     end
 
     S -->|"domain: spec (full)"| A

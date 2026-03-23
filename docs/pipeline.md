@@ -85,7 +85,7 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 #### Outputs
 
-**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, validates composition (ANLZ-003, ANLZ-004, ANLZ-005), and generates interface contracts. The delivery order (`delivery-order.yaml`) is compiled from the `provides`/`consumes` declarations in each subspec.
+**Ordered delivery subspecs** — per-deliverable behavioral contracts with BIDs, listed in implementation order with dependency edges. Layout decomposes the primary spec into subspecs, adds `@traces` tags, validates composition (ANLZ-003, ANLZ-004, ANLZ-005), and generates interface contracts. The delivery order (`delivery-order.yaml`) is compiled from the `Requires:`/`Provides:` declarations in each subspec.
 
 ---
 
