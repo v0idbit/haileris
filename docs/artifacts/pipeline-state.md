@@ -11,6 +11,8 @@ A machine-readable record of where a feature currently sits in the pipeline. Wri
 - `last_updated` — ISO timestamp of the most recent write
 - `stage_statuses` — a map of stage name → `pending` / `running` / `passed` / `failed`
 - `etch_realize_progress` — subspec tracking for Etch/Realize sequential execution
+- `subspec_statuses` — per-subspec tracking: `pending` / `running` / `passed` / `failed`. Each entry includes `provides_hash` (hash of the Provides line, used to detect contract changes during re-runs) and `last_completed_at` (ISO timestamp).
+- `rerun_scope` — populated by Settle.Scope when a loop is initiated: `target_subspecs` (subspecs owning failing BIDs), `blast_radius` (downstream dependents), `provides_changed` (set to `true` if any target subspec's Provides line changed after fix).
 - `loop_count` — number of Settle → re-entry loops (max 3; escalate to user if exceeded)
 - `last_loop_target` — which stage the most recent Settle loop re-entered (`ascertain` / `etch` / `realize` / `null`)
 
@@ -33,6 +35,23 @@ etch_realize_progress:
   current_subspec: 2
   total_subspecs: 3
   subspecs_completed: [1]
+subspec_statuses:
+  "users.feature":
+    status: passed
+    provides_hash: "a1b2c3"
+    last_completed_at: "2026-03-10T15:30:00Z"
+  "auth.feature":
+    status: running
+    provides_hash: null
+    last_completed_at: null
+  "_integration":
+    status: pending
+    provides_hash: null
+    last_completed_at: null
+rerun_scope:
+  target_subspecs: []
+  blast_radius: []
+  provides_changed: false
 loop_count: 0
 last_loop_target: null
 ```
@@ -40,6 +59,8 @@ last_loop_target: null
 ## Lifecycle
 
 Created by Harvest when the feature is first registered. Updated after each stage transition. On a Settle loop, downstream stage statuses reset to `pending` from the loop target onward. Remains in place until the feature is closed. Append-forward — the state always reflects the most recent completed transition.
+
+Per-subspec statuses are initialized when Layout completes (all subspecs set to `pending`). Updated after each subspec's Etch/Realize cycle. On a Settle loop with subspec-scoped re-run, only targeted subspecs and their blast radius are reset to `pending`; unaffected subspecs retain `passed`. `rerun_scope` is null except during Settle-initiated loops.
 
 ## Path
 
