@@ -21,9 +21,9 @@ flowchart TD
     E --> R
     R --> IN
     IN --> S
-    S -->|"domain: spec"| A
-    S -->|"domain: test"| E
-    S -->|"domain: impl"| R
+    S -->|"domain: spec (full)"| A
+    S -->|"domain: test (scoped)"| E
+    S -->|"domain: impl (scoped)"| R
     S -->|no failures| DONE([COMPLETE])
 ```
 
@@ -91,7 +91,7 @@ flowchart TD
     CON -->|ingested by| L
 
     L -->|creates| CS
-    L -->|creates| DO([Delivery Order])
+    L -->|"compiles (derived from Requires/Provides)"| DO([Delivery Order])
     CS -->|ingested by| E[5. Etch]
     TD -->|ingested by| E
     CON -->|ingested by| E
@@ -131,9 +131,11 @@ flowchart LR
     PS_IN["primary.feature<br>(from Inscribe)"] --> DEC["Layout.Decompose"]
 
     DEC -->|"step 2"| CS["{deliverable}.feature<br>(per-deliverable BIDs)"]
+    DEC -->|"step 3"| RP["Requires/Provides<br>per BID"]
     DEC -->|"step 4"| TR["@traces tags<br>added to primary.feature"]
 
-    CS --> V["Layout.Verify<br>ANLZ-003, ANLZ-004"]
+    CS --> V["Layout.Verify<br>ANLZ-003, ANLZ-004, ANLZ-005"]
+    RP --> V
     TR --> V
 
     V -->|"validates composition"| RESULT{"Subspecs cover<br>all primary steps?"}
@@ -213,12 +215,12 @@ flowchart TD
     IF --> S
 
     subgraph S["8. Settle + Constitution"]
-        S_T["Triage"] --> S_F["Fix"] --> S_C["Confirm"]
+        S_SC["Scope"] --> S_T["Triage"] --> S_F["Fix"] --> S_C["Confirm"]
     end
 
-    S -->|"domain: spec"| A
-    S -->|"domain: test"| E
-    S -->|"domain: impl"| R
+    S -->|"domain: spec (full)"| A
+    S -->|"domain: test (scoped)"| E
+    S -->|"domain: impl (scoped)"| R
     S -->|no failures| DONE(["COMPLETE"])
 ```
 
