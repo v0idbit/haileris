@@ -43,6 +43,7 @@ This pre-check ensures every stage has stable access to project conventions with
 ### Harvest.Initialize
 
 1. Record `constitution_version` in `pipeline-state.yaml` to lock the active constitution version for this feature run (if a constitution exists)
+2. Initialize `subspec_statuses` as an empty map in `pipeline-state.yaml`. Entries are populated when Layout completes.
 
 ## Outputs
 
@@ -64,7 +65,7 @@ This pre-check ensures every stage has stable access to project conventions with
 | Project test conventions | `.haileris/project/test-conventions.md` | Committed |
 | Harvest inspection | `.haileris/features/{feature_id}/harvest-inspection.yaml` | Traceability gate input for Inspect |
 | Harvest metadata | `.haileris/project/last-harvest.json` | Used for incremental reharvest detection |
-| Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | Tracks current stage, constitution version, and resume state |
+| Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` | Tracks current stage, constitution version, resume state, and per-subspec statuses (populated by Layout) |
 
 ## Harvest Inspection
 
