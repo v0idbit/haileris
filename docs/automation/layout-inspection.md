@@ -126,7 +126,7 @@ Feature: Layout Inspection
       Then no keyword-overlap finding is produced for "users.feature"
 ```
 
-Keyword extraction: For each BID, find the scenario tagged with `@{bid}` in the spec directory. Collect the text of all Given/When/Then/And/But steps in that scenario. Split into individual words (lowercased). Compare against words in the subspec Feature description (case-insensitive).
+Keyword extraction: For each BID, find the scenario tagged with `@{bid}` in the spec directory. Collect the text of all Given/When/Then/And/But steps in that scenario. Split into individual words (lowercased). Compare against words in the subspec Feature description (case-insensitive). `Requires:`, `Provides:`, and `Domains:` lines are excluded from word count and keyword overlap analysis — they are structural metadata, not descriptive content.
 
 ### 5. PARTIAL — Agent-Evaluated
 

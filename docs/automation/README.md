@@ -14,6 +14,7 @@ High frequency, high error cost, low implementation difficulty. Each spec below 
 | [Realize Inspection](realize-inspection.md) | 2 mechanically verified, 1 constraint-gated | [realize.md](../stages/realize.md) |
 | [Traceability Gate](traceability-gate.md) | 5 checks | [inspect.md](../stages/inspect.md) |
 | [ANLZ-003](anlz-003.md) | 1 check (5-step algorithm) | [layout.md](../stages/layout.md) |
+| [ANLZ-005](anlz-005.md) | 1 check (6-step algorithm) | [layout.md](../stages/layout.md) |
 | [TEST-001](test-001.md) | 1 check | [etch.md](../stages/etch.md) |
 | [Pipeline State](pipeline-state.md) | State machine + 5 operations | [pipeline-state.md](../artifacts/pipeline-state.md), [pipeline.md](../pipeline.md) |
 

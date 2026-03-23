@@ -182,3 +182,4 @@ Finding:
 - **Subspec step with effect verb in a Given clause:** Subspec Given steps are also excluded from effect extraction on the subspec side. Only Then/And and When steps with effect verbs count as covering an effect.
 - **Effect vocabulary false positives:** A step like "Then the system returns an error" matches `DATA_FLOW` via "returns." This is an accepted limitation of keyword-based detection — precision is traded for recall on obvious gaps.
 - **Overlap with ANLZ-003:** ANLZ-003 checks domain declarations; ANLZ-004 checks trace completeness and effect coverage. A subspec missing domains is an ANLZ-003 concern. A primary scenario missing traces is an ANLZ-004 concern.
+- **Relationship to interface contracts:** ANLZ-004 validates composition via effect coverage in Gherkin steps. Interface contracts (`Requires:`/`Provides:`) provide additional signal about data flow but are validated separately by ANLZ-005.

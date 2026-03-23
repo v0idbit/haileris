@@ -114,3 +114,4 @@ ANLZ-003 does not write a standalone inspection artifact. Its result is part of 
 - **BID in multiple files:** BID-to-file resolution returns the first file found. BIDs should be unique across files; duplicate BIDs are a separate validation concern.
 - **Primary scenario without `@traces`:** No entries in the traces map for that scenario. ANLZ-003 checks only scenarios with existing traces. Missing `@traces` tags are an ANLZ-004 concern.
 - **Traced BID resolves to primary.feature:** Skip — primary self-references are not domain coverage issues. This happens when a primary scenario traces another primary BID.
+- **Relationship to ANLZ-005:** ANLZ-003 validates `Domains:` metadata (import path contracts). ANLZ-005 validates `Requires:`/`Provides:` metadata (interface contracts). Both run at Layout.Verify; they validate orthogonal concerns.
