@@ -13,7 +13,7 @@ A machine-readable record of where a feature currently sits in the pipeline. Wri
 - `etch_realize_progress` — subspec tracking for Etch/Realize sequential execution
 - `subspec_statuses` — per-subspec tracking: `pending` / `running` / `passed` / `failed`. Each entry includes `provides_hash` (hash of the Provides line, used to detect contract changes during re-runs) and `last_completed_at` (ISO timestamp).
 - `rerun_scope` — default-empty; populated by Settle.Scope when a loop is initiated: `target_subspecs` (subspecs owning failing BIDs), `blast_radius` (downstream dependents), `provides_changed` (set to `true` if any target subspec's Provides line changed after fix).
-- `loop_count` — number of Settle → re-entry loops (max 3; escalate to user if exceeded)
+- `loop_count` — number of Settle → re-entry loops (max governed by `settle_loops` in [pipeline config](config.md); default: 0; escalate to user if exceeded)
 - `last_loop_target` — which stage the most recent Settle loop re-entered (`ascertain` / `etch` / `realize` / `null`)
 
 ```yaml

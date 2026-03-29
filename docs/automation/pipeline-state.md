@@ -50,7 +50,7 @@ Stage order: harvest → ascertain → inscribe → layout → etch → realize 
 
 Valid transitions from Settle on loop: ascertain, etch, realize.
 
-Maximum loops: 3.
+Maximum loops: governed by `settle_loops` in [pipeline config](../artifacts/config.md) (default: 0).
 
 ## Behavior
 
@@ -131,7 +131,8 @@ Feature: Pipeline State Machine
       And the stage status for "ascertain" is "running"
 
     Scenario: A loop at maximum count is rejected
-      Given the loop count is 3
+      Given the settle_loops config is set to 3
+      And the loop count is 3
       When a loop is initiated with target "etch"
       Then the loop is rejected with error "Loop count already at maximum (3); escalate to user"
 
@@ -233,7 +234,7 @@ Show is a read-only operation that emits the current pipeline state as YAML to s
 
 - `current_stage` is always a valid stage name from the stage order
 - `stage_statuses` always contains exactly the 8 pipeline stages
-- `loop_count` has a maximum of 3
+- `loop_count` has a maximum governed by `settle_loops` in pipeline config (default: 0)
 - `last_loop_target` is `null` or one of `ascertain`, `etch`, `realize`
 - After a loop, all stages from the target onward have status `pending`, and stages before the target retain their prior status
 - `constitution_version` is immutable after initialization (set once at Harvest)
@@ -247,6 +248,6 @@ Show is a read-only operation that emits the current pipeline state as YAML to s
 
 - **Advance on a failed stage:** Setting a stage to `failed` does not advance `current_stage`. The pipeline stays at the failed stage until the issue is resolved and the stage is re-run.
 - **Double advance:** Advancing the same stage twice (e.g., calling advance with `harvest` / `passed` when harvest is already `passed`) is idempotent if the stage matches `current_stage`. If the stage has already been advanced past, the transition validation rejects it.
-- **Loop at maximum:** If `loop_count` equals 3, the loop is rejected. The caller must escalate to the user.
+- **Loop at maximum:** If `loop_count` equals the `settle_loops` config value (default: 0), the loop is rejected. The caller must escalate to the user.
 - **Resume after loop:** `current_stage` points to the loop target with status `running`. Resume picks up from there.
 - **Settle passes (no loop):** Advancing `settle` with `passed` leaves `current_stage` at `settle`. The pipeline is complete.

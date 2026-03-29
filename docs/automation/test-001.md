@@ -6,7 +6,7 @@ Verifies every spec BID has at least one test function mapped in the etch-map. S
 
 | Input | Path | Format |
 |-------|------|--------|
-| Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags |
+| Gherkin spec files | `tests/features/{feature_id}/*.feature` | Gherkin with `@BID-NNN` tags |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | YAML per [etch-map.md](../artifacts/etch-map.md) |
 
 ## Behavior

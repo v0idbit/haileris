@@ -45,6 +45,34 @@ Source: [investment map](../../.notes/mechanical/investment-map.md) items 11–1
 
 Note: item 13 (tautological detection) is already specified in [red-diagnostics.md](red-diagnostics.md) under Tier 2.
 
+## Inspection Artifact Flow
+
+```mermaid
+flowchart LR
+    H[1. Harvest] -.->|produces| SAUD["harvest-inspection.yaml"]
+    L[4. Layout] -.->|produces| PAUD["layout-inspection.yaml"]
+    E[5. Etch] -.->|produces| DAUD["etch-inspection.yaml"]
+    R[6. Realize] -.->|produces| IAUD["realize-inspection.yaml"]
+
+    SAUD --> IN["7. Inspect<br>(Traceability Gate)"]
+    PAUD --> IN
+    DAUD --> IN
+    IAUD --> IN
+```
+
+### What each inspection verifies
+
+| Inspection | Validates |
+|-------|-----------|
+| `harvest-inspection.yaml` | decomposition.md and technical-details.md across 4 dimensions: template compliance (x2), artifact preflight, dependency doc coverage |
+| `layout-inspection.yaml` | subspec BID coverage: MISSING / HALLUCINATED / DUPLICATED / INSUFFICIENT / PARTIAL* |
+| `etch-inspection.yaml` | etch-map.yaml BID-to-test mapping: MISSING / HALLUCINATED / DUPLICATED* / INSUFFICIENT / PARTIAL* |
+| `realize-inspection.yaml` | Realize map: completeness (BID-to-derivation), scope (unmapped derivations via AST), broken refs (ghost derivations) |
+
+\*Agent-evaluated — no mechanical verification; inspection records SKIP. See [Checks Without Mechanical Specifications](#checks-without-mechanical-specifications).
+
+Missing or `pass: false` on any inspection artifact = **Critical** finding at Inspect. On-demand re-inspection is available for layout, etch, and realize inspections (all support `--fix` except realize).
+
 ## Conventions
 
 Each spec uses Gherkin (Feature/Rule/Scenario) to define observable behaviors. Scenarios describe what the check does, not how.
@@ -96,7 +124,7 @@ All paths in these specs use forward slashes and are relative to the project roo
 
 - **Feature directory**: `.haileris/features/{feature_id}/`
 - **Project directory**: `.haileris/project/`
-- **Spec directory**: `tests/features/`
+- **Spec directory**: `tests/features/{feature_id}/`
 
 ### BID Pattern
 

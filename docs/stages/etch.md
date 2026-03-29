@@ -10,36 +10,39 @@ Write red-phase tests for each Gherkin subspec.
 
 ## Process
 
-1. Write one test function per BID behavior in AAA (Arrange / Act / Assert) structure; import not-yet-existing source modules so all tests fail at import time. Import paths derive from the subspec's `Domains:` declarations (domain path) and project naming conventions (entity names) — the agent derives all import paths from these conventions. Primary BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`). Exact directory names and test framework follow project conventions. Test assertions must verify observable effects from the BID's Gherkin Then/And steps: state changes, outputs produced, and data passed between components. When the subspec has a `Requires:` line, the required interface contracts inform test fixture design: the test Arrange section can reference the contracted data shapes declared in the upstream subspec's `Provides:` metadata. All test function parameters and return types must use named data contract types for collections and compound types — bare generic annotations (`dict`, `list`, `tuple`, `set`, `Any`, `object`, and language equivalents) are prohibited. Scalar primitives (`str`, `int`, `float`, `bool`) are allowed bare. This applies to all functions. The language-specific contract mechanism is documented in technical-details. ANLZ-007 validates compliance.
-2. Write `etch-map.yaml` mapping each BID to its test functions
-3. Verify every BID has at least one test function via the map (TEST-001 gate); if FAIL, add missing tests and update the map
-4. Run the test suite to confirm RED state (TEST-002 gate) — every generated test must fail. For each passing test, apply the diagnostic protocol (see RED State Confirmation); re-run after corrections. Escalate to user when any test still passes after one correction pass.
-5. Validate the map across 5 check types; write `.haileris/features/{feature_id}/etch-inspection.yaml`
-6. Run data contract compliance check (ANLZ-007) on all test function signatures. If FAIL, replace bare generics with named contract types; re-run.
+1. Define named data contract types from the subspec's `Provides:`/`Requires:` field hints and BID scenarios. Write source stubs at `Domains:` paths — stub modules contain data contract type definitions (fully defined) and function/method signatures with placeholder bodies (raise, return default, or language-equivalent stub marker). Import paths derive from the subspec's `Domains:` declarations (domain path) and project naming conventions (entity names) — the agent derives all import paths from these conventions.
+2. Write one test function per BID behavior in AAA (Arrange / Act / Assert) structure, importing from the stub modules created in step 1. Primary BIDs produce integration tests (e.g., `tests/integration/`); subspec BIDs produce unit tests (e.g., `tests/unit/`). Exact directory names and test framework follow project conventions. Test assertions must verify observable effects from the BID's Gherkin Then/And steps: state changes, outputs produced, and data passed between components. When the subspec has a `Requires:` line, the required interface contracts inform test fixture design: the test Arrange section can reference the contracted data shapes declared in the upstream subspec's `Provides:` metadata. All test function parameters and return types must use named data contract types for collections and compound types — bare generic annotations (`dict`, `list`, `tuple`, `set`, `Any`, `object`, and language equivalents) are prohibited. Scalar primitives (`str`, `int`, `float`, `bool`) are allowed bare. This applies to all functions in both test files and source stubs. The language-specific contract mechanism is documented in technical-details. ANLZ-007 validates compliance.
+3. Write `etch-map.yaml` mapping each BID to its test functions
+4. Verify every BID has at least one test function via the map (TEST-001 gate); if FAIL, add missing tests and update the map
+5. Run the test suite to confirm RED state (TEST-002 gate) — every generated test must fail. Tests fail on assertions against stub placeholder returns (imports resolve immediately since stubs exist). For each passing test, apply the diagnostic protocol (see RED State Confirmation); re-run after corrections. The number of correction passes is governed by `etch_corrections` in [pipeline config](../artifacts/config.md) (default: 0). Escalate to user when a test still passes after corrections are exhausted.
+6. Validate the map across 5 check types; write `.haileris/features/{feature_id}/etch-inspection.yaml`
+7. Run data contract compliance check (ANLZ-007) on all test function signatures and source stub signatures. If FAIL, replace bare generics with named contract types; re-run.
 
 ### Re-entry Behavior (Settle Loop)
 
 When Etch is re-entered after a Settle loop with subspec-scoped re-run:
 
 1. Read `rerun_scope` from `pipeline-state.yaml` to identify subspecs needing re-run.
-2. Skip Etch for subspecs not in `target_subspecs` or `blast_radius`. Their existing etch-map entries and test files are preserved.
-3. Re-run Etch normally for subspecs in the re-run scope. New etch-map entries replace old entries for these subspecs only (merge semantics).
+2. Skip Etch for subspecs not in `target_subspecs` or `blast_radius`. Their existing etch-map entries, test files, and source stubs are preserved.
+3. Re-run Etch normally for subspecs in the re-run scope. New etch-map entries replace old entries for these subspecs only (merge semantics). Source stubs are regenerated for in-scope subspecs.
 4. `_integration` always re-runs when any subspec re-runs.
 
 ## Outputs
 
 - Red-phase tests for the Gherkin subspec
+- Source stubs for the Gherkin subspec
 
 ## Artifacts Written
 
 | Artifact | Path | Notes |
 |----------|------|-------|
+| Source stubs | `src/` at `Domains:` paths (repo) | Data contract type definitions and function signatures with placeholder bodies; written before tests |
 | Primary BID tests | `tests/integration/` (repo) | End-to-end tests from primary BIDs; written to repo test tree |
 | Subspec BID tests | `tests/unit/` (repo) | Per-deliverable tests from subspec BIDs; written to repo test tree |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | BID → test function map; validated by Etch Inspection and ingested by Inspect |
 | Etch inspection | `.haileris/features/{feature_id}/etch-inspection.yaml` | Traceability gate input for Inspect |
 
-All tests are source artifacts — always stored in the repo's test directories.
+Tests and stubs are source artifacts — always stored in the repo's test and source directories.
 
 ## Etch Inspection
 
@@ -55,21 +58,20 @@ Validates `etch-map.yaml` across 5 check types:
 
 DUPLICATED and PARTIAL are agent-evaluated (no mechanical verification; inspection records SKIP). Mechanically verified checks: MISSING, HALLUCINATED, INSUFFICIENT.
 
-On FAIL with `--fix`: up to 2 auto-revision passes; if still failing, escalate to user.
+On FAIL with `--fix`: up to `inspection_fixes` auto-revision passes (see [pipeline config](../artifacts/config.md); default: 0); if still failing or fixes exhausted, escalate to user.
 
 ## RED State Confirmation
 
-Every test must require production code to pass. Import/build failure on source modules pending creation by Realize is the expected failure mode; this protocol handles tests that pass before Realize creates production code. For each passing test, identify the cause and apply the prescribed correction:
+Every test must require production code to pass. Assertion failure against stub placeholder returns is the expected failure mode — imports resolve immediately since Etch creates source stubs alongside tests. This protocol handles tests that pass before Realize implements production code within the stubs. For each passing test, identify the cause and apply the prescribed correction:
 
 | Cause | Detection | Correction |
 |-------|-----------|------------|
-| **Existing import** — import resolves to a pre-existing module (stdlib, third-party, prior feature) | Import path resolves to a module outside the feature's `Domains:` paths | Update import to target the domain path from `Domains:` declarations (module exists only after Realize) |
-| **Default-value assertion** — asserted value matches a language default (None, null, 0, "", []) | Expected value in the assertion is a language default for the return type | Strengthen assertion to expect a specific value derived from the BID's Gherkin Then/And step and the test's Arrange data |
+| **Default-value assertion** — asserted value matches a stub's placeholder return (None, null, 0, "", []) | Expected value in the assertion is a language default or a stub placeholder return | Strengthen assertion to expect a specific value derived from the BID's Gherkin Then/And step and the test's Arrange data |
 | **Tautological assertion** — assertion references only Arrange-section data or evaluates to true unconditionally | Assertion holds true independent of production code execution | Rewrite to verify an observable effect from the BID's Gherkin Then/And step |
 
 Assertion corrections in this table use the same closed-derivation-scope principle as Settle tier 2: derive the expected value from the Gherkin step and the test's Arrange data only.
 
-One correction pass, then re-run. Escalate to user when a test still passes after correction — the test requires regeneration.
+Apply up to `etch_corrections` passes (see [pipeline config](../artifacts/config.md); default: 0), then re-run. Escalate to user when a test still passes after corrections are exhausted — the test requires regeneration.
 
 ## Data Contract Compliance
 
@@ -92,7 +94,8 @@ ANLZ-007 validates compliance. See [anlz-007.md](../automation/anlz-007.md) for 
 - `etch-inspection.yaml` is a Traceability Gate input at Inspect — missing or failed = Critical finding
 - The etch inspection can be re-run on demand with `--fix` to attempt auto-repair
 - See RED State Confirmation above for the full diagnostic protocol applied to passing tests
-- Import paths are derived from the subspec's `Domains:` declarations and project naming conventions — `Domains:` provides the module root, naming conventions provide entity names. This makes import paths a shared contract with Realize (see [spec Domains metadata](../artifacts/spec.md#pipeline-metadata))
-- After all subspec Etch→Realize cycles complete and the full suite is green, a final Etch pass writes integration tests for primary BIDs. These verify end-to-end composition (the wiring that `@traces` tags describe). The etch-map includes primary BIDs.
-- On re-entry, `etch-map.yaml` uses merge semantics: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim.
-- ANLZ-007 runs at Etch step 6 after the etch-map is validated. It checks all test function signatures for bare generic annotations. Bare generics in nested positions (e.g., `list[UserRecord]`) still fail — the outer container is bare.
+- Source stubs are written to `src/` at `Domains:` paths before tests are written. Stubs contain data contract type definitions (fully defined) and function/method signatures with placeholder bodies. Tests import from stubs; imports resolve immediately. Realize implements within stubs — stub signatures and type definitions are read-only from Etch forward
+- Import paths are derived from the subspec's `Domains:` declarations and project naming conventions — `Domains:` provides the module root, naming conventions provide entity names. Etch creates source stubs at these paths, establishing the shared import contract with Realize (see [spec Domains metadata](../artifacts/spec.md#pipeline-metadata))
+- After all subspec Etch→Realize cycles complete and the full suite is green, a final Etch pass writes integration tests for primary BIDs and stubs for any new integration-level modules needed. These verify end-to-end composition (the wiring that `@traces` tags describe). The etch-map includes primary BIDs.
+- On re-entry, `etch-map.yaml` uses merge semantics: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim. Source stubs follow the same semantics.
+- ANLZ-007 runs at Etch step 7 after the etch-map is validated. It checks all test function signatures and source stub signatures for bare generic annotations. Bare generics in nested positions (e.g., `list[UserRecord]`) still fail — the outer container is bare.

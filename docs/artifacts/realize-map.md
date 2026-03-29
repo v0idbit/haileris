@@ -2,7 +2,7 @@
 
 A derivation is any named callable or type that static analysis can discover: functions, methods, classes, and their equivalents in the target language.
 
-A structured mapping from BIDs to the derivations that implement them. Built incrementally by Realize after each subspec completes. Used by the realize inspection to verify completeness, scope, and derivation integrity.
+A structured mapping from BIDs to the derivations that implement them. Built incrementally by Realize after each subspec completes. Realize implements within Etch's source stubs — each derivation exists within a stub module at `Domains:` paths. Used by the realize inspection to verify completeness, scope, and derivation integrity.
 
 ## What It Contains
 

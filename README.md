@@ -4,7 +4,7 @@ A spec-driven pipeline. Takes raw feature context as input; produces verified, g
 
 ## Pipeline
 
-Eight stages in sequence. Stages 5–6 repeat per subspec (sequentially: Etch→Realize per subspec). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize. Settle re-runs are scoped: only the failing subspec(s) and their downstream dependents are re-processed, leaving passing subspecs untouched.
+Eight stages in sequence. Stages 5–6 repeat per subspec (Etch→Realize per subspec, respecting dependency edges; independent subspecs may run concurrently). After Settle, remaining failures loop to the earliest stage required by domain: `spec` → Ascertain, `test` → Etch, `impl` → Realize. Settle re-runs are scoped: only the failing subspec(s) and their downstream dependents are re-processed, leaving passing subspecs untouched.
 
 | # | Stage | What it does |
 |---|-------|-------------|
@@ -12,8 +12,8 @@ Eight stages in sequence. Stages 5–6 repeat per subspec (sequentially: Etch→
 | 2 | **Ascertain** | Surface and resolve ambiguities in the Decomposition |
 | 3 | **Inscribe** | Write the primary spec: end-to-end workflow scenarios with BIDs |
 | 4 | **Layout** | Decompose the primary spec into ordered delivery subspecs |
-| 5 | **Etch** | Generate red-phase (failing) tests per subspec |
-| 6 | **Realize** | Implement minimum code to turn red tests green |
+| 5 | **Etch** | Generate source stubs and red-phase (failing) tests per subspec |
+| 6 | **Realize** | Implement within Etch stubs to turn red tests green |
 | 7 | **Inspect** | Review the finished implementation against the spec |
 | 8 | **Settle** | Fix failures by domain; loop to earliest required stage if any remain |
 
@@ -30,12 +30,13 @@ Each stage produces artifacts that downstream stages consume. Key artifacts and 
 | Decomposition | Harvest | `.haileris/features/{feature_id}/decomposition.md` |
 | Technical details | Harvest | `.haileris/features/{feature_id}/technical-details.md` |
 | Ascertainments | Ascertain | `.haileris/features/{feature_id}/ascertainments.md` |
-| Primary spec | Inscribe | `tests/features/primary.feature` |
-| Subspecs | Layout | `tests/features/{deliverable}.feature` |
+| Primary spec | Inscribe | `tests/features/{feature_id}/primary.feature` |
+| Subspecs | Layout | `tests/features/{feature_id}/{deliverable}.feature` |
 | Delivery order | Layout (compiled) | `.haileris/features/{feature_id}/delivery-order.yaml` |
+| Source stubs | Etch | `src/` at `Domains:` paths (repo) |
 | Red-phase tests | Etch | `tests/` (repo) |
 | Etch map | Etch | `.haileris/features/{feature_id}/etch-map.yaml` |
-| Green-phase implementation | Realize | `src/` (repo) |
+| Green-phase implementation | Realize | `src/` (within Etch stubs) |
 | Realize map | Realize | `.haileris/features/{feature_id}/realize-map.yaml` |
 | Implementation failure details | Inspect | `.haileris/features/{feature_id}/verify_{timestamp}.md` |
 | Pipeline state | Harvest | `.haileris/features/{feature_id}/pipeline-state.yaml` |
@@ -47,6 +48,7 @@ Project-wide artifacts:
 ├── standards.md
 ├── test-conventions.md
 ├── constitution.md
+├── config.{ext}
 └── last-harvest.json
 ```
 

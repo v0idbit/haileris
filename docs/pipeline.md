@@ -80,7 +80,7 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 #### Inputs
 
-- Primary spec (`primary.feature`)
+- Primary spec (`tests/features/{feature_id}/primary.feature`)
 - Constitution
 
 #### Outputs
@@ -91,25 +91,28 @@ Repeat until all ascertainments are resolved: identify ambiguities or gaps, outp
 
 ### 5–6. Etch → Realize (per subspec)
 
-Etch and Realize execute **sequentially per subspec** in the dependency order established by Layout:
+Etch and Realize execute **per subspec**, respecting the dependency edges in `delivery-order.yaml`. A subspec's Etch/Realize cycle runs only after all subspecs it `Requires:` have completed Realize. Subspecs with no dependency relationship may execute concurrently; sequential execution is a valid default strategy.
 
 ```
-Etch(subspec 1) → Realize(subspec 1) → Etch(subspec 2) → Realize(subspec 2) → ...
+Sequential:  Etch(1) → Realize(1) → Etch(2) → Realize(2) → ...
+Parallel:    Etch(A) → Realize(A) ─┐
+                                    ├→ Etch(C) → Realize(C)
+             Etch(B) → Realize(B) ─┘
 ```
 
-This ensures later subspecs can depend on earlier subspecs' implementations. After all subspec cycles complete, a final Etch pass writes integration tests for primary BIDs; Realize then ensures those pass.
+After all subspec cycles complete, a final Etch pass writes integration tests for primary BIDs; Realize then ensures those pass.
 
-On re-entry after a Settle loop, only subspecs in `rerun_scope` execute. Passing subspecs are skipped; their etch-map and realize-map entries are preserved.
+On re-entry after a Settle loop, only subspecs in `rerun_scope` execute. Passing subspecs are skipped; their etch-map entries, test files, and source stubs are preserved.
 
 #### 5. Etch
 
 **Inputs:** Gherkin subspec (current subspec), Technical details, Constitution
-**Outputs:** Red-phase test suite, Etch map (BID → test function mapping). Test function signatures must use named data contract types — bare generic annotations are prohibited (ANLZ-007).
+**Outputs:** Source stubs at `src/` (data contract type definitions and function signatures with placeholder bodies), Red-phase test suite, Etch map (BID → test function mapping). All function signatures in both tests and stubs must use named data contract types — bare generic annotations are prohibited (ANLZ-007).
 
 #### 6. Realize
 
-**Inputs:** Gherkin subspec (current subspec), Red-phase tests, Technical details, Etch map, Constitution
-**Outputs:** Green-phase implementation, Realize map (BID → derivation mapping)
+**Inputs:** Gherkin subspec (current subspec), Red-phase tests, Source stubs (Etch-created), Technical details, Etch map, Constitution
+**Outputs:** Green-phase implementation (within Etch stubs), Realize map (BID → derivation mapping)
 
 ---
 
@@ -145,7 +148,7 @@ On re-entry after a Settle loop, only subspecs in `rerun_scope` execute. Passing
 
 #### Output
 
-If failures are present, route by domain of remaining findings (see [Settle](stages/settle.md)). Max 3 Settle loops; escalate to user if unresolved. Otherwise, **COMPLETE**.
+If failures are present, route by domain of remaining findings (see [Settle](stages/settle.md)). Settle loops up to `settle_loops` times (see [pipeline config](artifacts/config.md); default: 0); escalate to user if unresolved. Otherwise, **COMPLETE**.
 
 ---
 
@@ -196,7 +199,7 @@ rerun_scope:
 ### Resume Semantics
 
 - If execution is interrupted, the pipeline resumes from `current_stage` using the progress fields.
-- For Etch/Realize interruptions: `etch_realize_progress` tracks which subspecs are complete. The pipeline resumes at the current subspec; completed subspecs are skipped.
+- For Etch/Realize interruptions: `etch_realize_progress` tracks which subspecs are complete. The pipeline resumes from `subspecs_completed`; completed subspecs are skipped. When using parallel execution, multiple subspecs may be in-flight; `subspec_statuses` tracks per-subspec progress.
 - After a Settle loop, `loop_count` increments and `last_loop_target` records where the loop re-entered. Downstream stages reset to `pending` in `stage_statuses` from the loop target onward.
 - After a Settle loop with subspec-scoped re-run, `rerun_scope` identifies which subspecs need re-running. The pipeline skips Etch/Realize for subspecs not in scope.
 

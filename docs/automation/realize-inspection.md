@@ -6,7 +6,7 @@ Validates the Realize map after all subspecs complete. Source: [realize.md](../s
 
 | Input | Path | Format |
 |-------|------|--------|
-| Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags |
+| Gherkin spec files | `tests/features/{feature_id}/*.feature` | Gherkin with `@BID-NNN` tags |
 | Realize map | `.haileris/features/{feature_id}/realize-map.yaml` | YAML per [realize-map.md](../artifacts/realize-map.md) |
 | Source files | Referenced by realize-map derivations | Source code files |
 
@@ -45,7 +45,7 @@ Feature: Realize Inspection
   Validates the realize-map BID-to-derivation mapping.
 
   Background:
-    Given the spec files are in "tests/features/"
+    Given the spec files are in "tests/features/{feature_id}/"
     And the realize map is at ".haileris/features/{feature_id}/realize-map.yaml"
 
   Rule: Completeness — every spec BID must have at least one derivation in the realize-map

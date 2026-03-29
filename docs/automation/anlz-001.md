@@ -20,7 +20,7 @@ detail: "No typed propositions available; mechanical contradiction detection una
 | Input | Path | Format |
 |-------|------|--------|
 | Proposition set | Implementation-defined | Typed propositions (see format below) |
-| Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags (traceability) |
+| Gherkin spec files | `tests/features/{feature_id}/*.feature` | Gherkin with `@BID-NNN` tags (traceability) |
 
 ### Proposition Format
 

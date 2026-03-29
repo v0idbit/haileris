@@ -15,7 +15,7 @@ Create the primary spec from the improved decomposition.
 
 1. Write `primary.feature` — end-to-end workflow scenarios covering the feature's observable behavior. Each scenario gets a BID tag.
 2. Read constitution if present; flag constitution violations.
-3. Write `primary.feature` to `tests/features/`.
+3. Write `primary.feature` to `tests/features/{feature_id}/`.
 
 ### Inscribe.Verify
 
@@ -58,12 +58,12 @@ If `standards.md` uses structured rules (e.g., rule + scope pairs), comparison c
 
 | Artifact | Path | Notes |
 |----------|------|-------|
-| Primary spec | `tests/features/primary.feature` | Integration-level workflow scenarios |
+| Primary spec | `tests/features/{feature_id}/primary.feature` | Integration-level workflow scenarios |
 
 ## Notes
 
 - BID format: `BID-{NNN}` (sequentially numbered, e.g. `BID-001`)
 - Gherkin spec status lifecycle: `inscribing` → `ascertaining` (if markers exist) → `approved` (after user gate)
-- `tests/features/` is the canonical location for `primary.feature` — Layout and downstream stages read it. Read-only after user approval
+- `tests/features/{feature_id}/` is the canonical location for `primary.feature` — Layout and downstream stages read it. Read-only after user approval
 - Constitution violations are always **Critical** severity
 - Gherkin spec types: `greenfield` (all new), `modification` (unchanged / modified / new sections), `refactor` (behaviors are preserved)

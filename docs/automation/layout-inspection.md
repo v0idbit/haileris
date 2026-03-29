@@ -6,8 +6,8 @@ Validates subspecs against primary spec BIDs. Source: [layout.md](../stages/layo
 
 | Input | Path | Format |
 |-------|------|--------|
-| Primary spec | `tests/features/primary.feature` | Gherkin with `@BID-NNN` tags |
-| Subspec files | `tests/features/{deliverable}.feature` | Gherkin with `@BID-NNN` tags |
+| Primary spec | `tests/features/{feature_id}/primary.feature` | Gherkin with `@BID-NNN` tags |
+| Subspec files | `tests/features/{feature_id}/{deliverable}.feature` | Gherkin with `@BID-NNN` tags |
 
 ### BID Extraction
 
@@ -31,8 +31,8 @@ Feature: Layout Inspection
   Validates subspecs against primary spec BIDs across 5 dimensions.
 
   Background:
-    Given the primary spec is at "tests/features/primary.feature"
-    And subspec files are in "tests/features/" (excluding primary.feature)
+    Given the primary spec is at "tests/features/{feature_id}/primary.feature"
+    And subspec files are in "tests/features/{feature_id}/" (excluding primary.feature)
 
   Rule: MISSING — every primary spec BID must appear in at least one subspec
 

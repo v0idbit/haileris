@@ -8,7 +8,7 @@ Fully mechanical consistency check. Validates that subspec `Requires:` and `Prov
 
 | Input | Path | Format |
 |-------|------|--------|
-| Subspec files | `tests/features/{deliverable}.feature` | Gherkin with `Requires:` and `Provides:` lines |
+| Subspec files | `tests/features/{feature_id}/{deliverable}.feature` | Gherkin with `Requires:` and `Provides:` lines |
 
 ### Parsing Formats
 
@@ -24,7 +24,7 @@ Feature: ANLZ-005 Interface Contract Consistency
   a consistent, acyclic interface graph.
 
   Background:
-    Given the spec directory is "tests/features/"
+    Given the spec directory is "tests/features/{feature_id}/"
 
   Rule: Every Requires ContractName must match a Provides ContractName
 

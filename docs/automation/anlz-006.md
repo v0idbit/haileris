@@ -8,7 +8,7 @@ Fully mechanical consistency check. Validates that subspec `Provides:` entries i
 
 | Input | Path | Format |
 |-------|------|--------|
-| Subspec files | `tests/features/{deliverable}.feature` | Gherkin with `Requires:` and `Provides:` lines |
+| Subspec files | `tests/features/{feature_id}/{deliverable}.feature` | Gherkin with `Requires:` and `Provides:` lines |
 
 ### Parsing Formats
 
@@ -28,7 +28,7 @@ Feature: ANLZ-006 Field Hint Completeness
   field sets are subsets of the corresponding Provides: fields.
 
   Background:
-    Given the spec directory is "tests/features/"
+    Given the spec directory is "tests/features/{feature_id}/"
 
   Rule: Every Provides must have field hints
 

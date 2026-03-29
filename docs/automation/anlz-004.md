@@ -19,8 +19,8 @@ The effect vocabulary table is the mechanization lever: steps using listed verbs
 
 | Input | Path | Format |
 |-------|------|--------|
-| Primary spec | `tests/features/primary.feature` | Gherkin with `@BID-NNN` and `@traces` tags |
-| Subspec files | `tests/features/{deliverable}.feature` | Gherkin with `@BID-NNN` tags |
+| Primary spec | `tests/features/{feature_id}/primary.feature` | Gherkin with `@BID-NNN` and `@traces` tags |
+| Subspec files | `tests/features/{feature_id}/{deliverable}.feature` | Gherkin with `@BID-NNN` tags |
 
 ### Gherkin Metadata Formats
 
@@ -56,7 +56,7 @@ Feature: ANLZ-004 Composition Validation
   Steps 3–4 (effect coverage) require effect vocabulary in Gherkin steps.
 
   Background:
-    Given the spec directory is "tests/features/"
+    Given the spec directory is "tests/features/{feature_id}/"
 
   Rule: Traces tag presence — primary scenarios must have @traces tags
 

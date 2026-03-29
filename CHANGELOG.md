@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-03-28
+
+### Added
+- **Etch creates source stubs** — Etch generates source modules at `src/` (via `Domains:` paths) alongside tests. Stubs contain data contract type definitions (fully specified, reused in test fixtures) and function/method signatures with placeholder bodies. Realize implements within these stubs rather than creating source from scratch.
+- **Implementation criteria** — per-stage correctness criteria in `docs/implementation/criteria/` defining input manifests, read/write scope, behavioral constraints, and exit checks for each pipeline stage. Foundation for greenfield and brownfield implementation guides.
+- **Pipeline config** — new project-wide config file at `.haileris/project/config.{ext}` controlling retry limits (`realize_retries`, `settle_loops`, `etch_corrections`, `inspection_fixes`) and auto-resolution behavior (`auto_resolve_spec`). All retry limits default to 0, auto-resolution defaults to false — escalate to user immediately. Format left to implementation.
+
+### Changed
+- **RED state semantics** — tests fail on assertions against stub placeholder returns (imports resolve immediately since stubs exist). RED diagnostic protocol handles passing tests via assertion correction only; import-based diagnostics are retired.
+- **Realize implements within stubs** — Realize reads Etch stubs as fixed input and replaces placeholder bodies with behavioral implementations. Stub signatures and type definitions are read-only from Etch forward. Realize may add private helpers; the public interface is fixed by Etch.
+- **ANLZ-007 scope expanded** — data contract compliance checks both test function signatures and source stub signatures for bare generics
+- **Subspec execution model relaxed** — Etch/Realize execution per subspec respects dependency edges (`Requires:`) as the correctness requirement. Independent subspecs (no dependency path between them) may execute concurrently. Sequential execution remains a valid default strategy.
+- **Feature-scoped spec directories** — spec files moved from flat `tests/features/` to `tests/features/{feature_id}/`, preventing filename collisions when the pipeline runs multiple times on the same project. Each feature's primary spec and subspecs live in their own directory, mirroring the `.haileris/features/{feature_id}/` scoping of pipeline metadata.
+
 ## 2026-03-22
 
 ### Added

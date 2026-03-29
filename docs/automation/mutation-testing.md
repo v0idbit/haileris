@@ -25,7 +25,7 @@ detail: "Mutation testing prerequisites not met: {missing_component}; mutation t
 |-------|------|--------|
 | Realize map | `.haileris/features/{feature_id}/realize-map.yaml` | YAML per [realize-map.md](../artifacts/realize-map.md) |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | YAML per [etch-map.md](../artifacts/etch-map.md) |
-| Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags and Then/And steps |
+| Gherkin spec files | `tests/features/{feature_id}/*.feature` | Gherkin with `@BID-NNN` tags and Then/And steps |
 | Source files | Referenced by realize-map derivations | Source code files |
 | Test files | Referenced by etch-map entries | Test source files |
 

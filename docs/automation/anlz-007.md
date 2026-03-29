@@ -1,6 +1,6 @@
 # ANLZ-007: Data Contract Compliance
 
-Validates that test function signatures use named data contract types for collections and compound types. Bare generic annotations are prohibited; scalar primitives are allowed. Source: [etch.md](../stages/etch.md) (Data Contract Compliance section).
+Validates that test function signatures and source stub signatures use named data contract types for collections and compound types. Bare generic annotations are prohibited; scalar primitives are allowed. Source: [etch.md](../stages/etch.md) (Data Contract Compliance section).
 
 **Tier:** M-c (mechanical with constraints). Requires language-specific type annotation parsing.
 
@@ -30,14 +30,15 @@ detail: "Type annotation parsing unavailable for target language; data contract 
 |-------|------|--------|
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | YAML per [etch-map.md](../artifacts/etch-map.md) |
 | Test source files | Referenced by etch-map entries | Source code files |
+| Source stub files | `src/` at `Domains:` paths | Source code files (Etch-created stubs) |
 | Language config | Implementation-defined | Bare generic pattern table + type annotation parser |
 
 ## Behavior
 
 ```gherkin
 Feature: ANLZ-007 Data Contract Compliance
-  Validates that test function signatures use named data contract types
-  instead of bare generic annotations.
+  Validates that test function signatures and source stub signatures use
+  named data contract types instead of bare generic annotations.
 
   Background:
     Given the etch map is loaded
@@ -154,7 +155,7 @@ Finding:
   detail       — function name, file path, and the offending type annotation
 ```
 
-ANLZ-007 does not write a standalone inspection artifact. Its findings are part of the Etch process output (step 6).
+ANLZ-007 does not write a standalone inspection artifact. Its findings are part of the Etch process output (step 7). ANLZ-007 checks both test function signatures and source stub signatures — findings for either domain are part of the same output. Stub signatures must pass compliance before Realize begins.
 
 ## Edge Cases
 
@@ -165,3 +166,4 @@ ANLZ-007 does not write a standalone inspection artifact. Its findings are part 
 - **No annotations at all:** PASS — a function with no type annotations produces no findings.
 - **Language without type system:** SKIP — languages that lack type annotation syntax (e.g., plain JavaScript without JSDoc) trigger the constraint gate.
 - **Parameterized test functions:** Parameterization suffixes (e.g., `[case_a]`) are stripped before function lookup, consistent with other etch-map lookups.
+- **Stub signatures must match test signatures:** when a test expects parameter type `UserRecord`, the stub function parameter uses `UserRecord`. Data contract type definitions in stubs are the authority; test fixtures reference them.

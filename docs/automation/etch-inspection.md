@@ -6,7 +6,7 @@ Validates `etch-map.yaml` BID → test function mapping. Source: [etch.md](../st
 
 | Input | Path | Format |
 |-------|------|--------|
-| Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags |
+| Gherkin spec files | `tests/features/{feature_id}/*.feature` | Gherkin with `@BID-NNN` tags |
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | YAML per [etch-map.md](../artifacts/etch-map.md) |
 | Test source files | Referenced by etch-map entries | Source code files |
 
@@ -40,7 +40,7 @@ Feature: Etch Inspection
   Validates etch-map.yaml BID-to-test-function mapping across 5 dimensions.
 
   Background:
-    Given the spec files are in "tests/features/"
+    Given the spec files are in "tests/features/{feature_id}/"
     And the etch map is at ".haileris/features/{feature_id}/etch-map.yaml"
 
   Rule: MISSING — every spec BID must have an etch-map entry

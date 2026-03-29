@@ -25,7 +25,7 @@ detail: "Formulaic pattern detected but operands not available in Arrange data; 
 | Input | Path | Format |
 |-------|------|--------|
 | BID reference | From Settle.Fix context | BID identifier |
-| Gherkin step | From spec file (`tests/features/*.feature`) | Then/And step text |
+| Gherkin step | From spec file (`tests/features/{feature_id}/*.feature`) | Then/And step text |
 | Arrange section data | From test source file | Variable assignments in Arrange section |
 | Proposed correction | From Settle.Fix output | New assertion expected value |
 

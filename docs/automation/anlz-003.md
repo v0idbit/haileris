@@ -6,8 +6,8 @@ Fully mechanical consistency check. Verifies that every subspec referenced by pr
 
 | Input | Path | Format |
 |-------|------|--------|
-| Primary spec | `tests/features/primary.feature` | Gherkin with `@traces` tags |
-| Subspec files | `tests/features/{deliverable}.feature` | Gherkin with `Domains:` lines |
+| Primary spec | `tests/features/{feature_id}/primary.feature` | Gherkin with `@traces` tags |
+| Subspec files | `tests/features/{feature_id}/{deliverable}.feature` | Gherkin with `Domains:` lines |
 
 ### Gherkin Metadata Formats
 
@@ -40,7 +40,7 @@ Feature: ANLZ-003 Domain Coverage
   has declared Domains: metadata.
 
   Background:
-    Given the spec directory is "tests/features/"
+    Given the spec directory is "tests/features/{feature_id}/"
     And "primary.feature" exists in the spec directory
 
   Rule: Subspec domain declarations — every subspec must have a Domains: line

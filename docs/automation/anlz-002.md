@@ -27,8 +27,8 @@ The structured format is the pipeline's mechanization lever: a one-time format d
 | Input | Path | Format |
 |-------|------|--------|
 | Standards file | `.haileris/project/standards.md` | Structured rule format (see above) |
-| Gherkin spec files | `tests/features/*.feature` | Gherkin with `@BID-NNN` tags |
-| Subspec metadata | `tests/features/*.feature` | `Domains:` lines per subspec |
+| Gherkin spec files | `tests/features/{feature_id}/*.feature` | Gherkin with `@BID-NNN` tags |
+| Subspec metadata | `tests/features/{feature_id}/*.feature` | `Domains:` lines per subspec |
 
 ### Standards Parsing
 

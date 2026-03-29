@@ -21,8 +21,10 @@ Before any stage runs (not just Harvest), the pipeline checks for required proje
    - If missing: run Harvest.Explore and Harvest.Synthesize to generate them
 2. Check for `.haileris/project/constitution.md`
    - If missing: prompt the user with the option to create one (opt-in)
+3. Check for `.haileris/project/config.{ext}` ([pipeline config](../artifacts/config.md))
+   - If missing: all retry settings use defaults (0 — escalate to user immediately)
 
-This pre-check ensures every stage has stable access to project conventions without redundant exploration.
+This pre-check ensures every stage has stable access to project conventions and configuration without redundant exploration.
 
 ### Harvest.Explore
 

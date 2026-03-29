@@ -1,6 +1,6 @@
 # Etch Map
 
-A structured mapping from BIDs to the test functions that cover them. Written by Etch after tests are generated. Used by the etch inspection to verify coverage, and ingested by Realize and Inspect as the authoritative BID → test traceability record.
+A structured mapping from BIDs to the test functions that cover them. Written by Etch after source stubs and tests are generated. Used by the etch inspection to verify coverage, and ingested by Realize and Inspect as the authoritative BID → test traceability record.
 
 ## What It Contains
 
@@ -43,7 +43,7 @@ The parameterization suffix (e.g., `[foo]`) follows the project's test framework
 
 ## Lifecycle
 
-Written by Etch once all test functions are generated. Read by the etch inspection to validate coverage. Ingested by Realize to guide implementation scoping. Ingested by Inspect as input to the Traceability Gate. Updated by Settle when genuinely wrong test fixes change mappings (see [Settle](../stages/settle.md)). On re-entry after a Settle loop, merge semantics apply: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim.
+Written by Etch once source stubs and all test functions are generated. Etch also writes source stubs at `src/` (`Domains:` paths) alongside the etch-map — Realize uses both the etch-map (to guide implementation scoping) and the stubs (as fixed structure to implement within). Ingested by Inspect as input to the Traceability Gate. Updated by Settle when genuinely wrong test fixes change mappings (see [Settle](../stages/settle.md)). On re-entry after a Settle loop, merge semantics apply: entries for re-running subspecs are replaced; entries for skipped subspecs are preserved verbatim. Source stubs follow the same merge semantics.
 
 ## Path
 
