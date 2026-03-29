@@ -1,6 +1,6 @@
 # TEST-001: BID Coverage Gate
 
-Verifies every spec BID has at least one test function mapped in the etch-map. Source: [etch.md](../stages/etch.md) (step 3).
+Verifies every spec BID has at least one test function mapped in the etch-map. Source: [etch.md](../stages/etch.md) (step 4).
 
 ## Inputs
 
@@ -68,8 +68,8 @@ Feature: TEST-001 BID Coverage Gate
 
 TEST-001 overlaps with the etch inspection's MISSING check. The distinction:
 
-- **TEST-001** runs *during* Etch (step 3) as a gate before proceeding to RED state confirmation. It is a go/no-go signal: if any BID lacks a test, Etch must add the missing tests before continuing.
-- **Etch Inspection MISSING** runs *after* Etch completes (step 5) as part of the full inspection report that feeds the Traceability Gate.
+- **TEST-001** runs *during* Etch (step 4) as a gate before proceeding to RED state confirmation. It is a go/no-go signal: if any BID lacks a test, Etch must add the missing tests before continuing.
+- **Etch Inspection MISSING** runs *after* Etch completes (step 6) as part of the full inspection report that feeds the Traceability Gate.
 
 Both use the same BID set comparison. An implementation may share the underlying logic.
 

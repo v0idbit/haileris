@@ -21,8 +21,8 @@ Per-feature artifacts that accumulate as a feature moves through the pipeline. L
 | [Decomposition](decomposition.md) | Plain-English distillation of feature and delivery context | Harvest (write), Ascertain + Inscribe (read) |
 | [Ascertainments](ascertainments.md) | Ambiguities surfaced during Ascertain and their resolutions | Ascertain (write), Inscribe + Settle (read/append) |
 | [Technical Details](technical-details.md) | Synthesized technical context: standards, dependencies, file inventory | Harvest (write), Inscribe + Etch + Realize (read) |
-| [Delivery Order](delivery-order.md) | Sequenced YAML list of subspecs with dependency edges | Layout (write), Etch + Realize (read) |
-| [Etch Map](etch-map.md) | BID-to-test-function mapping with qualified test paths | Etch (write), Realize + Inspect (read) |
+| [Delivery Order](delivery-order.md) | Sequenced YAML list of subspecs with dependency edges | Layout (write), Etch + Realize (read), Settle (regenerate) |
+| [Etch Map](etch-map.md) | BID-to-test-function mapping with qualified test paths | Etch (write), Realize + Inspect (read), Settle (update) |
 | [Realize Map](realize-map.md) | BID-to-derivation mapping (functions, methods, classes) | Realize (write), Inspect + Settle (read) |
 | [Pipeline State](pipeline-state.md) | Machine-readable record of where the feature sits in the pipeline | All stages (read/write) |
 | [Inspection Reports](inspection-reports.md) | Machine-readable YAML from validation gates (Harvest, Layout, Etch, Realize) | Harvest through Realize (write), Inspect (read) |

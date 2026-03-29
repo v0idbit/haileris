@@ -50,11 +50,11 @@ Each stage reads artifacts from upstream and writes artifacts consumed downstrea
 
 | Stage | Artifacts Written | Location |
 |-------|-------------------|----------|
-| Harvest | decomposition, technical-details, standards, test-conventions, constitution | `.haileris/features/`, `.haileris/project/` |
+| Harvest | decomposition, technical-details, standards, test-conventions | `.haileris/features/`, `.haileris/project/` |
 | Ascertain | ascertainments (Q&A outcomes) | `.haileris/features/` |
 | Inscribe | primary.feature (Gherkin spec with BID tags) | `tests/features/{feature_id}/` |
 | Layout | subspec .feature files, delivery-order.yaml | `tests/features/{feature_id}/`, `.haileris/features/` |
-| Etch | integration + unit tests, etch-map.yaml | `tests/`, `.haileris/features/` |
+| Etch | source stubs, integration + unit tests, etch-map.yaml | `src/`, `tests/`, `.haileris/features/` |
 | Realize | production code, realize-map.yaml | `src/`, `.haileris/features/` |
 | Inspect | verify report | `.haileris/features/` |
 | Settle | fixed code/tests/specs, updated ascertainments | Various |

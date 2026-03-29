@@ -8,7 +8,7 @@
 | 2 | [Ascertain](stages/ascertain.md) | Resolve ambiguities, contradictions, and gaps |
 | 3 | [Inscribe](stages/inscribe.md) | Author the primary spec with enumerated BIDs |
 | 4 | [Layout](stages/layout.md) | Decompose the primary spec into ordered delivery subspecs |
-| 5 | [Etch](stages/etch.md) | Write red-phase tests for each subspec |
+| 5 | [Etch](stages/etch.md) | Write source stubs and red-phase tests for each subspec |
 | 6 | [Realize](stages/realize.md) | Implement green-phase code to make each subspec's tests pass |
 | 7 | [Inspect](stages/inspect.md) | Review the finished implementation for correctness and traceability |
 | 8 | [Settle](stages/settle.md) | Evaluate failures; loop back or declare completion |

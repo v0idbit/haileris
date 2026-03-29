@@ -16,7 +16,7 @@ Created by Ascertain when the first ascertainment is recorded. Appended to as ea
 
 ## Which Stages Read It
 
-Inscribe reads ascertainments as input to spec writing.
+Inscribe reads ascertainments as input to spec writing. Settle reads and appends to ascertainments when `auto_resolve_spec` is enabled (auto-resolved spec findings with `[AUTO-RESOLVED]` tag).
 
 ## Committed
 
