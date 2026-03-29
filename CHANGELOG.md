@@ -3,6 +3,8 @@
 ## 2026-03-28
 
 ### Added
+- **Greenfield implementation guide** — `docs/implementation/greenfield.md` (index) + `docs/implementation/construction/` (per-stage construction specs). Describes the three implementation layers (agent logic, mechanical verification, orchestration), cross-cutting foundations to build first, and per-stage component lists with automation spec references and tier classifications. Form-agnostic: constrains behavior, not architecture.
+- **Brownfield implementation guide** — `docs/implementation/brownfield.md`. Audit-and-fix workflow for existing implementations: audit foundations first, then stages in pipeline order, then mechanical checks by tier. Includes triage decision tree and names the `@traces` deadlock pattern explicitly.
 - **Etch creates source stubs** — Etch generates source modules at `src/` (via `Domains:` paths) alongside tests. Stubs contain data contract type definitions (fully specified, reused in test fixtures) and function/method signatures with placeholder bodies. Realize implements within these stubs rather than creating source from scratch.
 - **Implementation criteria** — per-stage correctness criteria in `docs/implementation/criteria/` defining input manifests, read/write scope, behavioral constraints, and exit checks for each pipeline stage. Foundation for greenfield and brownfield implementation guides.
 - **Pipeline config** — new project-wide config file at `.haileris/project/config.{ext}` controlling retry limits (`realize_retries`, `settle_loops`, `etch_corrections`, `inspection_fixes`) and auto-resolution behavior (`auto_resolve_spec`). All retry limits default to 0, auto-resolution defaults to false — escalate to user immediately. Format left to implementation.
@@ -18,7 +20,7 @@
 
 ### Added
 - **Interface contracts on subspecs** — subspecs now carry `Requires:` and `Provides:` metadata alongside `Domains:`, declaring the data contracts between subspecs; Layout.Verify validates that every `Requires:` entry is satisfied by a corresponding `Provides:` entry
-- **ANLZ-005 interface contract check** — new mechanical check at Layout.Verify: verifies that all inter-subspec `Requires:`/`Provides:` pairs are consistent (no unsatisfied requirement, no declaration mismatch); classified as agent-evaluated (*)
+- **ANLZ-005 interface contract check** — new mechanical check at Layout.Verify: verifies that all inter-subspec `Requires:`/`Provides:` pairs are consistent (no unsatisfied requirement, no declaration mismatch)
 - **`_integration` pseudo-subspec** — a reserved subspec entry in `delivery-order.yaml` that groups cross-cutting integration scenarios not owned by any single delivery subspec; Etch uses it to place integration-level tests
 - **Per-subspec status tracking in pipeline-state** — `pipeline-state.yaml` now records pass/fail status per subspec so Settle can identify exactly which subspecs need re-processing
 

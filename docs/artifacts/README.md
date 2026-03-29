@@ -8,7 +8,7 @@ Persistent artifacts that apply across all features. Written once and updated as
 
 | Spec | Purpose | Key Stages |
 |------|---------|------------|
-| [Constitution](constitution.md) | Architectural principles every stage enforces | Inscribe (write), Layout through Settle (read) |
+| [Constitution](constitution.md) | Architectural principles every stage enforces | User-created; Inscribe through Settle (read) |
 | [Project Standards](project-standards.md) | Coding standards, conventions, framework choices | Harvest (write), Inscribe through Settle (read) |
 | [Pipeline Config](config.md) | Retry limits and auto-fix behavior | User-created; Etch, Realize, Settle, Layout (read) |
 
@@ -20,7 +20,7 @@ Per-feature artifacts that accumulate as a feature moves through the pipeline. L
 |------|---------|------------|
 | [Decomposition](decomposition.md) | Plain-English distillation of feature and delivery context | Harvest (write), Ascertain + Inscribe (read) |
 | [Ascertainments](ascertainments.md) | Ambiguities surfaced during Ascertain and their resolutions | Ascertain (write), Inscribe + Settle (read/append) |
-| [Technical Details](technical-details.md) | Synthesized technical context: standards, dependencies, file inventory | Harvest (write), Inscribe through Inspect (read) |
+| [Technical Details](technical-details.md) | Synthesized technical context: standards, dependencies, file inventory | Harvest (write), Inscribe + Etch + Realize (read) |
 | [Delivery Order](delivery-order.md) | Sequenced YAML list of subspecs with dependency edges | Layout (write), Etch + Realize (read) |
 | [Etch Map](etch-map.md) | BID-to-test-function mapping with qualified test paths | Etch (write), Realize + Inspect (read) |
 | [Realize Map](realize-map.md) | BID-to-derivation mapping (functions, methods, classes) | Realize (write), Inspect + Settle (read) |

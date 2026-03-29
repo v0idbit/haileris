@@ -8,7 +8,7 @@
 | Constitution (when present) | `.haileris/project/constitution.md` | Project-wide |
 | Pipeline config (when present) | `.haileris/project/config.{ext}` | Governs `inspection_fixes` |
 
-Layout reads exactly two artifacts: `primary.feature` and `constitution.md`. All inputs are spec-level.
+Layout reads two primary artifacts — `primary.feature` and `constitution.md` — plus pipeline config for the `inspection_fixes` setting.
 
 ## Stage outputs
 

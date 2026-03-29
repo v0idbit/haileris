@@ -50,7 +50,6 @@ detail: "AAA section boundaries not identifiable in test function; tautological 
 |-------|------|--------|
 | Etch map | `.haileris/features/{feature_id}/etch-map.yaml` | YAML per [etch-map.md](../artifacts/etch-map.md) |
 | Test source files | Referenced by etch-map entries | Source code files |
-| Realize map | `.haileris/features/{feature_id}/realize-map.yaml` | YAML (for domain path resolution) |
 | Language config | Implementation-defined | Default value table + assertion patterns |
 
 ### Test Function Analysis

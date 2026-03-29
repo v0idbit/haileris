@@ -17,7 +17,7 @@ High frequency, high error cost, low implementation difficulty. Each spec below 
 | [ANLZ-005](anlz-005.md) | 1 check (6-step algorithm) | [layout.md](../stages/layout.md) |
 | [ANLZ-006](anlz-006.md) | 1 check (4-step algorithm) | [layout.md](../stages/layout.md) |
 | [TEST-001](test-001.md) | 1 check | [etch.md](../stages/etch.md) |
-| [Pipeline State](pipeline-state.md) | State machine + 5 operations | [pipeline-state.md](../artifacts/pipeline-state.md), [pipeline.md](../pipeline.md) |
+| [Pipeline State](pipeline-state.md) | State machine + 8 operations | [pipeline-state.md](../artifacts/pipeline-state.md), [pipeline.md](../pipeline.md) |
 
 ## Tier 2: Mechanical with Constraints (M-c)
 

@@ -79,3 +79,4 @@ Findings are classified by resolution domain: `impl` (production code), `test` (
 - [`docs/stages/`](docs/stages/) — per-stage process, artifacts, and inspect details
 - [`docs/artifacts/`](docs/artifacts/) — artifact format and lifecycle specs
 - [`docs/automation/`](docs/automation/) — mechanical verification specs (inspections, analysis checks)
+- [`docs/implementation/`](docs/implementation/) — greenfield/brownfield implementation guides, per-stage construction specs, correctness criteria

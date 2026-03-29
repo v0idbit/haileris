@@ -38,7 +38,7 @@ Stages execute in order. Each row links to the full spec, summarizes the stage's
 | 1 | [Harvest](harvest.md) | Gather and validate project context, standards, and feature requirements | Explore, Synthesize, Validate, Initialize |
 | 2 | [Ascertain](ascertain.md) | Clarify ambiguities, contradictions, and gaps in the decomposition | Iterative user-confirmation loop |
 | 3 | [Inscribe](inscribe.md) | Author the primary Gherkin spec from the improved decomposition | Author, Verify, Approve |
-| 4 | [Layout](layout.md) | Decompose the primary spec into ordered delivery subspecs | Decompose, Verify |
+| 4 | [Layout](layout.md) | Decompose the primary spec into ordered delivery subspecs | Decompose, Verify, Approve |
 | 5 | [Etch](etch.md) | Write red-phase tests for each subspec | Per-subspec test generation, red-state confirmation |
 | 6 | [Realize](realize.md) | Implement each subspec to make its red-phase tests pass | Per-subspec implementation in dependency order |
 | 7 | [Inspect](inspect.md) | Review finished implementation against the spec and upstream inspections | Gate, Review (5 parallel reviews), Synthesize |
@@ -61,7 +61,7 @@ Each stage reads artifacts from upstream and writes artifacts consumed downstrea
 
 ## Inspection Gates
 
-Five stages produce inspection artifacts that feed the traceability gate at Inspect. Each inspection is a machine-readable YAML report conforming to the schema in [inspection-reports.md](../artifacts/inspection-reports.md).
+Four stages produce inspection artifacts that feed the traceability gate at Inspect. Each inspection is a machine-readable YAML report conforming to the schema in [inspection-reports.md](../artifacts/inspection-reports.md).
 
 | Inspection | Stage | Checks |
 |------------|-------|--------|
@@ -157,4 +157,4 @@ flowchart TD
 - Sub-stages use dot notation: `Stage.SubStage` (e.g., `Harvest.Explore`)
 - Stage names are proper nouns: Harvest, Ascertain, Inscribe, Layout, Etch, Realize, Inspect, Settle
 - Each stage spec follows the section order: Inputs, Process, Outputs (or Iteration), Artifacts Written, Inspection (if applicable), Notes
-- Settle can trigger scoped re-runs of upstream stages (Etch, Realize, Inspect) based on failure domain triage and blast-radius analysis
+- Settle routes findings to Ascertain (domain: spec, full re-run), Etch (domain: test, scoped), or Realize (domain: impl, scoped); Inspect re-runs at each Settle.Confirm cycle to verify resolution

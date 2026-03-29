@@ -16,6 +16,7 @@
 | Pipeline state | `.haileris/features/{feature_id}/pipeline-state.yaml` |
 | Project standards | `.haileris/project/standards.md` |
 | Project test conventions | `.haileris/project/test-conventions.md` |
+| Harvest metadata | `.haileris/project/last-harvest.json` |
 
 ## Components to implement
 
